@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+          "DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <title>jxmlease.EtreeParser : API documentation</title>
+
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+    <link href="bootstrap.min.css" type="text/css" rel="stylesheet" />
+    <link href="apidocs.css" type="text/css" rel="stylesheet" />
+  </head>
+  <body>
+
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="navbar-brand">
+            jxmlease API Documentation
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+
+      <div class="page-header">
+        <h1 class="class"><code>jxmlease.EtreeParser(<span title="object">object</span>)</code> <small>class documentation</small></h1>
+
+        <span id="partOf">
+          Part of <code><a href="jxmlease.html" class="code">jxmlease</a></code>
+          
+          <a href="classIndex.html#jxmlease.EtreeParser">(View In Hierarchy)</a>
+        </span>
+      </div>
+
+      <div class="extrasDocstring">
+        
+      </div>
+
+      <div class="moduleDocstring">
+        <div><p>Creates Python data structures from an ElementTree object.</p>
+<p>This class returns a callable object. You can provide parameters at the 
+class creation time. These parameters modify the default parameters for the
+parser. When you call the callable object to parse a document, you can 
+supply additional parameters to override the default values.</p>
+<p>General usage is like this:</p>
+<pre class="py-doctest">
+<span class="py-prompt">&gt;&gt;&gt; </span>myparser = Parser()
+<span class="py-prompt">&gt;&gt;&gt; </span>root = myparser(etree_root)</pre>
+<p>For detailed usage information, please see the <a href="jxmlease.Parser.html"><code>Parser</code></a> class. Other than the 
+differences noted below, the behavior of the two classes should be the 
+same.</p>
+<h1 class="heading">Namespace Identifiers</h1>
+  <p>In certain versions of ElementTree, the original namespace identifiers
+  are not maintained. In these cases, the class will recreate namespace 
+  identfiers to represent the original namespaces. It will add appropriate 
+  xmlns attributes to maintain the original namespace mapping. However, the
+  actual identifier will be lost. As best I can tell, this is a bug with 
+  ElementTree, rather than this code. To avoid this problem, use LXML.</p>
+<h1 class="heading">Single-invocation Parsing</h1>
+  <p>If you will just be using a parser once, you can just use the <a href="jxmlease.html#parse_etree"><code>parse_etree</code></a> method, 
+  which is a shortcut way of creating a EtreeParser class and calling it 
+  all in one call. You can provide the same arguments to the <a href="jxmlease.html#parse_etree"><code>parse_etree</code></a> method that
+  you can provide to the EtreeParser class.</p>
+<h1 class="heading">Parameters</h1>
+  <p>As compared to the <a href="jxmlease.Parser.html"><code>Parser</code></a> class, the 
+  EtreeParser class does not accept the xml_input, expat, or encoding 
+  parameters.</p>
+  <p>Instead of the xml_input paramter, it accepts the etree_root 
+  parameter. (See below.)</p><table class="fieldTable"><tr class="fieldStart"><td class="fieldName">Parameters</td><td class="fieldArg">etree_root</td><td>An ElementTree object representing the tree you wish to parse. (type: ElementTree)</td></tr></table></div>
+      </div>
+
+      <div id="splitTables">
+        <table class="children sortable" id="id18">
+  
+  <tr class="method">
+    
+    <td>Method</td>
+    <td><a href="jxmlease.EtreeParser.html#__init__" class="code">__init__</a></td>
+    <td><span>See the class documentation.</span></td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><a href="jxmlease.EtreeParser.html#__call__" class="code">__call__</a></td>
+    <td><span>See the class documentation.</span></td>
+  </tr><tr class="method private">
+    
+    <td>Method</td>
+    <td><a href="jxmlease.EtreeParser.html#_process_args" class="code">_process_args</a></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="method private">
+    
+    <td>Method</td>
+    <td><a href="jxmlease.EtreeParser.html#_make_handler" class="code">_make_handler</a></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="method private">
+    
+    <td>Method</td>
+    <td><a href="jxmlease.EtreeParser.html#_parse" class="code">_parse</a></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="method private">
+    
+    <td>Method</td>
+    <td><a href="jxmlease.EtreeParser.html#_parse_attrib" class="code">_parse_attrib</a></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="method private">
+    
+    <td>Method</td>
+    <td><a href="jxmlease.EtreeParser.html#_parse_node" class="code">_parse_node</a></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr>
+</table>
+        
+
+          
+      </div>
+
+      <div id="childList">
+
+        <div class="function">
+  <a name="jxmlease.EtreeParser.__init__">
+    
+  </a>
+  <a name="__init__">
+    
+  </a>
+  <div class="functionHeader">
+    
+    def
+    __init__(self, **kwargs):
+    
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>See the class documentation.</p><table class="fieldTable"></table></div>
+  </div>
+</div><div class="function">
+  <a name="jxmlease.EtreeParser._process_args">
+    
+  </a>
+  <a name="_process_args">
+    
+  </a>
+  <div class="functionHeader">
+    
+    def
+    _process_args(self, **kwargs):
+    
+  </div>
+  <div class="docstring functionBody">
+    
+    <div class="undocumented">Undocumented</div>
+  </div>
+</div><div class="function">
+  <a name="jxmlease.EtreeParser._make_handler">
+    
+  </a>
+  <a name="_make_handler">
+    
+  </a>
+  <div class="functionHeader">
+    
+    def
+    _make_handler(self):
+    
+  </div>
+  <div class="docstring functionBody">
+    
+    <div class="undocumented">Undocumented</div>
+  </div>
+</div><div class="function">
+  <a name="jxmlease.EtreeParser._parse">
+    
+  </a>
+  <a name="_parse">
+    
+  </a>
+  <div class="functionHeader">
+    
+    def
+    _parse(self, node):
+    
+  </div>
+  <div class="docstring functionBody">
+    
+    <div class="undocumented">Undocumented</div>
+  </div>
+</div><div class="function">
+  <a name="jxmlease.EtreeParser._parse_attrib">
+    
+  </a>
+  <a name="_parse_attrib">
+    
+  </a>
+  <div class="functionHeader">
+    
+    def
+    _parse_attrib(self, in_dict, out_dict, nsdict):
+    
+  </div>
+  <div class="docstring functionBody">
+    
+    <div class="undocumented">Undocumented</div>
+  </div>
+</div><div class="function">
+  <a name="jxmlease.EtreeParser._parse_node">
+    
+  </a>
+  <a name="_parse_node">
+    
+  </a>
+  <div class="functionHeader">
+    
+    def
+    _parse_node(self, node, local_nsdict=None, root_element=False):
+    
+  </div>
+  <div class="docstring functionBody">
+    
+    <div class="undocumented">Undocumented</div>
+  </div>
+</div><div class="function">
+  <a name="jxmlease.EtreeParser.__call__">
+    
+  </a>
+  <a name="__call__">
+    
+  </a>
+  <div class="functionHeader">
+    
+    def
+    __call__(self, etree_root, **kwargs):
+    
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>See the class documentation.</p><table class="fieldTable"></table></div>
+  </div>
+</div>
+
+      </div>
+      <address>
+        <a href="index.html">API Documentation</a> for jxmlease, generated by <a href="https://github.com/twisted/pydoctor/">pydoctor</a> at 2015-10-28 17:03:03.
+      </address>
+
+    </div>
+  </body>
+</html>

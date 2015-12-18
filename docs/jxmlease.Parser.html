@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+          "DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <title>jxmlease.Parser : API documentation</title>
+
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+    <link href="bootstrap.min.css" type="text/css" rel="stylesheet" />
+    <link href="apidocs.css" type="text/css" rel="stylesheet" />
+  </head>
+  <body>
+
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="navbar-brand">
+            jxmlease API Documentation
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+
+      <div class="page-header">
+        <h1 class="class"><code>jxmlease.Parser(<span title="object">object</span>)</code> <small>class documentation</small></h1>
+
+        <span id="partOf">
+          Part of <code><a href="jxmlease.html" class="code">jxmlease</a></code>
+          
+          <a href="classIndex.html#jxmlease.Parser">(View In Hierarchy)</a>
+        </span>
+      </div>
+
+      <div class="extrasDocstring">
+        
+      </div>
+
+      <div class="moduleDocstring">
+        <div><p>Creates Python data structures from raw XML.</p>
+<p>This class returns a callable object. You can provide parameters at the 
+class creation time. These parameters modify the default parameters for the
+parser. When you call the callable object to parse a document, you can 
+supply additional parameters to override the default values.</p>
+<p>General usage is like this:</p>
+<pre class="py-doctest">
+<span class="py-prompt">&gt;&gt;&gt; </span>myparser = Parser()
+<span class="py-prompt">&gt;&gt;&gt; </span>root = myparser(<span class="py-string">"&lt;a&gt;foo&lt;/a&gt;"</span>)</pre>
+<h1 class="heading">Parsing</h1>
+  <p>In general, this returns an <a href="jxmlease.XMLDictNode.html"><code>XMLDictNode</code></a> containing 
+  the parsed XML tree.</p>
+  <p>In this example, root is an <a href="jxmlease.XMLDictNode.html"><code>XMLDictNode</code></a> which 
+  contains a representation of the XML you parsed:</p>
+<pre class="py-doctest">
+<span class="py-prompt">&gt;&gt;&gt; </span>isinstance(root, XMLDictNode)
+<span class="py-output">True</span>
+<span class="py-output"></span><span class="py-prompt">&gt;&gt;&gt; </span>root.prettyprint()
+<span class="py-output">{u'a': u'foo'}</span>
+<span class="py-output"></span><span class="py-prompt">&gt;&gt;&gt; </span><span class="py-keyword">print</span> root.emit_xml()
+<span class="py-output">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="py-output">&lt;a&gt;foo&lt;/a&gt;</span></pre>
+  <h2 class="heading">Single-invocation Parsing</h2>
+    <p>If you will just be using a parser once, you can just use the <a href="jxmlease.html#parse"><code>parse</code></a> method, which is a 
+    shortcut way of creating a Parser class and calling it all in one call.
+    You can provide the same arguments to the <a href="jxmlease.html#parse"><code>parse</code></a> method that you can 
+    provide to the <a href="jxmlease.Parser.html"><code>Parser</code></a> 
+    class.</p>
+    <p>For example:</p>
+<pre class="py-doctest">
+<span class="py-prompt">&gt;&gt;&gt; </span>root = jxmlease.parse(<span class="py-string">'&lt;a x="y"&gt;&lt;b&gt;1&lt;/b&gt;&lt;b&gt;2&lt;/b&gt;&lt;b&gt;3&lt;/b&gt;&lt;/a&gt;'</span>)
+<span class="py-prompt">&gt;&gt;&gt; </span>root.prettyprint()
+<span class="py-output">{u'a': {u'b': [u'1', u'2', u'3']}}</span></pre>
+  <h2 class="heading">Generators</h2>
+    <p>It is possible to call this as a generator by specifying the 
+    "generator" parameter. The "generator" parameter 
+    contains a list of paths to match. If paths are provided in this 
+    parameter, the behavior of the parser is changed. Instead of returning 
+    the root node of a parsed XML hierarchy, the parser returns a generator
+    object. On each call to the generator object, it will return the next 
+    node that matches one of the provided paths.</p>
+    <p>Paths are provided in a format similar to XPath expressions. For 
+    example, "/a/b" will match node &lt;b&gt; in this XML: :</p>
+<pre class="literalblock">
+ &lt;a&gt;
+   &lt;b/&gt;
+ &lt;/a&gt;
+</pre>
+    <p>If a path begins with a "/", it must exactly match the 
+    full path to a node. If a path does not begin with a "/", it 
+    must exactly match the "right side" of the path to a node. 
+    For example, consider this XML: :</p>
+<pre class="literalblock">
+ &lt;a&gt;
+   &lt;b&gt;
+     &lt;c/&gt;
+   &lt;/b&gt;
+ &lt;/a&gt;
+</pre>
+    <p>In this example, "/a/b/c", "c", "b/c",
+    and "a/b/c" all match the &lt;c&gt; node.</p>
+    <p>For each match, the generator returns a tuple of (path, 
+    match_string, xml_node), where the "path" is the calculated 
+    absolute path to the matching node, "match_string" is the 
+    user-supplied match string that triggered the match, and 
+    "xml_node" is the object representing that node (an instance 
+    of a <a href="jxmlease.XMLNodeBase.html"><code>XMLNodeBase</code></a> 
+    subclass).</p>
+    <p>For example:</p>
+<pre class="py-doctest">
+<span class="py-prompt">&gt;&gt;&gt; </span>xml = <span class="py-string">'&lt;a x="y"&gt;&lt;b&gt;1&lt;/b&gt;&lt;b&gt;2&lt;/b&gt;&lt;b&gt;3&lt;/b&gt;&lt;/a&gt;'</span>
+<span class="py-prompt">&gt;&gt;&gt; </span>myparser = Parser(generator=[<span class="py-string">"/a/b"</span>])
+<span class="py-prompt">&gt;&gt;&gt; </span><span class="py-keyword">for</span> (path, match, value) <span class="py-keyword">in</span> myparser(xml):
+<span class="py-more">... </span>  <span class="py-keyword">print</span> <span class="py-string">"%s: %s"</span> % (path, value)
+<span class="py-more">...</span>
+<span class="py-output">/a/b: 1</span>
+<span class="py-output">/a/b: 2</span>
+<span class="py-output">/a/b: 3</span></pre>
+<p>When calling the parser, you can specify all of these parameters. When 
+creating a parsing instance, you can specify all of these parameters except
+xml_input:</p><table class="fieldTable"><tr class="fieldStart"><td class="fieldName">Parameters</td><td class="fieldArg">xml_input</td><td>A string or file-like object that contains XML. (type: text or file-like object)</td></tr><tr><td></td><td class="fieldArg">encoding</td><td>The input's encoding. If not provided, this defaults to 'utf-8'. (type: text or None)</td></tr><tr><td></td><td class="fieldArg">expat</td><td>An expat parser class to use for parsing the XML input. If not provided, 
+this defaults to the expat parser in xml.parsers. (type: An expat parser class, or another parser class that supports the same 
+interface as expat.)</td></tr><tr><td></td><td class="fieldArg">process_namespaces</td><td>If True, namespaces in tags and attributes are converted to their full URL 
+value. If False (the default), the namespaces in tags and attributes are 
+left unchanged. (type: bool)</td></tr><tr><td></td><td class="fieldArg">namespace_separator</td><td>If process_namespaces is True, this specifies the separator that expat 
+should use between namespaces and identifiers in tags and attributes (type: text)</td></tr><tr><td></td><td class="fieldArg">xml_attribs</td><td>If True (the default), include XML attributes. If False, ignore them. (type: bool)</td></tr><tr><td></td><td class="fieldArg">strip_whitespace</td><td>If True (the default), strip whitespace at the start and end of CDATA. If 
+False, keep all whitespace. (type: bool)</td></tr><tr><td></td><td class="fieldArg">namespaces</td><td>A remapping for namespaces. If supplied, identifiers with a namespace 
+prefix will have their namespace prefix rewritten based on the dictionary. 
+The code will look for namespaces[current_namespace]. If found, 
+current_namespace will be replaced with the result of the lookup. (type: dict)</td></tr><tr><td></td><td class="fieldArg">strip_namespace</td><td>If True, the namespace prefix will be removed from all identifiers. If 
+False (the default), the namespace prefix will be retained. (type: bool)</td></tr><tr><td></td><td class="fieldArg">cdata_separator</td><td>When encountering "semi-structured" XML (where the XML has CDATA 
+and tags intermixed at the same level), the cdata_separator will be placed 
+between the different groups of CDATA. By default, the cdata_separator 
+parameter is '', which results in the CDATA groups being concatenated 
+without separator. (type: text)</td></tr><tr><td></td><td class="fieldArg">generator</td><td>A list of paths to match. If paths are provided here, the behavior of the 
+parser is changed. Instead of returning the root node of a parsed XML 
+hierarchy, the parser returns a generator object. On each call to the 
+generator object, it will return the next node that matches one of the 
+provided paths. (type: list of strings)</td></tr></table></div>
+      </div>
+
+      <div id="splitTables">
+        <table class="children sortable" id="id16">
+  
+  <tr class="method">
+    
+    <td>Method</td>
+    <td><a href="jxmlease.Parser.html#__init__" class="code">__init__</a></td>
+    <td><span>See class documentation.</span></td>
+  </tr><tr class="method">
+    
+    <td>Method</td>
+    <td><a href="jxmlease.Parser.html#__call__" class="code">__call__</a></td>
+    <td><span>See class documentation.</span></td>
+  </tr><tr class="method private">
+    
+    <td>Method</td>
+    <td><a href="jxmlease.Parser.html#_process_args" class="code">_process_args</a></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="method private">
+    
+    <td>Method</td>
+    <td><a href="jxmlease.Parser.html#_make_handler" class="code">_make_handler</a></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="method private">
+    
+    <td>Method</td>
+    <td><a href="jxmlease.Parser.html#_make_parser" class="code">_make_parser</a></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr><tr class="method private">
+    
+    <td>Method</td>
+    <td><a href="jxmlease.Parser.html#_parse_generator" class="code">_parse_generator</a></td>
+    <td><span class="undocumented">Undocumented</span></td>
+  </tr>
+</table>
+        
+
+          
+      </div>
+
+      <div id="childList">
+
+        <div class="function">
+  <a name="jxmlease.Parser.__init__">
+    
+  </a>
+  <a name="__init__">
+    
+  </a>
+  <div class="functionHeader">
+    
+    def
+    __init__(self, **kwargs):
+    
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>See class documentation.</p><table class="fieldTable"></table></div>
+  </div>
+</div><div class="function">
+  <a name="jxmlease.Parser._process_args">
+    
+  </a>
+  <a name="_process_args">
+    
+  </a>
+  <div class="functionHeader">
+    
+    def
+    _process_args(self, **kwargs):
+    
+  </div>
+  <div class="docstring functionBody">
+    
+    <div class="undocumented">Undocumented</div>
+  </div>
+</div><div class="function">
+  <a name="jxmlease.Parser._make_handler">
+    
+  </a>
+  <a name="_make_handler">
+    
+  </a>
+  <div class="functionHeader">
+    
+    def
+    _make_handler(self):
+    
+  </div>
+  <div class="docstring functionBody">
+    
+    <div class="undocumented">Undocumented</div>
+  </div>
+</div><div class="function">
+  <a name="jxmlease.Parser._make_parser">
+    
+  </a>
+  <a name="_make_parser">
+    
+  </a>
+  <div class="functionHeader">
+    
+    def
+    _make_parser(self):
+    
+  </div>
+  <div class="docstring functionBody">
+    
+    <div class="undocumented">Undocumented</div>
+  </div>
+</div><div class="function">
+  <a name="jxmlease.Parser._parse_generator">
+    
+  </a>
+  <a name="_parse_generator">
+    
+  </a>
+  <div class="functionHeader">
+    
+    def
+    _parse_generator(self, xml_input):
+    
+  </div>
+  <div class="docstring functionBody">
+    
+    <div class="undocumented">Undocumented</div>
+  </div>
+</div><div class="function">
+  <a name="jxmlease.Parser.__call__">
+    
+  </a>
+  <a name="__call__">
+    
+  </a>
+  <div class="functionHeader">
+    
+    def
+    __call__(self, xml_input, **kwargs):
+    
+  </div>
+  <div class="docstring functionBody">
+    
+    <div><p>See class documentation.</p><table class="fieldTable"></table></div>
+  </div>
+</div>
+
+      </div>
+      <address>
+        <a href="index.html">API Documentation</a> for jxmlease, generated by <a href="https://github.com/twisted/pydoctor/">pydoctor</a> at 2015-10-28 17:03:03.
+      </address>
+
+    </div>
+  </body>
+</html>
