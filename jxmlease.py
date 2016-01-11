@@ -1270,7 +1270,9 @@ class XMLNodeBase(XMLNodeMetaClass):
         @return: A generator which iterates over all matching nodes.
 
         """
-        return self._find_nodes_with_tag(tag, recursive=recursive,
+        if isinstance(tag, str):
+            tag = (tag,)
+        return self._find_nodes_with_tag(tuple(tag), recursive=recursive,
                                          top_level=True)
 
     def _find_nodes_with_tag(self, tag, recursive, top_level):
@@ -1368,7 +1370,7 @@ class XMLCDATANode(XMLNodeBase, _unicode):
             return newobj
 
     def _find_nodes_with_tag(self, tag, recursive=True, top_level=False):
-        if self.tag == tag and not top_level:
+        if self.tag in tag and not top_level:
             yield self
 
 def _get_dict_value_iter(arg, descr="node"):
@@ -1568,7 +1570,7 @@ class XMLListNode(XMLNodeBase, list):
             return newlist
 
     def _find_nodes_with_tag(self, tag, recursive=True, top_level=False):
-        if self.tag == tag and not top_level:
+        if self.tag in tag and not top_level:
             yield self
         elif recursive or top_level:
             for node in self:
@@ -1729,7 +1731,7 @@ class XMLDictNode(XMLNodeBase, OrderedDict):
         # Special case: If self._ignore_level is True, then we just
         # want to work on the children.
         pass_through = self._ignore_level or (self.tag is None and top_level)
-        if self.tag == tag and not pass_through and not top_level:
+        if self.tag in tag and not pass_through and not top_level:
             yield self
         elif recursive or top_level:
             for node in self.values():
