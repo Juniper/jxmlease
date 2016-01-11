@@ -1262,6 +1262,44 @@ class XMLNodeBase(XMLNodeMetaClass):
           ... 
           {u'c': {u'foo': u'bar', u'status': u'ok'}}
         
+        You can also use a tuple as the tag parameter, in which case
+        the method will return nodes with a tag that matches any of
+        the given tag values.
+        
+        You can use this function to create somewhat complicated logic
+        that mimics the functionality from XPath "//tag" matches. For
+        example, here we check for <xnm:warning> and <xnm:error> nodes
+        and return their value:
+          >>> root = jxmlease.parse(\"\"\"\
+          ... <foo>
+          ...   <xnm:warning>
+          ...     <message>This is bad.</message>
+          ...   </xnm:warning>
+          ...   <bar>
+          ...     <xnm:error>
+          ...       <message>This is very bad.</message>
+          ...     </xnm:error>
+          ...   </bar>
+          ... </foot>\"\"\")
+          >>> if root.has_node_with_tag(('xnm:warning', 'xnm:error')):
+          ...   print "Something bad happened."
+          ... 
+          Something bad happened.
+          >>> for node in root.find_nodes_with_tag(('xnm:warning', 'xnm:error')):
+          ...   if node.tag == 'xnm:error':
+          ...     level = "Error:"
+          ...   elif node.tag == 'xnm:warning':
+          ...     level = "Warning:"
+          ...   else:
+          ...     level = "Unknown:"
+          ...   print(level + " " + node.get("message", "(unknown)"))
+          ... 
+          Warning: This is bad.
+          Error: This is very bad.
+        
+        Once a given node matches, the method does not check that
+        node's children.
+        
         @type tag: text or tuple
         @param tag: The XML tag (or tags) for which to search.
         @type recursive: bool
