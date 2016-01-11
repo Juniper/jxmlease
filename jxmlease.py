@@ -1372,8 +1372,12 @@ class XMLListNode(XMLNodeBase, list):
                     node.standardize(deep=deep)
 
     def _emit_handler(self, content_handler, depth, pretty, newl, indent):
+        first_element = True
         for child in self:
+            if pretty and depth == 0 and not first_element:
+                content_handler.ignorableWhitespace(newl)
             child._emit_handler(content_handler, depth, pretty, newl, indent)
+            first_element = False
 
     def prettyprint(self, *args, **kwargs):
         currdepth = kwargs.pop("currdepth", 0)
@@ -1490,8 +1494,12 @@ class XMLDictNode(XMLNodeBase, OrderedDict):
         # Special case: If self._ignore_level is True, then we just want to
         # work on the children.
         if (self.tag is None and depth == 0) or self._ignore_level:
+            first_element = True
             for k in self:
+                if pretty and depth == 0 and not first_element:
+                    content_handler.ignorableWhitespace(newl)
                 self[k]._emit_handler(content_handler, depth, pretty, newl, indent)
+                first_element = False
             return
         if pretty:
             content_handler.ignorableWhitespace(depth * indent)
