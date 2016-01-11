@@ -1135,6 +1135,173 @@ class XMLNodeBase(XMLNodeMetaClass):
         """
         raise NotImplementedError()
 
+    def find_nodes_with_tag(self, tag, recursive=True):
+        """Iterates over nodes that have a matching tag.
+        
+        This method searches for a node that is a child of the current
+        node and has a matching tag. The tag of the current node is
+        not checked.
+        
+        For example, this will print all "name" nodes from the XML
+        snippet that is shown:
+          >>> root = jxmlease.parse(\"\"\"\
+          ... <?xml version="1.0" encoding="utf-8"?>
+          ... <name>
+          ...     <a>
+          ...         <name>name #1</name>
+          ...         <b>
+          ...             <name>name #2</name>
+          ...         </b>
+          ...         <b>
+          ...             <c>
+          ...                 <name>name #3</name>
+          ...             </c>
+          ...         </b>
+          ...     </a>
+          ... </name>\"\"\")
+          >>> print root
+          {u'name': {u'a': {u'b': [{u'name': u'name #2'},
+                                   {u'c': {u'name': u'name #3'}}],
+                            u'name': u'name #1'}}}
+          >>> for node in root.find_nodes_with_tag('name'):
+          ...   print node
+          ... 
+          name #1
+          name #2
+          name #3
+        
+        However, if we turn off recursion, you will see that this
+        returns only the direct children (if any) of the node we
+        select:
+          >>> for node in root.find_nodes_with_tag('name', recursive=False):
+          ...   print node
+          ... 
+          >>> for node in root['name']['a'].find_nodes_with_tag('name', recursive=False):
+          ...   print node
+          ... 
+          name #1
+
+        If you run this against an XMLDictNode without a tag (for
+        example, the tagless root node), then the command is run on
+        each member of the dictionary. The impact of this is that it
+        will search for tags in the grandchildren of the tagless
+        XMLDictNode, rather than searching the children of the tagless
+        XMLDictNode:
+          >>> root = jxmlease.parse("<name>top-level tag</name>")
+          >>> for i in root.find_nodes_with_tag('name'):
+          ...   print i
+          ... 
+          >>> root = jxmlease.parse(\"\"\"\
+          ... <a>
+          ...   <name>second-level tag</name>
+          ... </a>\"\"\")
+          >>> for i in root.find_nodes_with_tag('name'):
+          ...   print i
+          ... 
+          second-level tag
+        
+        If the current node is a list and it appears that the list was
+        created to hold multiple elements with the same tag, then the
+        command is run on each member of the list (rather than on the
+        list itself). The impact of this is that it will search for
+        tags in the grandchildren of the XMLListNode, rather
+        than searching the children of the XMLListNode.
+        
+        As confusing as this may sound, the point is simple: we never
+        check the tag of the "current" element. Because lists can be
+        homogenous or heterogenous, that statement is ambiguous for
+        lists. We resolve the ambiguity by comparing the tag stored
+        with the list and the tag of the children. :
+        
+        For example, here is a root node with two top-level "name"
+        elements. Searching for the "name" tag does not find these
+        top-level elements because both the top-level dictionary and
+        top-level list pass through the search:
+          >>> root = XMLDictNode()
+          >>> _ = root.add_node(tag='name', text='tag #1')
+          >>> _ = root.add_node(tag='name', text='tag #2')
+          >>> print root
+          {'name': [u'tag #1', u'tag #2']}
+          >>> for i in root.find_nodes_with_tag('name'):
+          ...   print i
+          ... 
+          >>>
+        
+        On the other hand, we create a root XMLListNode and add two
+        name tags to it. Because the XMLListNode has no internal
+        representation of its tag, it checks for matches in its
+        children. Note that you shouldn't really create XML trees this
+        way; rather, you should always have an XMLDictNode as the
+        root. However, this shows the concept:
+          >>> badroot = XMLListNode()
+          >>> badroot.append(XMLCDATANode('tag #1', tag='name'))
+          >>> badroot.append(XMLCDATANode('tag #2', tag='name'))
+          >>> print badroot
+          [u'tag #1', u'tag #2']
+          >>> print root.emit_xml()
+          <name>tag #1</name>
+          <name>tag #2</name>
+          >>> for i in badroot.find_nodes_with_tag('name'):
+          ...   print i
+          ... 
+          tag #1
+          tag #2
+
+        Also, note that this method returns the actual node:
+          >>> root = jxmlease.parse(\"\"\"\
+          ... <a>
+          ...   <b>
+          ...     <c>
+          ...       <foo>bar</foo>
+          ...       <status>ok</status>
+          ...     </c>
+          ...   </b>
+          ... </a>\"\"\")
+          >>> for i in root.find_nodes_with_tag('b'):
+          ...   print i
+          ... 
+          {u'c': {u'foo': u'bar', u'status': u'ok'}}
+        
+        @type tag: text or tuple
+        @param tag: The XML tag (or tags) for which to search.
+        @type recursive: bool
+        @param key: If True (the default), search recursively through
+            all children. If False, only search direct children.
+        @return: A generator which iterates over all matching nodes.
+
+        """
+        return self._find_nodes_with_tag(tag, recursive=recursive,
+                                         top_level=True)
+
+    def _find_nodes_with_tag(self, tag, recursive, top_level):
+        raise NotImplementedError()
+
+    def has_node_with_tag(self, tag, recursive=True):
+        """Determine whether a node with a matching tag exists.
+        
+        This method uses the L{find_nodes_with_tag} method to search
+        for a node that is a child of the current node and has a
+        matching tag. The tag of the current node is not checked. The
+        method returns a boolean value to indicate whether at least
+        one matching node is found.
+        
+        Because this function uses the L{find_nodes_with_tag} method,
+        the parameters and algorithm are the same as the
+        L{find_nodes_with_tag} method.
+        
+        @type tag: text or tuple
+        @param tag: The XML tag (or tags) for which to search.
+        @type recursive: bool
+        @param key: If True (the default), search recursively through
+            all children. If False, only search direct children.
+        @return: True if at least one matching node is found;
+            otherwise, False.
+
+        """
+        for node in self.find_nodes_with_tag(tag, recursive=recursive):
+            return True
+        return False
+
     def __repr__(self):
         return "%s(xml_attrs=%r, value=%s)" % (
             getattr(self, "__const_class_name__", self.__class__.__name__),
@@ -1200,6 +1367,9 @@ class XMLCDATANode(XMLNodeBase, _unicode):
         else:
             return newobj
 
+    def _find_nodes_with_tag(self, tag, recursive=True, top_level=False):
+        if self.tag == tag and not top_level:
+            yield self
 
 def _get_dict_value_iter(arg, descr="node"):
     if isinstance(arg, XMLDictNode):
@@ -1397,6 +1567,26 @@ class XMLListNode(XMLNodeBase, list):
         else:
             return newlist
 
+    def _find_nodes_with_tag(self, tag, recursive=True, top_level=False):
+        if self.tag == tag and not top_level:
+            yield self
+        elif recursive or top_level:
+            for node in self:
+                kwargs = {'recursive': recursive}
+
+                # If the list child has the same tag as the list, then
+                # assume that the list is an automatic list to group
+                # multiple items with the same tag. Therefore, run
+                # this function on the list child as if it were being
+                # run on the list itself.
+                #
+                # In this case, that means to pass on the top_level
+                # marker unchanged.
+                if node.tag == self.tag:
+                    kwargs['top_level'] = top_level
+                for item in node._find_nodes_with_tag(tag, **kwargs):
+                    yield item
+
 class XMLDictNode(XMLNodeBase, OrderedDict):
     def __init__(self, *args, **kwargs):
         self.__const_class_name__ = self.__class__.__name__
@@ -1532,6 +1722,23 @@ class XMLDictNode(XMLNodeBase, OrderedDict):
             pprint(newdict, *args, **kwargs)
         else:
             return newdict
+
+    def _find_nodes_with_tag(self, tag, recursive=True, top_level=False):
+        # Special case: If tag is None and top_level is True, then
+        # we might be the root container, which is tagless.
+        # Special case: If self._ignore_level is True, then we just
+        # want to work on the children.
+        pass_through = self._ignore_level or (self.tag is None and top_level)
+        if self.tag == tag and not pass_through and not top_level:
+            yield self
+        elif recursive or top_level:
+            for node in self.values():
+                kwargs = {'recursive': recursive}
+                # Pass through the top_level arg, if appropriate.
+                if pass_through:
+                    kwargs['top_level'] = top_level
+                for item in node._find_nodes_with_tag(tag, **kwargs):
+                    yield item
 
 class _GeneratorMatch(object):
     # Essentially, a data structure used to hold information on matches.
