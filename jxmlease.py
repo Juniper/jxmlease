@@ -2216,11 +2216,16 @@ class Parser(object):
 
                 # If the only error was parsing an empty document, ignore
                 # the error and return the empty dictionary.
-                if not (hasattr(expat, "errors") and
+                raise_error = True
+                if (hasattr(expat, "errors") and
                     hasattr(expat.errors, "XML_ERROR_NO_ELEMENTS") and
                     at_eof):
                     if str(e).startswith(expat.errors.XML_ERROR_NO_ELEMENTS + ":"):
-                        raise
+                        raise_error = False
+
+                # If needed, raise the error
+                if raise_error:
+                    raise
 
             if at_eof:
                 self._handler.end_document()
@@ -2269,10 +2274,15 @@ class Parser(object):
 
                 # If the only error was parsing an empty document, ignore
                 # the error and return the empty dictionary.
-                if not (hasattr(expat, "errors") and
+                raise_error = True
+                if (hasattr(expat, "errors") and
                     hasattr(expat.errors, "XML_ERROR_NO_ELEMENTS")):
                     if str(e).startswith(expat.errors.XML_ERROR_NO_ELEMENTS + ":"):
-                        raise
+                        raise_error = False
+
+                # If needed, raise the error
+                if raise_error:
+                    raise
 
         return self._handler.item
 
