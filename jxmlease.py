@@ -1360,8 +1360,16 @@ class XMLListNode(XMLNodeBase, list):
                         node = _unicode(node)
                     self[idx] = XMLCDATANode(node, **kwargs)
 
-            elif deep:
-                node.standardize(deep=deep)
+            else:
+                # Update the internal book-keeping entries that might
+                # need to be changed.
+                self._check_replacement()
+                if not (node.tag):
+                    node.tag = self.tag
+                node.key = self.key
+                node.parent = self
+                if deep:
+                    node.standardize(deep=deep)
 
     def _emit_handler(self, content_handler, depth, pretty, newl, indent):
         for child in self:
@@ -1411,6 +1419,8 @@ class XMLDictNode(XMLNodeBase, OrderedDict):
                 key = new_node.key
             else:
                 key = tag
+            if update:
+                new_node.tag = tag
 
         # Let's see if we already have an entry with this key. If so,
         # it needs to be a list.
@@ -1461,8 +1471,16 @@ class XMLDictNode(XMLNodeBase, OrderedDict):
                         node = _unicode(node)
                     self[k] = XMLCDATANode(node, **kwargs)
 
-            elif deep:
-                node.standardize(deep=deep)
+            else:
+                # Update the internal book-keeping entries that might
+                # need to be changed.
+                self._check_replacement()
+                if not node.tag:
+                    node.tag = k
+                node.key = k
+                node.parent = self
+                if deep:
+                    node.standardize(deep=deep)
 
     def _emit_handler(self, content_handler, depth, pretty, newl, indent):
         # Special case: If tag is None and depth is 0, then we might be the
