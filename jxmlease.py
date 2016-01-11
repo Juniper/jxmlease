@@ -1412,6 +1412,8 @@ class XMLDictNode(XMLNodeBase, OrderedDict):
             else:
                 key = tag
         else:
+            if not isinstance(new_node, XMLNodeBase):
+                raise TypeError("'new_node' argument must be a subclass of XMLNodeBase, not '%s'" % (type(new_node).__name__))
             if key:
                 if update:
                     new_node.key = (key)
