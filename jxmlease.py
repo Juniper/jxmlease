@@ -1138,9 +1138,11 @@ class XMLNodeBase(XMLNodeMetaClass):
     def find_nodes_with_tag(self, tag, recursive=True):
         """Iterates over nodes that have a matching tag.
         
-        This method searches for a node that is a child of the current
-        node and has a matching tag. The tag of the current node is
-        not checked.
+        This method searches for a node that is a descendant of the
+        current node and has a matching tag. Optionally (by providing
+        a False argument to the recursive parameter), you can limit
+        the search to direct children of the current node. In either
+        case, the tag of the current node is not checked.
         
         For example, this will print all "name" nodes from the XML
         snippet that is shown:
