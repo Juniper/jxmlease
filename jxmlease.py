@@ -1138,6 +1138,10 @@ class XMLNodeBase(XMLNodeMetaClass):
     def find_nodes_with_tag(self, tag, recursive=True):
         """Iterates over nodes that have a matching tag.
         
+        NOTE: This documentation needs to be updated to take into
+        account the changes to list handling and always checking the
+        current node's tag.
+        
         This method searches for a node that is a descendant of the
         current node and has a matching tag. Optionally (by providing
         a False argument to the recursive parameter), you can limit
@@ -1410,7 +1414,7 @@ class XMLCDATANode(XMLNodeBase, _unicode):
             return newobj
 
     def _find_nodes_with_tag(self, tag, recursive=True, top_level=False):
-        if self.tag in tag and not top_level:
+        if self.tag in tag:
             yield self
 
 def _get_dict_value_iter(arg, descr="node"):
@@ -1610,24 +1614,24 @@ class XMLListNode(XMLNodeBase, list):
             return newlist
 
     def _find_nodes_with_tag(self, tag, recursive=True, top_level=False):
-        if self.tag in tag and not top_level:
-            yield self
-        elif recursive or top_level:
-            for node in self:
-                kwargs = {'recursive': recursive}
+        # Never return a list; only its descendants. When code calls
+        # this method on a list, always call it for all the list
+        # children.
+        for node in self:
+            kwargs = {'recursive': recursive}
 
-                # If the list child has the same tag as the list, then
-                # assume that the list is an automatic list to group
-                # multiple items with the same tag. Therefore, run
-                # this function on the list child as if it were being
-                # run on the list itself.
-                #
-                # In this case, that means to pass on the top_level
-                # marker unchanged.
-                if node.tag == self.tag:
-                    kwargs['top_level'] = top_level
-                for item in node._find_nodes_with_tag(tag, **kwargs):
-                    yield item
+            # If the list child has the same tag as the list, then
+            # assume that the list is an automatic list to group
+            # multiple items with the same tag. Therefore, run
+            # this function on the list child as if it were being
+            # run on the list itself.
+            #
+            # In this case, that means to pass on the top_level
+            # marker unchanged.
+            if node.tag == self.tag:
+                kwargs['top_level'] = top_level
+            for item in node._find_nodes_with_tag(tag, **kwargs):
+                yield item
 
 class XMLDictNode(XMLNodeBase, OrderedDict):
     def __init__(self, *args, **kwargs):
@@ -1771,7 +1775,7 @@ class XMLDictNode(XMLNodeBase, OrderedDict):
         # Special case: If self._ignore_level is True, then we just
         # want to work on the children.
         pass_through = self._ignore_level or (self.tag is None and top_level)
-        if self.tag in tag and not pass_through and not top_level:
+        if self.tag in tag and not pass_through:
             yield self
         elif recursive or top_level:
             for node in self.values():
