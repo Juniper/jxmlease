@@ -5,19 +5,21 @@
 # Copyright (C) 2012 Martin Blech and individual contributors.
 #
 # See the LICENSE file for further information.
-"""Converts XML to intelligent Python data structures, and converts Python data structures to XML.
+"""jxmlease converts between XML and intelligent Python data structures.
 
-For a quick start, you can use the L{parse} method to convert a
-block of XML to a Python data structure. (This example uses the
-L{XMLDictNode.prettyprint} method to display the data.)
+For a quick start, you can use the :py:meth:`parse` method to convert a
+block of XML to a Python data structure. This example parses ``xml`` and uses
+the :py:meth:`XMLDictNode.prettyprint` method to display the result::
+
     >>> xml = "<a><b><c>foo</c><c>bar</c></b></a>"
     >>> parse(xml).prettyprint()
     {u'a': {u'b': {u'c': [u'foo', u'bar']}}}
 
-Or, you can use the L{XMLDictNode} class to convert a Python data
-structure to an intelligent XML data structure. You can convert
-these data structures to XML using the L{XMLNodeBase.emit_xml}
-method.
+Or, you can use the :py:class:`XMLDictNode` class to convert a Python data
+structure to an intelligent XML data structure. The following example creates an
+:py:obj:`XMLDictNode` object from ``data_structure`` and outputs the resulting
+XML using the :py:meth:`XMLNodeBase.emit_xml` method::
+
     >>> data_structure = {u'a': {u'b': {u'c': [u'foo', u'bar']}}}
     >>> print XMLDictNode(data_structure).emit_xml()
     <?xml version="1.0" encoding="utf-8"?>
@@ -27,6 +29,7 @@ method.
             <c>bar</c>
         </b>
     </a>
+
 """
 
 import sys
@@ -186,74 +189,73 @@ class _XMLNodeMetaClass(type):
             object should be initialized. All other parameters must be
             given as keywords.
             
-            Normally, the user can simply run this as:
-              >>> node = %s(initializer)
+            Normally, the user can simply run this as::
+
+                >>> node = %s(initializer)
             
-            In fact, the best way to use this is:
-              >>> root = XMLDictNode({'root': {'branch': { 'leaf': 'a'}}})
+            In fact, the best way to use this is::
+
+                >>> root = XMLDictNode({'root': {'branch': { 'leaf': 'a'}}})
             
             That will set all the tags, keys, etc. correctly. However,
             if you really want to customize a node, there are other
             parameters available. Note that these parameters only
-            impact I{this} node and descendants. They don't actually
+            impact *this* node and descendants. They don't actually
             add the node to a tree. Therefore, their use is
-            discouraged. Instead, you can probably use the L{add_node}
+            discouraged. Instead, you can probably use the :py:meth:`add_node`
             method to build your tree correctly.
             
             The one exception to this general rule is when adding a
             hunk of a tree. For example, assume you currently have this XML
-            structure: ::
-              <a>
-                <b>
-                  <node1>a</node1>
-                </b>
-              </a>
-            
-            And, assume you want to add another node "b" to create
-            this XML structure: ::
-              <a>
-                <b>
-                  <node1>a</node1>
-                </b>
-                <b>
-                  <node2>b</node1>
-                </b>
-              </a>
-            
-            In that case, you might do something like this:
-              >>> root.prettyprint()
-              {u'a': {u'b': {u'node1': u'a'}}}
-              >>> new_b = {'node2': 'b'}
-              >>> new_b = XMLDictNode(new_b, tag="b")
-              >>> _ = root['a'].add_node(tag="b", new_node=new_b)
-              >>> root.prettyprint()
-              {u'a': {u'b': [{u'node1': u'a'}, {'node2': u'b'}]}}
-            
-            And, you can print the XML to prove it is formatted
-            correctly:
-              >>> print root.emit_xml()
-              <?xml version="1.0" encoding="utf-8"?>
-              <a>
+            structure::
+
+                <a>
                   <b>
-                      <node1>a</node1>
+                    <node1>a</node1>
+                  </b>
+                </a>
+            
+            And, assume you want to add another node ``b`` to create this
+            XML structure::
+
+                <a>
+                  <b>
+                    <node1>a</node1>
                   </b>
                   <b>
-                      <node2>b</node2>
+                    <node2>b</node1>
                   </b>
-              </a>
+                </a>
             
-            User-supplied parameters:
-              @type initializer: (as appropriate for node)
-              @param initializer: The initial value for the node.
-              
-              @type tag: text
-              @param tag: The XML tag for this node.
-              
-              @type key: text or tuple
-              @param key: The dictionary key used for this node.
-              
-              @type xml_attrs: dict
-              @param xml_attrs: The XML attributes for the node.
+            In that case, you might do something like this::
+
+                >>> root.prettyprint()
+                {u'a': {u'b': {u'node1': u'a'}}}
+                >>> new_b = {'node2': 'b'}
+                >>> new_b = XMLDictNode(new_b, tag="b")
+                >>> _ = root['a'].add_node(tag="b", new_node=new_b)
+                >>> root.prettyprint()
+                {u'a': {u'b': [{u'node1': u'a'}, {'node2': u'b'}]}}
+            
+            And, you can print the XML to prove it is formatted correctly::
+
+                >>> print root.emit_xml()
+                <?xml version="1.0" encoding="utf-8"?>
+                <a>
+                    <b>
+                        <node1>a</node1>
+                    </b>
+                    <b>
+                        <node2>b</node2>
+                    </b>
+                </a>
+            
+            Args:
+                initializer (as appropriate for node): The initial value for
+                    the node.
+                tag (string): The XML tag for this node.
+                key (text or tuple): The dictionary key used for this node.
+                xml_attrs (dict): The XML attributes for the node.
               
               @type text: text
               @param text: The node's initial CDATA value. (Note
@@ -1974,23 +1976,24 @@ class _DictSAXHandler(object):
 class Parser(object):
     """Creates Python data structures from raw XML.
     
-    This class returns a callable object. You can provide parameters at
-    the class creation time. These parameters modify the default
-    parameters for the parser. When you call the callable object to
-    parse a document, you can supply additional parameters to override
-    the default values.
-    
-    General usage is like this:
-      >>> myparser = Parser()
-      >>> root = myparser("<a>foo</a>")
-    
-    Parsing
-    =======
-      In general, this returns an L{XMLDictNode} containing the parsed
-      XML tree.
-      
-      In this example, root is an L{XMLDictNode} which contains a
-      representation of the XML you parsed:
+    This class creates a callable object used to parse XML into Python data
+    structures. You can provide optional parameters at the class creation time.
+    These parameters modify the default behavior of the parser. When you invoke 
+    the callable object to parse a document, you can supply additional
+    parameters to override the values specified when the :py:class:`Parser`
+    object was created.
+
+    General usage is::
+
+        >>> myparser = Parser()
+        >>> root = myparser("<a>foo</a>")
+
+    Calling a :py:class:`Parser` object returns an :py:class:`XMLDictNode`
+    containing the parsed XML tree.
+
+    In this example, ``root`` is an :py:class:`XMLDictNode` which contains a
+    representation of the parsed XML::
+
         >>> isinstance(root, XMLDictNode)
         True
         >>> root.prettyprint()
@@ -1999,132 +2002,116 @@ class Parser(object):
         <?xml version="1.0" encoding="utf-8"?>
         <a>foo</a>
 
-      Single-invocation Parsing
-      -------------------------
-        If you will just be using a parser once, you can just use the
-        L{parse} method, which is a shortcut way of creating a Parser
-        class and calling it all in one call. You can provide the same
-        arguments to the L{parse} method that you can provide to the
-        L{Parser} class.
+    If you will just be using a parser once, you can just use the
+    :py:meth:`parse` method, which is a shortcut way of creating a
+    :py:class:`Parser` class and calling it all in one call. You can provide
+    the same arguments to the :py:meth:`parse` method that you provide to the
+    :py:class:`Parser` class.
         
-        For example:
+    For example::
+
           >>> root = jxmlease.parse('<a x="y"><b>1</b><b>2</b><b>3</b></a>')
           >>> root.prettyprint()
           {u'a': {u'b': [u'1', u'2', u'3']}}
 
-      Generators
-      ----------
-        It is possible to call this as a generator by specifying the
-        "generator" parameter. The "generator" parameter contains a
-        list of paths to match. If paths are provided in this parameter,
-        the behavior of the parser is changed. Instead of
-        returning the root node of a parsed XML hierarchy, the
-        parser returns a generator object. On each call to the
-        generator object, it will return the next node that matches
-        one of the provided paths.
+    It is possible to call a :py:class:`Parser` object as a generator by
+    specifying the :py:attr:`generator` parameter. The :py:attr:`generator`
+    parameter contains a list of paths to match. If paths are provided in this
+    parameter, the behavior of the parser is changed. Instead of returning the
+    root node of a parsed XML hierarchy, the parser returns a generator object.
+    On each call to the generator object, it will return the next node that
+    matches one of the provided paths.
         
-        Paths are provided in a format similar to XPath
-        expressions. For example, "/a/b" will match node <b> in this
-        XML: ::
-          <a>
+    Paths are provided in a format similar to XPath expressions. For example,
+    ``/a/b`` will match node ``<b>`` in this XML::
+
+        <a>
             <b/>
-          </a>
+        </a>
 
-        If a path begins with a "/", it must exactly match the full
-        path to a node. If a path does not begin with a "/", it must
-        exactly match the "right side" of the path to a node. For
-        example, consider this XML: ::
-          <a>
+    If a path begins with a ``/``, it must exactly match the full path to a
+    node. If a path does not begin with a ``/``, it must exactly match the
+    "right side" of the path to a node. For example, consider this XML::
+
+        <a>
             <b>
-              <c/>
+                <c/>
             </b>
-          </a>
+        </a>
 
-        In this example, "/a/b/c", "c", "b/c", and "a/b/c" all match
-        the <c> node.
+    In this example, ``/a/b/c``, ``c``, ``b/c``, and ``a/b/c`` all match the
+    ``<c>`` node.
         
-        For each match, the generator returns a tuple of (path,
-        match_string, xml_node), where the "path" is the calculated
-        absolute path to the matching node, "match_string" is the
-        user-supplied match string that triggered the match, and
-        "xml_node" is the object representing that node (an instance
-        of a L{XMLNodeBase} subclass).
+    For each match, the generator returns a tuple of:
+    ``(path,match_string,xml_node)``, where the *path* is
+    the calculated absolute path to the matching node, *match_string* is the
+    user-supplied match string that triggered the match, and *xml_node* is the
+    object representing that node (an instance of a :py:class:`XMLNodeBase`
+    subclass).
         
-        For example:
-          >>> xml = '<a x="y"><b>1</b><b>2</b><b>3</b></a>'
-          >>> myparser = Parser(generator=["/a/b"])
-          >>> for (path, match, value) in myparser(xml):
-          ...   print "%s: %s" % (path, value)
-          ...
-          /a/b: 1
-          /a/b: 2
-          /a/b: 3
-    
-    When calling the parser, you can specify all of these
-    parameters. When creating a parsing instance, you can specify
-    all of these parameters except xml_input:
+    For example::
 
-      @type xml_input: text or file-like object
-      @param xml_input: A string or file-like object that contains XML.
+        >>> xml = '<a x="y"><b>1</b><b>2</b><b>3</b></a>'
+        >>> myparser = Parser(generator=["/a/b"])
+        >>> for (path, match, value) in myparser(xml):
+        ...   print "%s: %s" % (path, value)
+        ...
+        /a/b: 1
+        /a/b: 2
+        /a/b: 3
     
-      @type encoding: text or None
-      @param encoding: The input's encoding. If not provided, this
-          defaults to 'utf-8'.
-      
-      @type expat: An expat parser class, or another parser class that
-          supports the same interface as expat.
-      @param expat: An expat parser class to use for parsing the XML
-          input. If not provided, this defaults to the expat parser in
-          xml.parsers.
-      
-      @type process_namespaces: bool
-      @param process_namespaces: If True, namespaces in tags and
-          attributes are converted to their full URL value. If False
-          (the default), the namespaces in tags and attributes are
-          left unchanged.
-      
-      @type namespace_separator: text
-      @param namespace_separator: If process_namespaces is True, this
-          specifies the separator that expat should use between namespaces
-          and identifiers in tags and attributes
-      
-      @type xml_attribs: bool
-      @param xml_attribs: If True (the default), include XML
-          attributes. If False, ignore them.
-      
-      @type strip_whitespace: bool
-      @param strip_whitespace: If True (the default), strip whitespace
-          at the start and end of CDATA. If False, keep all
-          whitespace.
-      
-      @type namespaces: dict
-      @param namespaces: A remapping for namespaces. If supplied,
-          identifiers with a namespace prefix will have their
-          namespace prefix rewritten based on the dictionary. The
-          code will look for namespaces[current_namespace]. If found,
-          current_namespace will be replaced with the result of the
-          lookup.
-      
-      @type strip_namespace: bool
-      @param strip_namespace: If True, the namespace prefix will be
-          removed from all identifiers. If False (the default), the
-          namespace prefix will be retained.
-      
-      @type cdata_separator: text
-      @param cdata_separator: When encountering "semi-structured" XML
-          (where the XML has CDATA and tags intermixed at the same
-          level), the cdata_separator will be placed between the
-          different groups of CDATA. By default, the cdata_separator
-          parameter is '', which results in the CDATA groups being
-          concatenated without separator.
-      
-      @type generator: list of strings
-      @param generator: A list of paths to match. If paths are provided
-          here, the behavior of the parser is changed. Instead of
-          returning the root node of a parsed XML hierarchy, the
-          parser returns a generator object. On each call to the
-          generator object, it will return the next node that matches
-          one of the provided paths.
+    When calling the parser, you can specify all of these parameters. When
+    creating a parsing instance, you can specify all of these parameters
+    except :py:attr:`xml_input`:
+
+    Args:
+	xml_input (stirng or file-like object): Ccontains the XML to parse.
+	encoding (string or None): The input's encoding. If not provided, this
+            defaults to 'utf-8'.
+        expat (An expat, or equivalent, parser class): Used for parsing the XML
+            input. If not provided, defaults to the expat parser in
+            :py:data:`xml.parsers`.
+        process_namespaces (bool): If True, namespaces in tags and attributes
+            are converted to their full URL value. If False (the default), the
+            namespaces in tags and attributes are left unchanged.
+	namespace_separator (string): If :py:attr:`process_namespaces` is True,
+            this specifies the separator that expat should use between
+            namespaces and identifiers in tags and attributes
+	xml_attribs (bool): If True (the default), include XML attributes.
+            If False, ignore them.
+        strip_whitespace (bool): If True (the default), strip whitespace
+            at the start and end of CDATA. If False, keep all whitespace.
+        namespaces (dict): A remapping for namespaces. If supplied, identifiers
+            with a namespace prefix will have their namespace prefix rewritten
+            based on the dictionary. The code will look for
+            :py:attr:`namespaces[current_namespace]`. If found,
+            :py:obj:`current_namespace` will be replaced with the result of
+            the lookup.
+        strip_namespace (bool): If True, the namespace prefix will be
+            removed from all identifiers. If False (the default), the namespace
+            prefix will be retained.
+        cdata_separator (string): When encountering "semi-structured" XML
+            (where the XML has CDATA and tags intermixed at the same level), the
+            :py:attr:`cdata_separator` will be placed between the different
+            groups of CDATA. By default, the :py:attr:`cdata_separator`
+            parameter is '', which results in the CDATA groups being
+            concatenated without separator.
+        generator (list of strings): A list of paths to match. If paths are
+            provided here, the behavior of the parser is changed. Instead of
+            returning the root node of a parsed XML hierarchy, the parser
+            returns a :py:obj:`generator` object. On each call to the
+            :py:obj:`generator` object, it will return the next node that
+            matches one of the provided paths.
+
+    Returns:
+        A callable instance of the :py:class:`Parser` class.
+
+        Calling a :py:class:`Parser` object returns an :py:class:`XMLDictNode`
+        containing the parsed XML tree.
+
+        Alternatively, if the :py:attr:`generator` parameter is specified, a 
+        :py:obj:`generator` object is returned.
+
     """
 
     def __init__(self, **kwargs):
@@ -2295,7 +2282,7 @@ class Parser(object):
 def parse(xml_input, **kwargs):
     """Create Python data structures from raw XML.
     
-    See the L{Parser} class documentation."""
+    See the :py:class:`Parser` class documentation."""
     return Parser(**kwargs)(xml_input)
 
 if etree:
@@ -2319,45 +2306,41 @@ if etree:
         parse a document, you can supply additional parameters to override
         the default values.
     
-        General usage is like this:
-          >>> myparser = Parser()
-          >>> root = myparser(etree_root)
+        General usage is like this::
+
+            >>> myparser = Parser()
+            >>> root = myparser(etree_root)
         
-        For detailed usage information, please see the L{Parser}
+        For detailed usage information, please see the :py:class`Parser`
         class. Other than the differences noted below, the behavior of
         the two classes should be the same.
         
-        Namespace Identifiers
-        =====================
-          In certain versions of ElementTree, the original
-          namespace identifiers are not maintained. In these cases, the
-          class will recreate namespace identfiers to represent the
-          original namespaces. It will add appropriate xmlns attributes
-          to maintain the original namespace mapping. However, the
-          actual identifier will be lost. As best I can tell, this is a
-          bug with ElementTree, rather than this code. To avoid this
-          problem, use LXML.
+        Namespace Identifiers:
 
-        Single-invocation Parsing
-        =========================
-          If you will just be using a parser once, you can just use
-          the L{parse_etree} method, which is a shortcut way of
-          creating a EtreeParser class and calling it all in one call. You
-          can provide the same arguments to the L{parse_etree} method that you
-          can provide to the EtreeParser class.
+        In certain versions of :py:mod:`ElementTree`, the original namespace
+        identifiers are not maintained. In these cases, the class will recreate
+        namespace identfiers to represent the original namespaces. It will add
+        appropriate xmlns attributes to maintain the original namespace
+        mapping. However, the actual identifier will be lost. As best I can
+        tell, this is a bug with :py:mod:`ElementTree`, rather than this code.
+        To avoid this problem, use :py:mod:`lxml`.
 
-        Parameters
-        ==========
-          As compared to the L{Parser} class, the EtreeParser class does
-          not accept the xml_input, expat, or encoding parameters.
+        Single-invocation Parsing:
+
+        If you will just be using a parser once, you can just use the
+        :py:meth:`parse_etree` method, which is a shortcut way of creating a
+        :py:class:`EtreeParser` class and calling it all in one call. You
+        can provide the same arguments to the :py:meth:`parse_etree` method
+        that you can provide to the :py:class:`EtreeParser` class.
+
+        Args:
+            etree_root (ElementTree): An ElementTree object representing the
+                tree you wish to parse.
+
+        Also accepts most of the same arguments as the :py:class:`Parser` class.
+        However, it does not accept the :py:attr:`xml_input`, :py:attr:`expat`,
+        or :py:attr:`encoding` parameters.
         
-          Instead of the xml_input paramter, it accepts the etree_root
-          parameter. (See below.)
-
-        @type etree_root: ElementTree
-        @param etree_root: An ElementTree object representing the
-            tree you wish to parse.
-
         """
     
         def __init__(self, **kwargs):
@@ -2658,5 +2641,5 @@ if etree:
     def parse_etree(etree_root, **kwargs):
         """Create Python data structures from an ElementTree object.
     
-        See the L{EtreeParser} class documentation."""
+        See the py:class:`EtreeParser` class documentation."""
         return EtreeParser(**kwargs)(etree_root)

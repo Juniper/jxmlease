@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>jxmlease Version: 0.0.1 &mdash; jxmlease 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="jxmlease 0.0.1 documentation" href="#" />
+    <link rel="next" title="Installation" href="install.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="jxmlease-version-version">
+<h1><a class="reference internal" href="#module-jxmlease" title="jxmlease"><code class="xref py py-mod docutils literal"><span class="pre">jxmlease</span></code></a> Version: 0.0.1<a class="headerlink" href="#jxmlease-version-version" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-jxmlease">
+<span id="welcome"></span><h2>Welcome<a class="headerlink" href="#module-jxmlease" title="Permalink to this headline">¶</a></h2>
+<p>jxmlease converts between XML and intelligent Python data structures.</p>
+<p>For a quick start, you can use the <a class="reference internal" href="parsing.html#jxmlease.parse" title="jxmlease.parse"><code class="xref py py-meth docutils literal"><span class="pre">parse()</span></code></a> method to convert a
+block of XML to a Python data structure. This example parses <code class="docutils literal"><span class="pre">xml</span></code> and uses
+the <a class="reference internal" href="objects.html#jxmlease.XMLDictNode.prettyprint" title="jxmlease.XMLDictNode.prettyprint"><code class="xref py py-meth docutils literal"><span class="pre">XMLDictNode.prettyprint()</span></code></a> method to display the result:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xml</span> <span class="o">=</span> <span class="s2">&quot;&lt;a&gt;&lt;b&gt;&lt;c&gt;foo&lt;/c&gt;&lt;c&gt;bar&lt;/c&gt;&lt;/b&gt;&lt;/a&gt;&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parse</span><span class="p">(</span><span class="n">xml</span><span class="p">)</span><span class="o">.</span><span class="n">prettyprint</span><span class="p">()</span>
+<span class="go">{u&#39;a&#39;: {u&#39;b&#39;: {u&#39;c&#39;: [u&#39;foo&#39;, u&#39;bar&#39;]}}}</span>
+</pre></div>
+</div>
+<p>Or, you can use the <a class="reference internal" href="objects.html#jxmlease.XMLDictNode" title="jxmlease.XMLDictNode"><code class="xref py py-class docutils literal"><span class="pre">XMLDictNode</span></code></a> class to convert a Python data
+structure to an intelligent XML data structure. The following example creates an
+<a class="reference internal" href="objects.html#jxmlease.XMLDictNode" title="jxmlease.XMLDictNode"><code class="xref py py-obj docutils literal"><span class="pre">XMLDictNode</span></code></a> object from <code class="docutils literal"><span class="pre">data_structure</span></code> and outputs the resulting
+XML using the <code class="xref py py-meth docutils literal"><span class="pre">XMLNodeBase.emit_xml()</span></code> method:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data_structure</span> <span class="o">=</span> <span class="p">{</span><span class="s1">u&#39;a&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">u&#39;b&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">u&#39;c&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">u&#39;foo&#39;</span><span class="p">,</span> <span class="s1">u&#39;bar&#39;</span><span class="p">]}}}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">XMLDictNode</span><span class="p">(</span><span class="n">data_structure</span><span class="p">)</span><span class="o">.</span><span class="n">emit_xml</span><span class="p">()</span>
+<span class="go">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="go">&lt;a&gt;</span>
+<span class="go">    &lt;b&gt;</span>
+<span class="go">        &lt;c&gt;foo&lt;/c&gt;</span>
+<span class="go">        &lt;c&gt;bar&lt;/c&gt;</span>
+<span class="go">    &lt;/b&gt;</span>
+<span class="go">&lt;/a&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound" id="mastertoc">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parsing.html">Parsing XML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="objects.html">Ojbects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iteration.html">Iteration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">Producing XML Output</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/juniper_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><code class="docutils literal"><span class="pre">jxmlease</span></code> Version: 0.0.1</a><ul>
+<li><a class="reference internal" href="#module-jxmlease">Welcome</a></li>
+<li><a class="reference internal" href="#documentation">Documentation</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="install.html" title="next chapter">Installation</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Juniper Networks.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
