@@ -1,0 +1,7 @@
+# Copyright (c) 2016, Juniper Networks, Inc.
+# All rights reserved.
+#
+include LICENSE
+include README*
+recursive-include docs *
+include tests/*.py
