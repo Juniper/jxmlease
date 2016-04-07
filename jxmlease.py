@@ -1,23 +1,25 @@
 #!/usr/bin/env python
-# Copyright (c) 2015, Juniper Networks, Inc.
+# Copyright (c) 2015-2016, Juniper Networks, Inc.
 # All rights reserved.
 #
 # Copyright (C) 2012 Martin Blech and individual contributors.
 #
 # See the LICENSE file for further information.
-"""Converts XML to intelligent Python data structures, and converts Python data structures to XML.
+"""jxmlease converts between XML and intelligent Python data structures.
 
-For a quick start, you can use the L{parse} method to convert a
-block of XML to a Python data structure. (This example uses the
-L{XMLDictNode.prettyprint} method to display the data.)
+For a quick start, you can use the :py:meth:`parse` method to convert a
+block of XML to a Python data structure. This example parses ``xml`` and uses
+the :py:meth:`XMLDictNode.prettyprint` method to display the result::
+
     >>> xml = "<a><b><c>foo</c><c>bar</c></b></a>"
     >>> parse(xml).prettyprint()
     {u'a': {u'b': {u'c': [u'foo', u'bar']}}}
 
-Or, you can use the L{XMLDictNode} class to convert a Python data
-structure to an intelligent XML data structure. You can convert
-these data structures to XML using the L{XMLNodeBase.emit_xml}
-method.
+Or, you can use the :py:class:`XMLDictNode` class to convert a Python data
+structure to an intelligent XML data structure. The following example creates an
+:py:obj:`XMLDictNode` object from ``data_structure`` and outputs the resulting
+XML using the :py:meth:`XMLNodeBase.emit_xml` method::
+
     >>> data_structure = {u'a': {u'b': {u'c': [u'foo', u'bar']}}}
     >>> print XMLDictNode(data_structure).emit_xml()
     <?xml version="1.0" encoding="utf-8"?>
@@ -27,6 +29,7 @@ method.
             <c>bar</c>
         </b>
     </a>
+
 """
 
 import sys
@@ -124,7 +127,7 @@ parser_defaults = {}
 
 
 __author__ = 'Jonathan Looney'
-__version__ = '0.0.1'
+__version__ = '1.0a1'
 __license__ = 'MIT'
 
 class _NoArg():
@@ -186,92 +189,83 @@ class _XMLNodeMetaClass(type):
             object should be initialized. All other parameters must be
             given as keywords.
             
-            Normally, the user can simply run this as:
-              >>> node = %s(initializer)
+            Normally, the user can simply run this as::
+
+                >>> node = %s(initializer)
             
-            In fact, the best way to use this is:
-              >>> root = XMLDictNode({'root': {'branch': { 'leaf': 'a'}}})
+            In fact, the best way to use this is::
+
+                >>> root = XMLDictNode({'root': {'branch': { 'leaf': 'a'}}})
             
             That will set all the tags, keys, etc. correctly. However,
             if you really want to customize a node, there are other
             parameters available. Note that these parameters only
-            impact I{this} node and descendants. They don't actually
+            impact *this* node and descendants. They don't actually
             add the node to a tree. Therefore, their use is
-            discouraged. Instead, you can probably use the L{add_node}
+            discouraged. Instead, you can probably use the :py:meth:`add_node`
             method to build your tree correctly.
             
             The one exception to this general rule is when adding a
             hunk of a tree. For example, assume you currently have this XML
-            structure: ::
-              <a>
-                <b>
-                  <node1>a</node1>
-                </b>
-              </a>
-            
-            And, assume you want to add another node "b" to create
-            this XML structure: ::
-              <a>
-                <b>
-                  <node1>a</node1>
-                </b>
-                <b>
-                  <node2>b</node1>
-                </b>
-              </a>
-            
-            In that case, you might do something like this:
-              >>> root.prettyprint()
-              {u'a': {u'b': {u'node1': u'a'}}}
-              >>> new_b = {'node2': 'b'}
-              >>> new_b = XMLDictNode(new_b, tag="b")
-              >>> _ = root['a'].add_node(tag="b", new_node=new_b)
-              >>> root.prettyprint()
-              {u'a': {u'b': [{u'node1': u'a'}, {'node2': u'b'}]}}
-            
-            And, you can print the XML to prove it is formatted
-            correctly:
-              >>> print root.emit_xml()
-              <?xml version="1.0" encoding="utf-8"?>
-              <a>
+            structure::
+
+                <a>
                   <b>
-                      <node1>a</node1>
+                    <node1>a</node1>
+                  </b>
+                </a>
+            
+            And, assume you want to add another node ``b`` to create this
+            XML structure::
+
+                <a>
+                  <b>
+                    <node1>a</node1>
                   </b>
                   <b>
-                      <node2>b</node2>
+                    <node2>b</node1>
                   </b>
-              </a>
+                </a>
             
-            User-supplied parameters:
-              @type initializer: (as appropriate for node)
-              @param initializer: The initial value for the node.
-              
-              @type tag: text
-              @param tag: The XML tag for this node.
-              
-              @type key: text or tuple
-              @param key: The dictionary key used for this node.
-              
-              @type xml_attrs: dict
-              @param xml_attrs: The XML attributes for the node.
-              
-              @type text: text
-              @param text: The node's initial CDATA value. (Note
-                  that this is ignored for XMLCDATANode objects.)
-              
-              @type parent: An instance of a sub-class of L{XMLNodeBase}
-              @param parent: A reference to the object's parent
-                  node in the data structure.
-              
-              @type convert: bool
-              @param convert: If True, the L{convert} method is run on
-                  the object's children during object initialization.
-              
-              @type deep: bool
-              @param deep: If True (and the convert parameter is
-                  True), the L{convert} method is run recursively
-                  on the object's children during object initialization.
-            """ % (name,name)
+            In that case, you might do something like this::
+
+                >>> root.prettyprint()
+                {u'a': {u'b': {u'node1': u'a'}}}
+                >>> new_b = {'node2': 'b'}
+                >>> new_b = XMLDictNode(new_b, tag="b")
+                >>> _ = root['a'].add_node(tag="b", new_node=new_b)
+                >>> root.prettyprint()
+                {u'a': {u'b': [{u'node1': u'a'}, {'node2': u'b'}]}}
+            
+            And, you can print the XML to prove it is formatted correctly::
+
+                >>> print root.emit_xml()
+                <?xml version="1.0" encoding="utf-8"?>
+                <a>
+                    <b>
+                        <node1>a</node1>
+                    </b>
+                    <b>
+                        <node2>b</node2>
+                    </b>
+                </a>
+            
+            Args:
+                initializer (as appropriate for node): The initial value for
+                    the node.
+                tag (string): The XML tag for this node.
+                key (string or tuple): The dictionary key used for this node.
+                xml_attrs (dict): The XML attributes for the node.
+                text (string): The node's initial CDATA value. (Note
+                    that this is ignored for :py:class:`XMLCDATANode` objects.)
+                parent (Instance of a sub-class of :py:class:`XMLNodeBase`): A
+                    reference to the object's parent node in the data structure.
+                convert (bool): If True, the :py:meth:`convert` method is run on
+                    the object's children during object initialization.
+                deep (bool): If True (and the :py:obj:`convert` parameter is
+                    True), the :py:meth:`convert` method is run recursively
+                    on the object's children during object initialization.
+            """ % (name, name)
         # Create and return the class.
         return type.__new__(cls, name, bases, dict)
 
@@ -281,7 +275,8 @@ class _XMLNodeMetaClass(type):
         initializer = kwargs.pop("initializer", _NoArg())
         if not isinstance(initializer, _NoArg):
             if len(args) > 0:
-                raise TypeError("got multiple values for keyword argument 'initializer'")
+                raise TypeError("got multiple values for keyword "
+                                "argument 'initializer'")
             args.append(initializer)
         elif len(args) == 1:
             initializer = args[0]
@@ -349,15 +344,16 @@ del _temp_class_dict
 
 class XMLNodeBase(XMLNodeMetaClass):
     """This module provides methods common to the XML node classes.
-    
+
     This modules is not intended for standalone use.
     """
 
     def has_xml_attrs(self):
         """Determine if the node has XML attributes.
-        
-        @rtype: boolean
-        @return: True if the node has XML attributes; otherwise, False.
+
+        Returns:
+            A bool that is True if the node has XML attributes, and
+                False otherwise.
         """
         if len(self.xml_attrs) > 0:
             return True
@@ -370,43 +366,46 @@ class XMLNodeBase(XMLNodeMetaClass):
                 "Attempt to modify an out-of-date node. " +
                 "Use get_current_node() to update the reference."
                 )
-        
+
     def set_xml_attr(self, attr, val):
         """Set an XML attribute.
-        
+
         This method sets the XML attribute to the given value.  If the
         XML attribute already existed, its value is overridden by the
         new value.  If the XML attribute did not already exist, it is
         created.
-        
-        @type attr: text
-        @param attr: The name of the XML attribute.
-        @type val: text
-        @param val: The value of the XML attribute.
-        @rtype: None
-        @return: None
-        @raises: AttributeError, if the node is out of date. (See
-            L{get_current_node}.)
+
+        Args:
+            attr (string): The name of the XML attribute.
+            val (string): The value of the XML attribute.
+
+        Returns:
+            None
+
+        Raises:
+            :py:exc:`AttributeError`: If the node is out of date.
+                (See :py:meth:`get_current_node`.)
         """
         self._check_replacement()
         self.xml_attrs[attr] = _unicode(val)
 
     def get_xml_attr(self, attr, defval=_NoArg()):
         """Get an XML attribute.
-        
-        This method returns the value of an XML attribute.  If the XML
-        attribute does not exist, it will return a user-supplied
-        default value.  If the user did not supply a default value, it
-        raises a KeyError.
-        
-        @type attr: text
-        @param attr: The name of the XML attribute.
-        @type defval: text
-        @param defval: The default value. (Default:
-            Raise a KeyError.)
-        @return: The value of the XML attribute, or defval.
-        @raises: KeyError, if the attr is not found and
-        defval is not supplied.
+
+        This method returns the value of an XML attribute. If the XML
+        attribute does not exist, it will return a user-supplied default value.
+        If the user did not supply a default value, it raises a KeyError.
+
+        Args:
+            attr (string): The name of the XML attribute.
+            defval (string): The default value. (Default: Raise a KeyError.)
+
+        Returns:
+            The string value of the XML attribute, or :py:obj:`defval`.
+
+        Raises:
+            :py:exc:`KeyError`: If the :py:obj:`attr` is not found and
+                :py:obj:`defval` is not supplied.
         """
         try:
             return self.xml_attrs[attr]
@@ -417,66 +416,72 @@ class XMLNodeBase(XMLNodeMetaClass):
 
     def get_xml_attrs(self):
         """Return the XML attribute dictionary.
-        
+
         This method returns the value of the XML attribute
         dictonary.  Note that it returns the actual XML attribute
         dictionary, rather than a copy.  Please take caution in
         modifying it.
-        
-        @rtype: L{OrderedDict}
-        @return: The XML attribute dictionary.
+
+        Returns:
+            :py:class:`OrderedDict`: The XML attribute dictionary.
         """
         return self.xml_attrs
 
     def delete_xml_attr(self, attr):
         """Delete an XML attribute.
-        
+
         This method deletes an XML attribute from the node.  If the
         attribute does not exist, it raises a KeyError.
-        
-        @type attr: text
-        @param attr: The name of the XML attribute.
-        @return: None
-        @raises: KeyError, if the attr is not found.
-        @raises: AttributeError, if the node is out of date. (See
-            L{get_current_node}.)
+
+        Args:
+            attr (string): The name of the XML attribute.
+
+        Returns:
+            None
+
+        Raises:
+            :py:exc:`KeyError`: If the :py:obj:`attr` is not found.
+            :py:exc:`AttributeError`: If the node is out of date. (See
+                :py:meth:`get_current_node`.)
         """
         self._check_replacement()
         del self.xml_attrs[attr]
 
     def set_cdata(self, cdata, return_node=False):
         """Set a node's CDATA.
-        
+
         This method sets a node's CDATA.  Note that any node can
         contain CDATA in what is called "semi-structured"
         XML. However, nodes that only contain CDATA are represented as
-        L{XMLCDATANode} objects. Regardless of the node, you can use
+        :py:class:`XMLCDATANode` objects. Regardless of the node, you can use
         this same method to set the CDATA.
-        
-        B{Note}: When running this on an XMLCDATANode, the actual node
+
+        **Note**: When running this on an XMLCDATANode, the actual node
         will be replaced with a new node in the tree. (This is a
         result of Python's string immutability.)  The function will
         update the XML tree, if necessary; however, any local
         references you have saved for the node will become stale.  You
         can obtain the updated node by setting the return_node
-        parameter to True or by running the L{get_current_node} method
+        parameter to True or by running the :py:meth:`get_current_node` method
         on the old node. For this reason, if you plan to keep a local
         reference to XML node in question, it is a good idea to run
-        the method like this:
-          >>> node = root['a']['b'][0]
-          >>> node = node.set_cdata("foo", True)
-        
-        @type cdata: text
-        @param cdata: The text value that should be used for the
-            node's CDATA.
-        @type return_node: bool
-        @param return_node: Whether the method should return the
-            updated node.
-        @rtype: None or an appropriate node object.
-        @return: If return_node is False, None; otherwise, the updated
-            node object.
-        @raises: AttributeError, if the node is out of date. (See
-            L{get_current_node}.)
+        the method like this::
+
+            >>> node = root['a']['b'][0]
+            >>> node = node.set_cdata("foo", True)
+
+        Args:
+            cdata (string): The text value that should be used for the
+                node's CDATA.
+            return_node (bool): Whether the method should return the
+                updated node.
+
+        Returns:
+            None or the updated node object if :py:obj:`return_node` is True.
+
+        Raises:
+            :py:exc:`AttributeError`: If the node is out of date. (See
+                :py:meth:`get_current_node`.)
         """
         self._check_replacement()
         self.text = _unicode(cdata)
@@ -485,37 +490,40 @@ class XMLNodeBase(XMLNodeMetaClass):
 
     def append_cdata(self, cdata, return_node=False):
         """Append text to a node's CDATA.
-        
+
         This method appends text to a node's CDATA.  Note that any
         node can contain CDATA in what is called "semi-structured"
         XML. However, nodes that only contain CDATA are represented as
-        L{XMLCDATANode} objects. Regardless of the node, you can use
+        :py:class:`XMLCDATANode` objects. Regardless of the node, you can use
         this same method to append CDATA.
-        
-        B{Note}: When running this on an XMLCDATANode, the actual node
-        will be replaced with a new node in the tree. (This is a
+
+        **Note**: When running this on an :py:class:`XMLCDATANode`, the actual
+        node will be replaced with a new node in the tree. (This is a
         result of Python's string immutability.)  The function will
         update the XML tree, if necessary; however, any local
         references you have saved for the node will become stale.  You
-        can obtain the updated node by setting the return_node
-        parameter to True or by running the L{get_current_node} method
+        can obtain the updated node by setting the :py:obj:`return_node`
+        parameter to True or by running the :py:meth:`get_current_node` method
         on the old node. For this reason, if you plan to keep a local
         reference to XML node in question, it is a good idea to run
-        the method like this:
-          >>> node = root['a']['b'][0]
-          >>> node = node.append_cdata("foo", True)
-        
-        @type cdata: text
-        @param cdata: The text value that should be used for the
-            node's CDATA.
-        @type return_node: bool
-        @param return_node: Whether the method should return the
-            updated node.
-        @rtype: None or an appropriate node object.
-        @return: If return_node is False, None; otherwise, the updated
-            node object.
-        @raises: AttributeError, if the node is out of date. (See
-            L{get_current_node}.)
+        the method like this::
+
+            >>> node = root['a']['b'][0]
+            >>> node = node.append_cdata("foo", True)
+
+        Args:
+            cdata (string): The text value that should be used for the
+                node's CDATA.
+            return_node (bool): Whether the method should return the
+                updated node.
+
+        Returns:
+            None, if :py:obj:`return_node` is False, otherwise, the updated
+                node object.
+
+        Raises:
+            :py:exc:`AttributeError`: If the node is out of date.
+                (See :py:meth:`get_current_node`.)
         """
         self._check_replacement()
         self.text = self.text + cdata
@@ -524,49 +532,52 @@ class XMLNodeBase(XMLNodeMetaClass):
 
     def get_cdata(self):
         """Get a node's CDATA.
-        
-        @rtype: text
-        @return: The node's CDATA.
+
+        Returns:
+            A string containing the node's CDATA.
         """
         return self.text
 
     def strip_cdata(self, chars=None, return_node=False):
         """Strip leading/trailing characters from a node's CDATA.
-        
-        This method runs the string class' strip() method on a node's
+
+        This method runs the string class' :py:meth:`strip` method on a node's
         CDATA and updates the node's CDATA with the result. (This is
         the functional equivalent to
-        node.set_cdata(node.get_cdata().strip()).)
-        
+        ``node.set_cdata(node.get_cdata().strip())``.)
+
         Note that any node can contain CDATA in what is called
         "semi-structured" XML. However, nodes that only contain CDATA
-        are represented as L{XMLCDATANode} objects. Regardless of the
+        are represented as :py:class:`XMLCDATANode` objects. Regardless of the
         node, you can use this same method to append CDATA.
-        
-        B{Note}: When running this on an XMLCDATANode, the actual node
-        will be replaced with a new node in the tree. (This is a
+
+        **Note**: When running this on an :py:class:`XMLCDATANode`, the actual
+        node will be replaced with a new node in the tree. (This is a
         result of Python's string immutability.)  The function will
         update the XML tree, if necessary; however, any local
         references you have saved for the node will become stale.  You
         can obtain the updated node by setting the return_node
-        parameter to True or by running the L{get_current_node} method
+        parameter to True or by running the :py:meth:`get_current_node` method
         on the old node. For this reason, if you plan to keep a local
         reference to XML node in question, it is a good idea to run
-        the method like this:
-          >>> node = root['a']['b'][0]
-          >>> node = node.strip_cdata(return_node=True)
-        
-        @type chars: text
-        @param chars: A string containing the characters to
-            strip. This is passed to the string class' strip() method.
-        @type return_node: bool
-        @param return_node: Whether the method should return the
-            updated node.
-        @rtype: None or an appropriate node object.
-        @return: If return_node is False, None; otherwise, the updated
-            node object.
-        @raises: AttributeError, if the node is out of date. (See
-            L{get_current_node}.)
+        the method like this::
+
+            >>> node = root['a']['b'][0]
+            >>> node = node.strip_cdata(return_node=True)
+
+        Args:
+            chars (string): Contains the characters to strip. This is passed to
+                the string class' :py:meth:`strip` method.
+            return_node (bool): Whether the method should return the
+                updated node.
+
+        Returns:
+            None if :py:obj:`return_node` is False; otherwise, the updated
+                node object.
+
+        Raises:
+            :py:class:`AttributeError`: If the node is out of date.
+                (See :py:meth:`get_current_node`.)
         """
         self._check_replacement()
         newtext = _unicode.strip(self.get_cdata(), chars)
@@ -575,73 +586,76 @@ class XMLNodeBase(XMLNodeMetaClass):
     def add_node(self, tag, key=None, text=_unicode(), new_node=None,
                  update=True, **kwargs):
         """Add an XML node to an XML tree.
-        
-        This method adds a new XML node as a child of the current
-        node. If the current node is an XMLCDATANode, it will be
-        converted to an XMLDictNode so that it can hold children. If
-        the current node is an XMLDictNode and you attempt to add a
-        node with a duplicate key, the code will create a list to hold
-        the existing node and add the new node to the list.
-        
-        By default, all new nodes are created as L{XMLCDATANode}
-        objects. You can include any keyword parameters that you could
-        provide when creating an L{XMLCDATANode} object. If supplied,
-        these additional keyword parameters are passed to the
-        L{XMLCDATANode.__init__} function.
-        
-        @type tag: text
-        @param tag: The XML tag of the node.
-        @type key: text or tuple
-        @param key: The dictionary key that the method should use for
-            the node. If None (the default), the tag is used as the
-            key.
-        @type text: text
-        @param text: The CDATA for the new node. (Default: an empty
-            string)
-        @type new_node: An instance of a subclass of L{XMLNodeBase}.
-        @param new_node: If supplied, this will be used for the new
-            node instead of a new instance of the XMLCDATANode. If
-            supplied, the text parameter and additional keyword
-            arguments are ignored.
-        @type update: bool
-        @param update: If True (the default), update the reverse
-            linkages in the new node to point to the parent. If False,
-            only create the one-way linkages from the parent to the
-            child. (B{Note}: This should always be True unless you are
-            creating a temporary tree for some reason. Setting this to
-            False may create inconsistent data that causes problems later.)
 
-        @raises: AttributeError, if the node is out of date and
-            in_place is True. (See L{get_current_node}.)
-        @raises: AttributeError, if in_place is True and the method
-            encounters irrecoverable data inconsistency while making
-            changes to the XML tree.
+        This method adds a new XML node as a child of the current
+        node. If the current node is an :py:class:`XMLCDATANode`, it will be
+        converted to an :py:class:`XMLDictNode` so that it can hold children.
+        If the current node is an :py:class:`XMLDictNode` and you attempt to
+        add a node with a duplicate key, the code will create a list to hold
+        the existing node and add the new node to the list.
+
+        By default, all new nodes are created as :py:class:`XMLCDATANode`
+        objects. You can include any keyword parameters that you could
+        provide when creating an :py:class:`XMLCDATANode` object. If supplied,
+        these additional keyword parameters are passed to the
+        :py:func:`XMLCDATANode.__init__` function.
+
+        Args:
+            tag (string): The XML tag of the node.
+            key (string or tuple): The dictionary key that the method should
+                use for the node. If None (the default), the :py:obj:`tag` is
+                is used as the key.
+            text (string): The CDATA for the new node. The default value is
+                an empty string.
+            new_node (instance of a subclass of :py:class:`XMLNodeBase`): If
+                supplied, this will be used for the new node instead of a
+                new instance of the :py:class:`XMLCDATANode`. If supplied, the
+                :py:obj:`text` parameter and additional keyword arguments
+                are ignored.
+            update (bool): If True (the default), update the reverse linkages
+                in the new node to point to the parent. If False, only create
+                the one-way linkages from the parent to the child. (**Note**:
+                This should always be True unless you are creating a temporary
+                tree for some reason. Setting this to False may create
+                inconsistent data that causes problems later.)
+
+        Raises:
+            :py:exc:`AttributeError`: If the node is out of date
+                (See :py:meth:`get_current_node`) or the method encounters
+                irrecoverable data inconsistency while making changes to the
+                XML tree.
+            :py:exc:`TypeError`: If :py:obj:`new_node` is not None and not
+                an instance of :py:class:`XMLNodeBase`
         """
         raise NotImplementedError()
 
     def list(self, in_place=False):
         """Return a node as a list.
-        
+
         This method returns a node as a list. This is useful when you
         are not sure whether a node will contain a single entry or a
         list. If the node contains a list, the node itself is
         returned. If the node does not already contain a list, the
         method creates a list, adds the node to it, and returns the
         list.
-        
-        If the in_place parameter is True, then the change is made in
-        the XML tree. Otherwise, the XML tree is left unchanged and
+
+        If the :py:obj:`in_place` parameter is True, then the change is
+        made in the XML tree. Otherwise, the XML tree is left unchanged and
         the method creates and returns a temporary list.
-        
-        @type in_place: bool
-        @param in_place: Whether the change should be made in the XML
-            tree.
-        @rtype: list or L{XMLListNode}
-        @return: If the current node is a list, the current node;
+
+        Args:
+            in_place (bool): Whether the change should be made in the
+                XML tree.
+
+        Returns:
+            list or :py:class:`XMLListNode`
+            If the current node is a list, the current node;
             otherwise, a list containing the current node as its sole
             member.
-        @raises: AttributeError, if the node is out of date and
-            in_place is True. (See L{get_current_node}.)
+
+        Raises:
+            :py:exc:`AttributeError`: If the node is out of date and
+                :py:obj:`in_place` is True. (See :py:meth:`get_current_node`.)
         """
         if not in_place:
             return [self]
@@ -667,31 +681,34 @@ class XMLNodeBase(XMLNodeMetaClass):
 
     def get_current_node(self):
         """Return the current node.
-        
+
         There are times that the current node must be replaced in the
         XML tree for some reason. For example, due to the immutability
         of Python strings, a new XMLCDATANode (which masquerades as a
         string) is required anytime its CDATA value changes.
-        
+
         When this occurs, you can retrieve the latest node using the
         get_current_node() method. This will attempt to find the node
         that succeeded the node in question. If the node is still
         current, it simply returns itself.
-        
-        Therefore, it should always be safe to run:
-          >>> node = node.get_current_node()
-        
-        @rtype: A subclass of XMLNodeBase
-        @return: The current successor to the node (if
-            any). If the node is still "current", the method returns the
-            node itself.
+
+        Therefore, it should always be safe to run::
+
+            >>> node = node.get_current_node()
+
+        Returns:
+            Subclass of :py:class:`XMLNodeBase` containing the current
+            successor to the node (if any). If the node is still "current",
+            the method returns the node itself.
         """
         if self._replacement_node is not None:
             # Recurse as deep as we can looking for replacement nodes.
             # If we hit an error, return the last replacement node we found.
             try:
                 while self._replacement_node._replacement_node is not None:
-                    self._replacement_node = self._replacement_node._replacement_node
+                    self._replacement_node = (
+                        self._replacement_node._replacement_node
+                    )
             except:
                 pass
             return self._replacement_node
@@ -741,7 +758,7 @@ class XMLNodeBase(XMLNodeMetaClass):
                     return
                 elif isinstance(val, XMLListNode):
                     # Check the list
-                    for i in range(0,len(val)):
+                    for i in range(0, len(val)):
                         if val[i] == self:
                             if newnode is not None:
                                 # Update the new node's key and parent
@@ -760,15 +777,15 @@ class XMLNodeBase(XMLNodeMetaClass):
             pass
         # Case 2: Parent is list
         try:
-            made_change=False
-            for i in range(0,len(self.parent)):
+            made_change = False
+            for i in range(0, len(self.parent)):
                 if self.parent[i] == self:
                     if newnode is not None:
                         self.parent[i] = newnode
                         return
                     else:
                         del self.parent[i]
-                        made_change=True
+                        made_change = True
                         break
             if made_change:
                 # Make sure we don't need to delete the enclosing list,
@@ -783,131 +800,135 @@ class XMLNodeBase(XMLNodeMetaClass):
     def dict(self, attrs=[], tags=[], func=None, in_place=False,
              promote=False):
         """Return a dictionary keyed as indicated by the parameters.
-        
+
         This method lets you re-key your data with some
         flexibility. It takes the current node (whether a single node
         or a list) and turns it into a dictionary. If the current node
         is a list, all the list members are added to the
         dictionary. If the current node is not a list, just the
         current node is added to the dictonary.
-        
-        The key for each node is determined by the attrs, tags, and
-        func parameters, in that order of precedence. For I{each
-        node}, the method looks for child nodes that have an
-        XML attribute that exactly matches one of the attributes in
-        the attrs argument. If it finds a match, it uses the I{node's}
-        (not the attribute's) CDATA as the key.
-        
+
+        The key for each node is determined by the :py:obj:`attrs`,
+        :py:obj:`tags`, and :py:obj:`func` parameters, in that order of
+        precedence. For *each node*, the method looks for child nodes that
+        have an XML attribute that exactly matches one of the attributes
+        in the :py:obj:`attrs` argument. If it finds a match, it uses the
+        *node's* (not the attribute's) CDATA as the key.
+
         If the method does not find a matching attribute, it looks for
         child nodes that have a tag that exactly matches one of the
-        tags in the tags argument. If it finds a match, it uses the
-        node's CDATA as the key.
-        
+        tags in the :py:obj:`tags` argument. If it finds a match, it uses
+        the node's CDATA as the key.
+
         If the method does not find a matching tag, it passes the node
-        to the user-suppled function (supplied by the func parameter)
+        to the user-suppled function (supplied by the :py:obj:`func` parameter)
         and uses the return value as the key.
-        
-        If the func is not provided or returns a value that evaluates to
-        False (e.g. None or ""), the method uses the node's XML tag as
-        the key.
-        
+
+        If the :py:obj:`func` is not provided or returns a value that
+        evaluates to False (e.g. None or ""), the method uses the node's
+        XML tag as the key.
+
         If there are multiple matches, the order of precedence is like
-        this (again, this is applied for I{each node} independent of
+        this (again, this is applied for *each node* independent of
         the other nodes):
-          1. The attributes in the attrs parameter, in the order they
-             appear in the attrs parameter.
-          2. The tags in the tags parameter, in the order they appear
-             in the attrs parameter.
-          3. The return value of the user-supplied function.
-          4. The node's XML tag.
-        
-        If the in_place parameter is True, then the method will
+
+        1. The attributes in the attrs parameter, in the order they
+           appear in the attrs parameter.
+        2. The tags in the tags parameter, in the order they appear
+           in the attrs parameter.
+        3. The return value of the user-supplied function.
+        4. The node's XML tag.
+
+        If the :py:obj:`in_place` parameter is True, then the method will
         replace the current node in the hierarchy with the
         dictionary. Otherwise, it will create a new dictionary and
         return it.
-        
-        If both the in_place and promote parameters are True, then the
-        method will make the changes as described above; however, it
-        will add the nodes to the first dictionary it finds enclosing
-        the curent node.
-        
+
+        If both the :py:obj:`in_place` and :py:obj:`promote` parameters are
+        True, then the method will make the changes as described above;
+        however, it will add the nodes to the first dictionary it finds
+        enclosing the curent node.
+
         Some examples should help with this. Here is an example of the
         simple functionality. Note how the original nodes are turned
         into a dictionary with the appropriate keys, but the original
-        root is left untouched:
-          >>> root.prettyprint()
-          {'a': {'b': [{'name': u'foo', 'value': u'1'},
-                       {'name': u'bar', 'value': u'2'}]}}
-          >>> root['a']['b'].dict(tags=['name']).prettyprint()
-          {u'bar': {'name': u'bar', 'value': u'2'},
-           u'foo': {'name': u'foo', 'value': u'1'}}
-          >>> root.prettyprint()
-          {'a': {'b': [{'name': u'foo', 'value': u'1'},
-                       {'name': u'bar', 'value': u'2'}]}}
-        
+        root is left untouched::
+
+            >>> root.prettyprint()
+            {'a': {'b': [{'name': u'foo', 'value': u'1'},
+                         {'name': u'bar', 'value': u'2'}]}}
+            >>> root['a']['b'].dict(tags=['name']).prettyprint()
+            {u'bar': {'name': u'bar', 'value': u'2'},
+             u'foo': {'name': u'foo', 'value': u'1'}}
+            >>> root.prettyprint()
+            {'a': {'b': [{'name': u'foo', 'value': u'1'},
+                         {'name': u'bar', 'value': u'2'}]}}
+
         Here is an example of a dictionary changed in place. Note how
         the original nodes are turned into a dictionary with the
         appropriate keys and this dictionary replaces the current node
-        in the hierarchy:
-          >>> root.prettyprint()
-          {'a': {'b': [{'name': u'foo', 'value': u'1'},
-                       {'name': u'bar', 'value': u'2'}]}}
-          >>> root['a']['b'].dict(tags=['name'], in_place=True).prettyprint()
-          {u'bar': {'name': u'bar', 'value': u'2'},
-           u'foo': {'name': u'foo', 'value': u'1'}}
-          >>> root.prettyprint()
-          {'a': {'b': {u'bar': {'name': u'bar', 'value': u'2'},
-                       u'foo': {'name': u'foo', 'value': u'1'}}}}
-        
-        Here is an example of the "promotion" functionality. Note how
-        the original nodes are added directly to the root['a']
-        enclosing dictionary:
-          >>> root.prettyprint()
-          {'a': {'b': [{'name': u'foo', 'value': u'1'},
-                       {'name': u'bar', 'value': u'2'}]}}
-          >>> root['a']['b'].dict(tags=['name'], in_place=True, promote=True).prettyprint()
-          {u'bar': {'name': u'bar', 'value': u'2'},
-           u'foo': {'name': u'foo', 'value': u'1'}}
-          >>> root.prettyprint()
-          {'a': {u'bar': {'name': u'bar', 'value': u'2'},
-                 u'foo': {'name': u'foo', 'value': u'1'}}}
-        
-        Quirks:
-          1. If the current node is the only member of a list in
-             the XML tree, the operation will occur on that single-node
-             list instead of the node itself.
-          2. If the method encounters an exception while trying to
-             modify the XML tree (in_place == True), it will attempt
-             to undo its changes; however, this logic is not
-             completely reliable.
+        in the hierarchy::
 
-        @type attrs: list
-        @param attrs: The list of XML attributes that signal a node
-            should be used as a key.
-        @type tags: list
-        @param attrs: The list of XML tags that signal a node
-            should be used as a key.
-        @type func: function
-        @param func: A function that will accept a node as a parameter
-            and return a key.
-        @type in_place: bool
-        @param in_place: Whether the change should be made in the XML
-            tree.
-        @type promote: bool
-        @param promote: Whether the new nodes should be added to a
-            dictonary placed at the current node, or they should be
-            "promoted" to the first enclosing dictionary.
-        @rtype: L{XMLDictNode}
-        @return: If in_place is False, a dictionary formulated from
-            the current node. If in_place is True, the dictionary to which
-            the nodes were added. (Note: If promote is True, this
-            dictionary may contain additional entries that already
-            existed in the enclosing dictionary.)
-        @raises: AttributeError, if the node is out of date and
-            in_place is True. (See L{get_current_node}.)
-        @raises: AttributeError, if in_place is True and the method
-            encounters irrecoverable data inconsistency while making
-            changes to the XML tree.
+            >>> root.prettyprint()
+            {'a': {'b': [{'name': u'foo', 'value': u'1'},
+                         {'name': u'bar', 'value': u'2'}]}}
+            >>> root['a']['b'].dict(tags=['name'], in_place=True).prettyprint()
+            {u'bar': {'name': u'bar', 'value': u'2'},
+             u'foo': {'name': u'foo', 'value': u'1'}}
+            >>> root.prettyprint()
+            {'a': {'b': {u'bar': {'name': u'bar', 'value': u'2'},
+                         u'foo': {'name': u'foo', 'value': u'1'}}}}
+
+        Here is an example of the "promotion" functionality. Note how
+        the original nodes are added directly to the ``root['a']``
+        enclosing dictionary::
+
+            >>> root.prettyprint()
+            {'a': {'b': [{'name': u'foo', 'value': u'1'},
+                         {'name': u'bar', 'value': u'2'}]}}
+            >>> root['a']['b'].dict(tags=['name'], in_place=True, promote=True).prettyprint()
+            {u'bar': {'name': u'bar', 'value': u'2'},
+             u'foo': {'name': u'foo', 'value': u'1'}}
+            >>> root.prettyprint()
+            {'a': {u'bar': {'name': u'bar', 'value': u'2'},
+                   u'foo': {'name': u'foo', 'value': u'1'}}}
+
+        Quirks:
+
+        1. If the current node is the only member of a list in
+           the XML tree, the operation will occur on that single-node
+           list instead of the node itself.
+        2. If the method encounters an exception while trying to
+           modify the XML tree (``in_place == True``), it will attempt
+           to undo its changes; however, this logic is not
+           completely reliable.
+
+        Args:
+            attrs (list): The list of XML attributes that signal a node
+                should be used as a key.
+            tags (list): The list of XML tags that signal a node should be used
+                as a key.
+            func (function): A function that will accept a node as a parameter
+                and return a key.
+            in_place (bool): Whether the change should be made in the XML tree.
+            promote (bool): Whether the new nodes should be added to a
+                dictonary placed at the current node, or they should be
+                "promoted" to the first enclosing dictionary.
+
+        Returns:
+            An :py:class:`XMLDictNode`. If :py:obj:`in_place` is False, the
+            dictionary formulated from the current node. If :py:obj:`in_place`
+            is True, the dictionary to which the nodes were added.
+            (Note: If :py:obj:`promote` is True, this dictionary may contain
+            additional entries that already existed in the enclosing
+            dictionary.)
+
+        Raises:
+            :py:class:`AttributeError`: If the node is out of date and
+                :py:obj:`in_place` is True. (See :py:meth:`get_current_node`.)
+            :py:class:`AttributeError`: If :py:obj:`in_place`
+                is True and the method encounters irrecoverable data
+                inconsistency while making changes to the XML tree.
         """
         newlist = None
         if in_place:
@@ -928,7 +949,7 @@ class XMLNodeBase(XMLNodeMetaClass):
             # doesn't make complete sense.
             parent = self.parent
             if (isinstance(parent, XMLListNode) and len(parent) == 1
-                and parent[0] == self):
+                    and parent[0] == self):
                 # Easy. Just convert our parent.
                 newlist = parent
             else:
@@ -952,115 +973,125 @@ class XMLNodeBase(XMLNodeMetaClass):
                 self.parent = orig['parent']
                 self.tag = orig['tag']
                 self.key = orig['key']
-                self._replacement_node=None
+                self._replacement_node = None
                 newlist._replace_node(self)
             raise
 
     def jdict(self, in_place=False, promote=False):
         """Return a dictionary keyed appropriately for Junos output.
-        
-        This method is a shortcut to call the L{dict} method with these
-        parameters:
-          - attrs=[('junos:key', 'junos:key', 'junos:key'),
-                   ('junos:key', 'junos:key'), 'junos:key'] 
-          - tags=['name']
-        
+
+        This method is a shortcut to call the :py:meth:`dict`
+        method with these parameters::
+
+            attrs=[('junos:key', 'junos:key', 'junos:key'),
+                   ('junos:key', 'junos:key'), 'junos:key']
+            tags=['name']
+
         This will attempt to produce the correct key for each
         node. Some nodes have a multi-field key. If that occurs, the
         dictionary key will be a tuple. In cases where there is a
         single key, the dictionary key will be a string. If there is
         no matching node, the key will simply be the XML tag name.
-        
+
         Some Junos nodes use a different tag for the key. And, in some
-        cases, the junos:key attribute is not available. In those
-        circumstances, you should directly call the L{dict} method
-        with the correct attributes or tags.
-        
-        Please see the documentation for the L{dict} method for
+        cases, the ``junos:key`` attribute is not available. In those
+        circumstances, you should directly call the :py:meth:`dict`
+        method with the correct attributes or tags.
+
+        Please see the documentation for the :py:meth:`dict` method for
         further information.
-        
-        @type in_place: bool
-        @param in_place: Whether the change should be made in the XML
-            tree.
-        @type promote: bool
-        @param promote: Whether the new nodes should be added to a
-            dictonary placed at the current node, or they should be
-            "promoted" to the first enclosing dictionary.
-        @rtype: L{XMLDictNode}
-        @return: If in_place is False, a dictionary formulated from
-            the current node. If in_place is True, the dictionary to which
-            the nodes were added. (Note: If promote is True, this
-            dictionary may contain additional entries that already
-            existed in the enclosing dictionary.)
-        @raises: AttributeError, if the node is out of date and
-            in_place is True. (See L{get_current_node}.)
-        @raises: AttributeError, if in_place is True and the method
-            encounters irrecoverable data inconsistency while making
-            changes to the XML tree.
+
+        Args:
+            in_place (bool): Whether the change should be made in the XML tree.
+            promote (bool): Whether the new nodes should be added to a
+                dictonary placed at the current node, or they should be
+                "promoted" to the first enclosing dictionary.
+
+        Returns:
+            An :py:class:`XMLDictNode`. If :py:obj:`in_place` is False, the
+            dictionary formulated from the current node. If :py:obj:`in_place`
+            is True, the dictionary to which the nodes were added.
+            (Note: If :py:obj:`promote` is True, this dictionary may contain
+            additional entries that already existed in the enclosing
+            dictionary.)
+
+        Raises:
+            :py:class:`AttributeError`: If the node is out of date and
+                :py:obj:`in_place` is True. (See :py:meth:`get_current_node`.)
+            :py:class:`AttributeError`: If :py:obj:`in_place`
+                is True and the method encounters irrecoverable data
+                inconsistency while making changes to the XML tree.
         """
         return self.dict(attrs=[('junos:key', 'junos:key', 'junos:key'),
                                 ('junos:key', 'junos:key'), 'junos:key'],
                          tags=['name'], in_place=in_place, promote=promote)
 
     def standardize(self, deep=True):
-        """Convert all child nodes to instances of an L{XMLNodeBase} sub-class.
-        
+        """Convert all child nodes to instances of an XMLNodeBase sub-class.
+
         This method is useful when you have added a child node
         directly to a dictionary or list and now want to convert it to
-        the appropriate L{XMLNodeBase} sub-class.
-        
-        @type deep: bool
-        @param deep: If True (the default), recursively descend
-            through all children, converting all nodes, as needed. If
-            False, only convert direct children of the node.
-        @return: None
+        the appropriate :py:class:`XMLNodeBase` sub-class.
+
+        Args:
+            deep (bool): If True (the default), recursively descend
+                through all children, converting all nodes, as needed. If
+                False, only convert direct children of the node.
+        Returns:
+            None
         """
         raise NotImplementedError()
 
     def emit_handler(self, content_handler, pretty=True, newl='\n',
                      indent='    ', full_document=_NoArg()):
         """Pass the contents of the XML tree to a ContentHandler object.
-        
+
         This method will pass the contents of the XML tree to a
-        ContentHandler object.
-        
-        @type content_handler: A ContentHandler object
-        @param content_handler: The ContentHandler object to which the
-            XML tree wll be passed.
-        @type pretty: bool
-        @param pretty: If True, this method will call the
-            content_handler.ignorableWhitespace() method to add
+        :py:obj:`ContentHandler` object.
+
+        Args:
+            content_handler (:py:obj:`ContentHandler`): The
+                :py:obj:`ContentHandler` object to which the XML tree wll
+                be passed.
+            pretty (bool): If True, this method will call the
+                :py:meth:`content_handler.ignorableWhitespace` method to add
             whitespace to the output document.
-        @type newl: text
-        @param newl: The string which the method should use for new
-            lines when adding white space (see the pretty parameter).
-        @type indent: text
-        @param indent: The string which the method should use for each
-            level of indentation when adding white space (see the pretty
-            parameter).
-        @type full_document: bool
-        @param full_document: If True, the method will call the
-            content_handler.startDocument() and
-            content_handler.endDocument() methods at the start and end of
-            the document, respectively. If False, it will not call these
-            methods. If the parameter is not set, the method will
-            attempt to determine whether the current node is the root
-            of an XML tree with a single root tag. If so, it will set
-            the full_document parameter to True; otherwise, it will
-            set it to False.
-        @return: None
+            newl (string): The string which the method should use for new
+                lines when adding white space (see the :py:obj:`pretty`
+                parameter).
+            indent (text): The string which the method should use for each
+                level of indentation when adding white space (see the
+                :py:obj:`pretty` parameter).
+            full_document (bool): If True, the method will call the
+                :py:meth:`content_handler.startDocument` and
+                :py:meth:`content_handler.endDocument` methods at the start
+                and end of the document, respectively. If False, it will not
+                call these methods. If the parameter is not set, the method
+                will attempt to determine whether the current node is the root
+                of an XML tree with a single root tag. If so, it will set
+                the full_document parameter to True; otherwise, it will
+                set it to False.
+
+        Returns:
+            None
         """
         if not isinstance(full_document, _NoArg):
             # Make sure there is only one root in a "full" document.
-            if full_document and isinstance(self, XMLListNode) and len(self) > 1:
-                raise ValueError("Document will have more than one root node. The full_document argument must be False.")
+            if (full_document and isinstance(self, XMLListNode) and
+                    len(self) > 1):
+                raise ValueError("Document will have more than one root node. "
+                                 "The full_document argument must be False.")
         elif isinstance(self, XMLListNode) and len(self) > 1:
             # We have multiple tags. We cannot be a full document.
             full_document = False
-        elif self.tag is None and isinstance(self, (XMLDictNode, XMLListNode)) and len(self) <= 1:
+        elif (self.tag is None and
+              isinstance(self, (XMLDictNode, XMLListNode)) and
+              len(self) <= 1):
             # We are the root. We have a single root tag.
             full_document = True
-        elif isinstance(self.tag, (_unicode, str)) and (self.parent is None or (self.parent.tag is None and len(self.parent) == 1)):
+        elif (isinstance(self.tag, (_unicode, str)) and
+              (self.parent is None or
+               (self.parent.tag is None and len(self.parent) == 1))):
             # We look like the only child of the root node. In other words,
             # we look like the root tag. Treat us as a full document.
             full_document = True
@@ -1079,26 +1110,26 @@ class XMLNodeBase(XMLNodeMetaClass):
     def emit_xml(self, output=None, encoding='utf-8', handler=XMLGenerator,
                  **kwargs):
         """Return the contents of the XML tree as an XML document.
-        
-        This method will create a ContentHandler by calling the
+
+        This method will create a :py:obj:`ContentHandler` by calling the
         method provided by the handler parameter.  It will call
-        L{emit_handler} with this ContentHandler object.  In addition,
-        this method will accept any parameter that the L{emit_handler}
-        method accepts (except the content_handler parameter).  It will pass
-        them to the L{emit_handler} method when it calls it.
-        
-        @type output: A file-like IO object, or None.
-        @param output: The file-like IO object in which output should
-            be placed. If None, the method will return the XML output
-            as a string.
-        @type encoding: text
-        @param encoding: The encoding that should be used for the output.
-        @type handler: function
-        @param handler: A method that will return a ContentHandler
-            object. This method will be called with two positional
-            parameters: the output parameter (or, if None, a file-like IO
-            object) and the encoding parameter.
-        @return: If output was None, the method will return the XML
+        :py:meth:`emit_handler` with this :py:obj:`ContentHandler` object.
+        In addition, this method will accept any parameter that the
+        :py:meth:`emit_handler` method accepts (except the
+        :py:obj:`content_handler` parameter).  It will pass
+        them to the :py:meth:`emit_handler` method when it calls it.
+
+        Args:
+            output (A file-like IO object, or None): The file-like IO object
+                in which output should be placed. If None, the method will
+                return the XML output as a string.
+            encoding (string): The encoding that should be used for the output.
+            handler (function): A method that will return a
+                :py:obj:`ContentHandler` object. This method will be called
+                with two positional parameters: the output parameter
+                (or, if None, a file-like IO object) and the encoding parameter.
+        Returns:
+            If :py:obj:`output` was None, the method will return the XML
             output as a string. Otherwise, None.
         """
         if output is None:
@@ -1121,198 +1152,206 @@ class XMLNodeBase(XMLNodeMetaClass):
 
     def prettyprint(self, *args, **kwargs):
         """Print a "pretty" representation of the data structure.
-        
-        This uses the Python pprint method to print a "pretty"
-        representation of the data structure. The parameters are
-        passed unchanged to the Python pprint method.
-        
-        This shows only the main data and not the meta data (such as
-        XML attributes).
-        
-        When using pprint, it is necessary to use this method to get a
-        reasonable representation of the data; otherwise, pprint will
-        not know how to represent the object in a "pretty" way.
+
+        This uses the :py:meth:`pprint` method from the :py:mod:`pprint`
+        module to print a "pretty" representation of the data structure.
+        The parameters are passed unchanged to the :py:meth:`pprint` method.
+
+        The output from this method shows only the main data and not the meta
+        data (such as XML attributes).
+
+        When using :py:meth:`pprint`, it is necessary to use this method to
+        get a reasonable representation of the data; otherwise,
+        :py:meth:`pprint` will not know how to represent the object in a
+        "pretty" way.
         """
         raise NotImplementedError()
 
     def find_nodes_with_tag(self, tag, recursive=True):
         """Iterates over nodes that have a matching tag.
-        
-        NOTE: This documentation needs to be updated to take into
+
+        **NOTE**: This documentation needs to be updated to take into
         account the changes to list handling and always checking the
         current node's tag.
-        
+
         This method searches for a node that is a descendant of the
         current node and has a matching tag. Optionally (by providing
-        a False argument to the recursive parameter), you can limit
+        a False value to the :py:obj:`recursive` parameter), you can limit
         the search to direct children of the current node. In either
         case, the tag of the current node is not checked.
-        
+
         For example, this will print all "name" nodes from the XML
-        snippet that is shown:
-          >>> root = jxmlease.parse(\"\"\"\
-          ... <?xml version="1.0" encoding="utf-8"?>
-          ... <name>
-          ...     <a>
-          ...         <name>name #1</name>
-          ...         <b>
-          ...             <name>name #2</name>
-          ...         </b>
-          ...         <b>
-          ...             <c>
-          ...                 <name>name #3</name>
-          ...             </c>
-          ...         </b>
-          ...     </a>
-          ... </name>\"\"\")
-          >>> print root
-          {u'name': {u'a': {u'b': [{u'name': u'name #2'},
-                                   {u'c': {u'name': u'name #3'}}],
-                            u'name': u'name #1'}}}
-          >>> for node in root.find_nodes_with_tag('name'):
-          ...   print node
-          ... 
-          name #1
-          name #2
-          name #3
-        
+        snippet that is shown::
+
+            >>> root = jxmlease.parse(\"\"\"\
+            ... <?xml version="1.0" encoding="utf-8"?>
+            ... <name>
+            ...     <a>
+            ...         <name>name #1</name>
+            ...         <b>
+            ...             <name>name #2</name>
+            ...         </b>
+            ...         <b>
+            ...             <c>
+            ...                 <name>name #3</name>
+            ...             </c>
+            ...         </b>
+            ...     </a>
+            ... </name>\"\"\")
+            >>> print root
+            {u'name': {u'a': {u'b': [{u'name': u'name #2'},
+                                     {u'c': {u'name': u'name #3'}}],
+                              u'name': u'name #1'}}}
+            >>> for node in root.find_nodes_with_tag('name'):
+            ...   print node
+            ...
+            name #1
+            name #2
+            name #3
+
         However, if we turn off recursion, you will see that this
         returns only the direct children (if any) of the node we
-        select:
-          >>> for node in root.find_nodes_with_tag('name', recursive=False):
-          ...   print node
-          ... 
-          >>> for node in root['name']['a'].find_nodes_with_tag('name', recursive=False):
-          ...   print node
-          ... 
-          name #1
+        select::
 
-        If you run this against an XMLDictNode without a tag (for
+            >>> for node in root.find_nodes_with_tag('name', recursive=False):
+            ...   print node
+            ...
+            >>> for node in root['name']['a'].find_nodes_with_tag('name', recursive=False):
+            ...   print node
+            ...
+            name #1
+
+        If you run this against an :py:class:`XMLDictNode` without a tag (for
         example, the tagless root node), then the command is run on
         each member of the dictionary. The impact of this is that it
         will search for tags in the grandchildren of the tagless
-        XMLDictNode, rather than searching the children of the tagless
-        XMLDictNode:
-          >>> root = jxmlease.parse("<name>top-level tag</name>")
-          >>> for i in root.find_nodes_with_tag('name'):
-          ...   print i
-          ... 
-          >>> root = jxmlease.parse(\"\"\"\
-          ... <a>
-          ...   <name>second-level tag</name>
-          ... </a>\"\"\")
-          >>> for i in root.find_nodes_with_tag('name'):
-          ...   print i
-          ... 
-          second-level tag
-        
+        :py:class:`XMLDictNode`, rather than searching the children of the
+        tagless :py:class:`XMLDictNode`::
+
+            >>> root = jxmlease.parse("<name>top-level tag</name>")
+            >>> for i in root.find_nodes_with_tag('name'):
+            ...   print i
+            ...
+            >>> root = jxmlease.parse(\"\"\"\
+            ... <a>
+            ...   <name>second-level tag</name>
+            ... </a>\"\"\")
+            >>> for i in root.find_nodes_with_tag('name'):
+            ...   print i
+            ...
+            second-level tag
+
         If the current node is a list and it appears that the list was
         created to hold multiple elements with the same tag, then the
         command is run on each member of the list (rather than on the
         list itself). The impact of this is that it will search for
-        tags in the grandchildren of the XMLListNode, rather
-        than searching the children of the XMLListNode.
-        
+        tags in the grandchildren of the :py:class:`XMLListNode`, rather
+        than searching the children of the :py:class:`XMLListNode`.
+
         As confusing as this may sound, the point is simple: we never
         check the tag of the "current" element. Because lists can be
         homogenous or heterogenous, that statement is ambiguous for
         lists. We resolve the ambiguity by comparing the tag stored
-        with the list and the tag of the children. :
-        
+        with the list and the tag of the children.
+
         For example, here is a root node with two top-level "name"
         elements. Searching for the "name" tag does not find these
         top-level elements because both the top-level dictionary and
-        top-level list pass through the search:
-          >>> root = XMLDictNode()
-          >>> _ = root.add_node(tag='name', text='tag #1')
-          >>> _ = root.add_node(tag='name', text='tag #2')
-          >>> print root
-          {'name': [u'tag #1', u'tag #2']}
-          >>> for i in root.find_nodes_with_tag('name'):
-          ...   print i
-          ... 
-          >>>
-        
-        On the other hand, we create a root XMLListNode and add two
-        name tags to it. Because the XMLListNode has no internal
+        top-level list pass through the search::
+
+            >>> root = XMLDictNode()
+            >>> _ = root.add_node(tag='name', text='tag #1')
+            >>> _ = root.add_node(tag='name', text='tag #2')
+            >>> print root
+            {'name': [u'tag #1', u'tag #2']}
+            >>> for i in root.find_nodes_with_tag('name'):
+            ...   print i
+            ...
+            >>>
+
+        On the other hand, we create a root :py:class:`XMLListNode` and add
+        two name tags to it. Because the :py:class:`XMLListNode` has no internal
         representation of its tag, it checks for matches in its
         children. Note that you shouldn't really create XML trees this
         way; rather, you should always have an XMLDictNode as the
-        root. However, this shows the concept:
-          >>> badroot = XMLListNode()
-          >>> badroot.append(XMLCDATANode('tag #1', tag='name'))
-          >>> badroot.append(XMLCDATANode('tag #2', tag='name'))
-          >>> print badroot
-          [u'tag #1', u'tag #2']
-          >>> print root.emit_xml()
-          <name>tag #1</name>
-          <name>tag #2</name>
-          >>> for i in badroot.find_nodes_with_tag('name'):
-          ...   print i
-          ... 
-          tag #1
-          tag #2
+        root. However, this shows the concept::
 
-        Also, note that this method returns the actual node:
-          >>> root = jxmlease.parse(\"\"\"\
-          ... <a>
-          ...   <b>
-          ...     <c>
-          ...       <foo>bar</foo>
-          ...       <status>ok</status>
-          ...     </c>
-          ...   </b>
-          ... </a>\"\"\")
-          >>> for i in root.find_nodes_with_tag('b'):
-          ...   print i
-          ... 
-          {u'c': {u'foo': u'bar', u'status': u'ok'}}
-        
+            >>> badroot = XMLListNode()
+            >>> badroot.append(XMLCDATANode('tag #1', tag='name'))
+            >>> badroot.append(XMLCDATANode('tag #2', tag='name'))
+            >>> print badroot
+            [u'tag #1', u'tag #2']
+            >>> print root.emit_xml()
+            <name>tag #1</name>
+            <name>tag #2</name>
+            >>> for i in badroot.find_nodes_with_tag('name'):
+            ...   print i
+            ...
+            tag #1
+            tag #2
+
+        Also, note that this method returns the actual node::
+
+            >>> root = jxmlease.parse(\"\"\"\
+            ... <a>
+            ...   <b>
+            ...     <c>
+            ...       <foo>bar</foo>
+            ...       <status>ok</status>
+            ...     </c>
+            ...   </b>
+            ... </a>\"\"\")
+            >>> for i in root.find_nodes_with_tag('b'):
+            ...   print i
+            ...
+            {u'c': {u'foo': u'bar', u'status': u'ok'}}
+
         You can also use a tuple as the tag parameter, in which case
         the method will return nodes with a tag that matches any of
         the given tag values.
-        
+
         You can use this function to create somewhat complicated logic
         that mimics the functionality from XPath "//tag" matches. For
         example, here we check for <xnm:warning> and <xnm:error> nodes
-        and return their value:
-          >>> root = jxmlease.parse(\"\"\"\
-          ... <foo>
-          ...   <xnm:warning>
-          ...     <message>This is bad.</message>
-          ...   </xnm:warning>
-          ...   <bar>
-          ...     <xnm:error>
-          ...       <message>This is very bad.</message>
-          ...     </xnm:error>
-          ...   </bar>
-          ... </foot>\"\"\")
-          >>> if root.has_node_with_tag(('xnm:warning', 'xnm:error')):
-          ...   print "Something bad happened."
-          ... 
-          Something bad happened.
-          >>> for node in root.find_nodes_with_tag(('xnm:warning', 'xnm:error')):
-          ...   if node.tag == 'xnm:error':
-          ...     level = "Error:"
-          ...   elif node.tag == 'xnm:warning':
-          ...     level = "Warning:"
-          ...   else:
-          ...     level = "Unknown:"
-          ...   print(level + " " + node.get("message", "(unknown)"))
-          ... 
-          Warning: This is bad.
-          Error: This is very bad.
-        
+        and return their value::
+
+            >>> root = jxmlease.parse(\"\"\"\
+            ... <foo>
+            ...   <xnm:warning>
+            ...     <message>This is bad.</message>
+            ...   </xnm:warning>
+            ...   <bar>
+            ...     <xnm:error>
+            ...       <message>This is very bad.</message>
+            ...     </xnm:error>
+            ...   </bar>
+            ... </foot>\"\"\")
+            >>> if root.has_node_with_tag(('xnm:warning', 'xnm:error')):
+            ...   print "Something bad happened."
+            ...
+            Something bad happened.
+            >>> for node in root.find_nodes_with_tag(('xnm:warning', 'xnm:error')):
+            ...   if node.tag == 'xnm:error':
+            ...     level = "Error:"
+            ...   elif node.tag == 'xnm:warning':
+            ...     level = "Warning:"
+            ...   else:
+            ...     level = "Unknown:"
+            ...   print(level + " " + node.get("message", "(unknown)"))
+            ...
+            Warning: This is bad.
+            Error: This is very bad.
+
         Once a given node matches, the method does not check that
         node's children.
-        
-        @type tag: text or tuple
-        @param tag: The XML tag (or tags) for which to search.
-        @type recursive: bool
-        @param key: If True (the default), search recursively through
-            all children. If False, only search direct children.
-        @return: A generator which iterates over all matching nodes.
 
+        Args:
+            tag (string or tuple): The XML tag (or tags) for which to search.
+            recursive (bool): If True (the default), search recursively through
+                all children. If False, only search direct children.
+
+        Returns:
+            A generator which iterates over all matching nodes.
         """
         if isinstance(tag, str):
             tag = (tag,)
@@ -1324,24 +1363,24 @@ class XMLNodeBase(XMLNodeMetaClass):
 
     def has_node_with_tag(self, tag, recursive=True):
         """Determine whether a node with a matching tag exists.
-        
-        This method uses the L{find_nodes_with_tag} method to search
+
+        This method uses the :py:meth:`find_nodes_with_tag` method to search
         for a node that is a child of the current node and has a
         matching tag. The tag of the current node is not checked. The
         method returns a boolean value to indicate whether at least
         one matching node is found.
-        
-        Because this function uses the L{find_nodes_with_tag} method,
+
+        Because this function uses the :py:meth:`find_nodes_with_tag` method,
         the parameters and algorithm are the same as the
-        L{find_nodes_with_tag} method.
-        
-        @type tag: text or tuple
-        @param tag: The XML tag (or tags) for which to search.
-        @type recursive: bool
-        @param key: If True (the default), search recursively through
-            all children. If False, only search direct children.
-        @return: True if at least one matching node is found;
-            otherwise, False.
+        :py:meth:`find_nodes_with_tag` method.
+
+        Args:
+            tag (string or tuple): The XML tag (or tags) for which to search.
+            recursive (bool): If True (the default), search recursively through
+                all children. If False, only search direct children.
+
+        Returns:
+            True if at least one matching node is found; otherwise, False.
 
         """
         for node in self.find_nodes_with_tag(tag, recursive=recursive):
@@ -1408,7 +1447,7 @@ class XMLCDATANode(XMLNodeBase, _unicode):
     def prettyprint(self, *args, **kwargs):
         currdepth = kwargs.pop("currdepth", 0)
         newobj = self.__parent_class__(self)
-        if currdepth==0:
+        if currdepth == 0:
             pprint(newobj, *args, **kwargs)
         else:
             return newobj
@@ -1433,17 +1472,19 @@ def _get_dict_value_iter(arg, descr="node"):
 class XMLListNode(XMLNodeBase, list):
     def add_node(self, *args, **kwargs):
         """Add an XML node to the XML tree.
-        
-        You should not call this method on an XMLListNode. Instead,
-        call the add_node method on an L{XMLCDATANode} or an
-        L{XMLDictNode}.
-        
-        @raises: AttributeError, if the node is out of date. (See
-            L{get_current_node}.)
-        @raises: TypeError, if called on an XMLListNode.
+
+        You should **NOT** call this method on an XMLListNode. Instead,
+        call the add_node method on an :py:class:`XMLCDATANode` or an
+        :py:class:`XMLDictNode`.
+
+        Raises:
+            :py:exc:`AttributeError`: If the node is out of date.
+                (See :py:class:`get_current_node`.)
+            :py:exc:`TypeError`: If called on an :py:class:`XMLListNode`.
         """
         self._check_replacement()
-        raise TypeError("Unable to add a child node to a list. Either add the node to the list's parent or one of the list members.")
+        raise TypeError("Unable to add a child node to a list. Either add the "
+                        "node to the list's parent or one of the list members.")
 
     def list(self, in_place=False):
         return self
@@ -1486,17 +1527,17 @@ class XMLListNode(XMLNodeBase, list):
                 while not isinstance(parent, XMLDictNode):
                     parent = parent.parent
                 if not parent:
-                    raise ValueError(
-                        "promote argument is True, but no parent was a dictionary"
-                    )
+                    raise ValueError("promote argument is True, "
+                                     "but no parent was a dictionary")
                 newnode = parent
                 self._replace_node(None)
         if newnode is None:
-            newnode = XMLDictNode(tag=self.tag, key=self.key, parent=self.parent)
+            newnode = XMLDictNode(tag=self.tag, key=self.key,
+                                  parent=self.parent)
             newnode._ignore_level = True
         try:
             for child in self:
-                newkey=None
+                newkey = None
                 for attr_keys in attrs:
                     key_check = KeyBuilder(attr_keys)
 
@@ -1516,7 +1557,8 @@ class XMLListNode(XMLNodeBase, list):
                 if newkey is None:
                     for tag_keys in tags:
                         key_check = KeyBuilder(tag_keys)
-                        for grandchild in _get_dict_value_iter(child, "child node"):
+                        for grandchild in _get_dict_value_iter(child,
+                                                               "child node"):
                             for item in grandchild.list():
                                 newkey = key_check.eval_key(
                                     [item.tag],
@@ -1608,7 +1650,7 @@ class XMLListNode(XMLNodeBase, list):
                                              **kwargs))
             else:
                 newlist.append(v)
-        if currdepth==0:
+        if currdepth == 0:
             pprint(newlist, *args, **kwargs)
         else:
             return newlist
@@ -1653,7 +1695,9 @@ class XMLDictNode(XMLNodeBase, OrderedDict):
                 key = tag
         else:
             if not isinstance(new_node, XMLNodeBase):
-                raise TypeError("'new_node' argument must be a subclass of XMLNodeBase, not '%s'" % (type(new_node).__name__))
+                raise TypeError("'new_node' argument must be a subclass of "
+                                "XMLNodeBase, not '%s'"
+                                % (type(new_node).__name__))
             if key:
                 if update:
                     new_node.key = (key)
@@ -1734,7 +1778,8 @@ class XMLDictNode(XMLNodeBase, OrderedDict):
             for k in self:
                 if pretty and depth == 0 and not first_element:
                     content_handler.ignorableWhitespace(newl)
-                self[k]._emit_handler(content_handler, depth, pretty, newl, indent)
+                self[k]._emit_handler(content_handler, depth, pretty, newl,
+                                      indent)
                 first_element = False
             return
         if pretty:
@@ -1743,7 +1788,8 @@ class XMLDictNode(XMLNodeBase, OrderedDict):
         if pretty and len(self) > 0:
             content_handler.ignorableWhitespace(newl)
         for k in self:
-            self[k]._emit_handler(content_handler, depth+1, pretty, newl, indent)
+            self[k]._emit_handler(content_handler, depth+1, pretty, newl,
+                                  indent)
         content_handler.characters(_unicode.strip(self.get_cdata()))
         if pretty and len(self) > 0:
             content_handler.ignorableWhitespace(depth * indent)
@@ -1758,13 +1804,13 @@ class XMLDictNode(XMLNodeBase, OrderedDict):
             return {}
         # Construct a new item, recursively.
         newdict = dict()
-        for (k,v) in self.items():
+        for (k, v) in self.items():
             if hasattr(v, "prettyprint"):
                 newdict[k] = v.prettyprint(*args, currdepth=currdepth+1,
                                            **kwargs)
             else:
                 newdict[k] = v
-        if currdepth==0:
+        if currdepth == 0:
             pprint(newdict, *args, **kwargs)
         else:
             return newdict
@@ -1835,7 +1881,7 @@ class _DictSAXHandler(object):
         else:
             self.in_ignore = False
         self.cdata_separator = cdata_separator
-        self.need_cdata_separator=False
+        self.need_cdata_separator = False
 
     def _parse_generator_matches(self, match_string):
         match_obj = _GeneratorMatch(match_string=match_string)
@@ -1907,7 +1953,8 @@ class _DictSAXHandler(object):
                 if k.rfind(self.namespace_separator) >= 0:
                     newkey = k[k.rfind(self.namespace_separator) + 1:]
                     if newkey in rv:
-                        raise ValueError("Stripping namespace causes duplicate attribute \"%s\"" % newkey)
+                        raise ValueError("Stripping namespace causes duplicate "
+                                         "attribute \"%s\"" % newkey)
                     rv[newkey] = rv[k]
                     del rv[k]
         return rv
@@ -1973,24 +2020,25 @@ class _DictSAXHandler(object):
 
 class Parser(object):
     """Creates Python data structures from raw XML.
-    
-    This class returns a callable object. You can provide parameters at
-    the class creation time. These parameters modify the default
-    parameters for the parser. When you call the callable object to
-    parse a document, you can supply additional parameters to override
-    the default values.
-    
-    General usage is like this:
-      >>> myparser = Parser()
-      >>> root = myparser("<a>foo</a>")
-    
-    Parsing
-    =======
-      In general, this returns an L{XMLDictNode} containing the parsed
-      XML tree.
-      
-      In this example, root is an L{XMLDictNode} which contains a
-      representation of the XML you parsed:
+
+    This class creates a callable object used to parse XML into Python data
+    structures. You can provide optional parameters at the class creation time.
+    These parameters modify the default behavior of the parser. When you invoke
+    the callable object to parse a document, you can supply additional
+    parameters to override the values specified when the :py:class:`Parser`
+    object was created.
+
+    General usage is::
+
+        >>> myparser = Parser()
+        >>> root = myparser("<a>foo</a>")
+
+    Calling a :py:class:`Parser` object returns an :py:class:`XMLDictNode`
+    containing the parsed XML tree.
+
+    In this example, ``root`` is an :py:class:`XMLDictNode` which contains a
+    representation of the parsed XML::
+
         >>> isinstance(root, XMLDictNode)
         True
         >>> root.prettyprint()
@@ -1999,132 +2047,116 @@ class Parser(object):
         <?xml version="1.0" encoding="utf-8"?>
         <a>foo</a>
 
-      Single-invocation Parsing
-      -------------------------
-        If you will just be using a parser once, you can just use the
-        L{parse} method, which is a shortcut way of creating a Parser
-        class and calling it all in one call. You can provide the same
-        arguments to the L{parse} method that you can provide to the
-        L{Parser} class.
-        
-        For example:
+    If you will just be using a parser once, you can just use the
+    :py:meth:`parse` method, which is a shortcut way of creating a
+    :py:class:`Parser` class and calling it all in one call. You can provide
+    the same arguments to the :py:meth:`parse` method that you provide to the
+    :py:class:`Parser` class.
+
+    For example::
+
           >>> root = jxmlease.parse('<a x="y"><b>1</b><b>2</b><b>3</b></a>')
           >>> root.prettyprint()
           {u'a': {u'b': [u'1', u'2', u'3']}}
 
-      Generators
-      ----------
-        It is possible to call this as a generator by specifying the
-        "generator" parameter. The "generator" parameter contains a
-        list of paths to match. If paths are provided in this parameter,
-        the behavior of the parser is changed. Instead of
-        returning the root node of a parsed XML hierarchy, the
-        parser returns a generator object. On each call to the
-        generator object, it will return the next node that matches
-        one of the provided paths.
-        
-        Paths are provided in a format similar to XPath
-        expressions. For example, "/a/b" will match node <b> in this
-        XML: ::
-          <a>
+    It is possible to call a :py:class:`Parser` object as a generator by
+    specifying the :py:obj:`generator` parameter. The :py:obj:`generator`
+    parameter contains a list of paths to match. If paths are provided in this
+    parameter, the behavior of the parser is changed. Instead of returning the
+    root node of a parsed XML hierarchy, the parser returns a generator object.
+    On each call to the generator object, it will return the next node that
+    matches one of the provided paths.
+
+    Paths are provided in a format similar to XPath expressions. For example,
+    ``/a/b`` will match node ``<b>`` in this XML::
+
+        <a>
             <b/>
-          </a>
+        </a>
 
-        If a path begins with a "/", it must exactly match the full
-        path to a node. If a path does not begin with a "/", it must
-        exactly match the "right side" of the path to a node. For
-        example, consider this XML: ::
-          <a>
+    If a path begins with a ``/``, it must exactly match the full path to a
+    node. If a path does not begin with a ``/``, it must exactly match the
+    "right side" of the path to a node. For example, consider this XML::
+
+        <a>
             <b>
-              <c/>
+                <c/>
             </b>
-          </a>
+        </a>
 
-        In this example, "/a/b/c", "c", "b/c", and "a/b/c" all match
-        the <c> node.
-        
-        For each match, the generator returns a tuple of (path,
-        match_string, xml_node), where the "path" is the calculated
-        absolute path to the matching node, "match_string" is the
-        user-supplied match string that triggered the match, and
-        "xml_node" is the object representing that node (an instance
-        of a L{XMLNodeBase} subclass).
-        
-        For example:
-          >>> xml = '<a x="y"><b>1</b><b>2</b><b>3</b></a>'
-          >>> myparser = Parser(generator=["/a/b"])
-          >>> for (path, match, value) in myparser(xml):
-          ...   print "%s: %s" % (path, value)
-          ...
-          /a/b: 1
-          /a/b: 2
-          /a/b: 3
-    
-    When calling the parser, you can specify all of these
-    parameters. When creating a parsing instance, you can specify
-    all of these parameters except xml_input:
+    In this example, ``/a/b/c``, ``c``, ``b/c``, and ``a/b/c`` all match the
+    ``<c>`` node.
 
-      @type xml_input: text or file-like object
-      @param xml_input: A string or file-like object that contains XML.
-    
-      @type encoding: text or None
-      @param encoding: The input's encoding. If not provided, this
-          defaults to 'utf-8'.
-      
-      @type expat: An expat parser class, or another parser class that
-          supports the same interface as expat.
-      @param expat: An expat parser class to use for parsing the XML
-          input. If not provided, this defaults to the expat parser in
-          xml.parsers.
-      
-      @type process_namespaces: bool
-      @param process_namespaces: If True, namespaces in tags and
-          attributes are converted to their full URL value. If False
-          (the default), the namespaces in tags and attributes are
-          left unchanged.
-      
-      @type namespace_separator: text
-      @param namespace_separator: If process_namespaces is True, this
-          specifies the separator that expat should use between namespaces
-          and identifiers in tags and attributes
-      
-      @type xml_attribs: bool
-      @param xml_attribs: If True (the default), include XML
-          attributes. If False, ignore them.
-      
-      @type strip_whitespace: bool
-      @param strip_whitespace: If True (the default), strip whitespace
-          at the start and end of CDATA. If False, keep all
-          whitespace.
-      
-      @type namespaces: dict
-      @param namespaces: A remapping for namespaces. If supplied,
-          identifiers with a namespace prefix will have their
-          namespace prefix rewritten based on the dictionary. The
-          code will look for namespaces[current_namespace]. If found,
-          current_namespace will be replaced with the result of the
-          lookup.
-      
-      @type strip_namespace: bool
-      @param strip_namespace: If True, the namespace prefix will be
-          removed from all identifiers. If False (the default), the
-          namespace prefix will be retained.
-      
-      @type cdata_separator: text
-      @param cdata_separator: When encountering "semi-structured" XML
-          (where the XML has CDATA and tags intermixed at the same
-          level), the cdata_separator will be placed between the
-          different groups of CDATA. By default, the cdata_separator
-          parameter is '', which results in the CDATA groups being
-          concatenated without separator.
-      
-      @type generator: list of strings
-      @param generator: A list of paths to match. If paths are provided
-          here, the behavior of the parser is changed. Instead of
-          returning the root node of a parsed XML hierarchy, the
-          parser returns a generator object. On each call to the
-          generator object, it will return the next node that matches
-          one of the provided paths.
+    For each match, the generator returns a tuple of:
+    ``(path,match_string,xml_node)``, where the *path* is
+    the calculated absolute path to the matching node, *match_string* is the
+    user-supplied match string that triggered the match, and *xml_node* is the
+    object representing that node (an instance of a :py:class:`XMLNodeBase`
+    subclass).
+
+    For example::
+
+        >>> xml = '<a x="y"><b>1</b><b>2</b><b>3</b></a>'
+        >>> myparser = Parser(generator=["/a/b"])
+        >>> for (path, match, value) in myparser(xml):
+        ...   print "%s: %s" % (path, value)
+        ...
+        /a/b: 1
+        /a/b: 2
+        /a/b: 3
+
+    When calling the parser, you can specify all of these parameters. When
+    creating a parsing instance, you can specify all of these parameters
+    except :py:obj:`xml_input`:
+
+    Args:
+	xml_input (stirng or file-like object): Ccontains the XML to parse.
+	encoding (string or None): The input's encoding. If not provided, this
+            defaults to 'utf-8'.
+        expat (An expat, or equivalent, parser class): Used for parsing the XML
+            input. If not provided, defaults to the expat parser in
+            :py:data:`xml.parsers`.
+        process_namespaces (bool): If True, namespaces in tags and attributes
+            are converted to their full URL value. If False (the default), the
+            namespaces in tags and attributes are left unchanged.
+	namespace_separator (string): If :py:obj:`process_namespaces` is True,
+            this specifies the separator that expat should use between
+            namespaces and identifiers in tags and attributes
+	xml_attribs (bool): If True (the default), include XML attributes.
+            If False, ignore them.
+        strip_whitespace (bool): If True (the default), strip whitespace
+            at the start and end of CDATA. If False, keep all whitespace.
+        namespaces (dict): A remapping for namespaces. If supplied, identifiers
+            with a namespace prefix will have their namespace prefix rewritten
+            based on the dictionary. The code will look for
+            :py:obj:`namespaces[current_namespace]`. If found,
+            :py:obj:`current_namespace` will be replaced with the result of
+            the lookup.
+        strip_namespace (bool): If True, the namespace prefix will be
+            removed from all identifiers. If False (the default), the namespace
+            prefix will be retained.
+        cdata_separator (string): When encountering "semi-structured" XML
+            (where the XML has CDATA and tags intermixed at the same level), the
+            :py:obj:`cdata_separator` will be placed between the different
+            groups of CDATA. By default, the :py:obj:`cdata_separator`
+            parameter is '', which results in the CDATA groups being
+            concatenated without separator.
+        generator (list of strings): A list of paths to match. If paths are
+            provided here, the behavior of the parser is changed. Instead of
+            returning the root node of a parsed XML hierarchy, the parser
+            returns a :py:obj:`generator` object. On each call to the
+            :py:obj:`generator` object, it will return the next node that
+            matches one of the provided paths.
+
+    Returns:
+        A callable instance of the :py:class:`Parser` class.
+
+        Calling a :py:class:`Parser` object returns an :py:class:`XMLDictNode`
+        containing the parsed XML tree.
+
+        Alternatively, if the :py:obj:`generator` parameter is specified, a
+        :py:obj:`generator` object is returned.
+
     """
 
     def __init__(self, **kwargs):
@@ -2170,7 +2202,7 @@ class Parser(object):
         self._encoding = self._kwargs.pop('encoding')
         self._expat = self._kwargs.pop('expat')
         self._process_namespaces = self._kwargs.pop('process_namespaces')
-        
+
     def _make_handler(self):
         self._handler = _DictSAXHandler(**self._kwargs)
 
@@ -2206,7 +2238,7 @@ class Parser(object):
         else:
             io_obj = xml_input
 
-        at_eof=False
+        at_eof = False
         while not at_eof:
             buf = io_obj.read(parsing_increment)
             if len(buf) == 0:
@@ -2224,9 +2256,10 @@ class Parser(object):
                 # the error and return the empty dictionary.
                 raise_error = True
                 if (hasattr(expat, "errors") and
-                    hasattr(expat.errors, "XML_ERROR_NO_ELEMENTS") and
-                    at_eof):
-                    if str(e).startswith(expat.errors.XML_ERROR_NO_ELEMENTS + ":"):
+                        hasattr(expat.errors, "XML_ERROR_NO_ELEMENTS") and
+                        at_eof):
+                    if str(e).startswith(expat.errors.XML_ERROR_NO_ELEMENTS +
+                                         ":"):
                         raise_error = False
 
                 # If needed, raise the error
@@ -2243,7 +2276,7 @@ class Parser(object):
         # Make a copy of the default arguments and update that copy with
         # our new arguments.
         self._process_args(**kwargs)
-        
+
         # Did we get keyword arguments? If so, we need to recreate the
         # default handler. Otherwise, we can try to use it (if the default
         # parser exists).
@@ -2282,8 +2315,9 @@ class Parser(object):
                 # the error and return the empty dictionary.
                 raise_error = True
                 if (hasattr(expat, "errors") and
-                    hasattr(expat.errors, "XML_ERROR_NO_ELEMENTS")):
-                    if str(e).startswith(expat.errors.XML_ERROR_NO_ELEMENTS + ":"):
+                        hasattr(expat.errors, "XML_ERROR_NO_ELEMENTS")):
+                    if str(e).startswith(expat.errors.XML_ERROR_NO_ELEMENTS +
+                                         ":"):
                         raise_error = False
 
                 # If needed, raise the error
@@ -2294,8 +2328,8 @@ class Parser(object):
 
 def parse(xml_input, **kwargs):
     """Create Python data structures from raw XML.
-    
-    See the L{Parser} class documentation."""
+
+    See the :py:class:`Parser` class documentation."""
     return Parser(**kwargs)(xml_input)
 
 if etree:
@@ -2312,54 +2346,50 @@ if etree:
 
     class EtreeParser(object):
         """Creates Python data structures from an ElementTree object.
-    
+
         This class returns a callable object. You can provide parameters at
         the class creation time. These parameters modify the default
         parameters for the parser. When you call the callable object to
         parse a document, you can supply additional parameters to override
         the default values.
-    
-        General usage is like this:
-          >>> myparser = Parser()
-          >>> root = myparser(etree_root)
-        
-        For detailed usage information, please see the L{Parser}
+
+        General usage is like this::
+
+            >>> myparser = Parser()
+            >>> root = myparser(etree_root)
+
+        For detailed usage information, please see the :py:class`Parser`
         class. Other than the differences noted below, the behavior of
         the two classes should be the same.
-        
-        Namespace Identifiers
-        =====================
-          In certain versions of ElementTree, the original
-          namespace identifiers are not maintained. In these cases, the
-          class will recreate namespace identfiers to represent the
-          original namespaces. It will add appropriate xmlns attributes
-          to maintain the original namespace mapping. However, the
-          actual identifier will be lost. As best I can tell, this is a
-          bug with ElementTree, rather than this code. To avoid this
-          problem, use LXML.
 
-        Single-invocation Parsing
-        =========================
-          If you will just be using a parser once, you can just use
-          the L{parse_etree} method, which is a shortcut way of
-          creating a EtreeParser class and calling it all in one call. You
-          can provide the same arguments to the L{parse_etree} method that you
-          can provide to the EtreeParser class.
+        Namespace Identifiers:
 
-        Parameters
-        ==========
-          As compared to the L{Parser} class, the EtreeParser class does
-          not accept the xml_input, expat, or encoding parameters.
-        
-          Instead of the xml_input paramter, it accepts the etree_root
-          parameter. (See below.)
+        In certain versions of :py:mod:`ElementTree`, the original namespace
+        identifiers are not maintained. In these cases, the class will recreate
+        namespace identfiers to represent the original namespaces. It will add
+        appropriate xmlns attributes to maintain the original namespace
+        mapping. However, the actual identifier will be lost. As best I can
+        tell, this is a bug with :py:mod:`ElementTree`, rather than this code.
+        To avoid this problem, use :py:mod:`lxml`.
 
-        @type etree_root: ElementTree
-        @param etree_root: An ElementTree object representing the
-            tree you wish to parse.
+        Single-invocation Parsing:
+
+        If you will just be using a parser once, you can just use the
+        :py:meth:`parse_etree` method, which is a shortcut way of creating a
+        :py:class:`EtreeParser` class and calling it all in one call. You
+        can provide the same arguments to the :py:meth:`parse_etree` method
+        that you can provide to the :py:class:`EtreeParser` class.
+
+        Args:
+            etree_root (:py:class:`ElementTree`): An :py:class:`ElementTree`
+                object representing the tree you wish to parse.
+
+        Also accepts most of the same arguments as the :py:class:`Parser` class.
+        However, it does not accept the :py:obj:`xml_input`, :py:obj:`expat`,
+        or :py:obj:`encoding` parameters.
 
         """
-    
+
         def __init__(self, **kwargs):
             """See the class documentation."""
             # Populate a dictionary with default arguments.
@@ -2401,7 +2431,7 @@ if etree:
             # Pop off and save the argument(s) that we don't want to pass
             # to the handler class.
             self._process_namespaces = self._kwargs.pop('process_namespaces')
-            
+
             # Get local versions of the arguments we want.
             self._namespace_separator = self._kwargs['namespace_separator']
             self._strip_namespace = self._kwargs['strip_namespace']
@@ -2418,7 +2448,7 @@ if etree:
             return self._parse_node(node, root_element=True)
 
         def _parse_attrib(self, in_dict, out_dict, nsdict):
-            for (k,v) in list(in_dict.items()):
+            for (k, v) in list(in_dict.items()):
                 parsed_attr = QNameSeparator(k)
                 if not parsed_attr.namespace:
                     out_dict[k] = v
@@ -2481,7 +2511,7 @@ if etree:
                     # them out here when strip_namespace is true. It seems
                     # best to have the logic in a single place.
                     attrib = dict()
-                    for (k,v) in node.attrib.items():
+                    for (k, v) in node.attrib.items():
                         parsed_attr = QNameSeparator(k)
                         if not parsed_attr.namespace:
                             attrib[k] = v
@@ -2584,14 +2614,13 @@ if etree:
                             ns_resolve_dict[e.namespace] = newns
                             attrib[_unicode("xmlns:" + newns)] = e.namespace
 
-                            
                     # Add any necessary xmlns tags.
                     if hasattr(node, "nsmap"):
                         if root_element:
                             parent_nsmap = {}
                         else:
                             parent_nsmap = node.getparent().nsmap
-                        for (k,v) in node.nsmap.items():
+                        for (k, v) in node.nsmap.items():
                             if parent_nsmap.get(k, '@@NOMATCH@@') != v:
                                 if k:
                                     attrib[_unicode("xmlns:" + k)] = v
@@ -2656,7 +2685,7 @@ if etree:
                 return self._handler.item
 
     def parse_etree(etree_root, **kwargs):
-        """Create Python data structures from an ElementTree object.
-    
-        See the L{EtreeParser} class documentation."""
+        """Create Python data structures from an :py:class:`ElementTree` object.
+
+        See the :py:class:`EtreeParser` class documentation."""
         return EtreeParser(**kwargs)(etree_root)
