@@ -2361,7 +2361,7 @@ if etree:
         For detailed usage information, please see the :py:class`Parser`
         class. Other than the differences noted below, the behavior of
         the two classes should be the same.
-        
+
         Namespace Identifiers:
 
         In certain versions of :py:mod:`ElementTree`, the original namespace
@@ -2387,9 +2387,9 @@ if etree:
         Also accepts most of the same arguments as the :py:class:`Parser` class.
         However, it does not accept the :py:obj:`xml_input`, :py:obj:`expat`,
         or :py:obj:`encoding` parameters.
-        
+
         """
-    
+
         def __init__(self, **kwargs):
             """See the class documentation."""
             # Populate a dictionary with default arguments.
@@ -2431,7 +2431,7 @@ if etree:
             # Pop off and save the argument(s) that we don't want to pass
             # to the handler class.
             self._process_namespaces = self._kwargs.pop('process_namespaces')
-            
+
             # Get local versions of the arguments we want.
             self._namespace_separator = self._kwargs['namespace_separator']
             self._strip_namespace = self._kwargs['strip_namespace']
@@ -2448,7 +2448,7 @@ if etree:
             return self._parse_node(node, root_element=True)
 
         def _parse_attrib(self, in_dict, out_dict, nsdict):
-            for (k,v) in list(in_dict.items()):
+            for (k, v) in list(in_dict.items()):
                 parsed_attr = QNameSeparator(k)
                 if not parsed_attr.namespace:
                     out_dict[k] = v
@@ -2511,7 +2511,7 @@ if etree:
                     # them out here when strip_namespace is true. It seems
                     # best to have the logic in a single place.
                     attrib = dict()
-                    for (k,v) in node.attrib.items():
+                    for (k, v) in node.attrib.items():
                         parsed_attr = QNameSeparator(k)
                         if not parsed_attr.namespace:
                             attrib[k] = v
@@ -2614,14 +2614,13 @@ if etree:
                             ns_resolve_dict[e.namespace] = newns
                             attrib[_unicode("xmlns:" + newns)] = e.namespace
 
-                            
                     # Add any necessary xmlns tags.
                     if hasattr(node, "nsmap"):
                         if root_element:
                             parent_nsmap = {}
                         else:
                             parent_nsmap = node.getparent().nsmap
-                        for (k,v) in node.nsmap.items():
+                        for (k, v) in node.nsmap.items():
                             if parent_nsmap.get(k, '@@NOMATCH@@') != v:
                                 if k:
                                     attrib[_unicode("xmlns:" + k)] = v
@@ -2687,6 +2686,6 @@ if etree:
 
     def parse_etree(etree_root, **kwargs):
         """Create Python data structures from an :py:class:`ElementTree` object.
-    
+
         See the :py:class:`EtreeParser` class documentation."""
         return EtreeParser(**kwargs)(etree_root)

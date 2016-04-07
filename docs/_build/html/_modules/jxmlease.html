@@ -306,7 +306,7 @@
 <span class="s2">                deep (bool): If True (and the :py:obj:`convert` parameter is</span>
 <span class="s2">                    True), the :py:meth:`convert` method is run recursively</span>
 <span class="s2">                    on the object&#39;s children during object initialization.</span>
-<span class="s2">            &quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">name</span><span class="p">)</span>
+<span class="s2">            &quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="c1"># Create and return the class.</span>
         <span class="k">return</span> <span class="nb">type</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
 
@@ -317,7 +317,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">initializer</span><span class="p">,</span> <span class="n">_NoArg</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;got multiple values for keyword &quot;</span>
-				<span class="s2">&quot;argument &#39;initializer&#39;&quot;</span><span class="p">)</span>
+                                <span class="s2">&quot;argument &#39;initializer&#39;&quot;</span><span class="p">)</span>
             <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">initializer</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">initializer</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -385,13 +385,13 @@
 
 <span class="k">class</span> <span class="nc">XMLNodeBase</span><span class="p">(</span><span class="n">XMLNodeMetaClass</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;This module provides methods common to the XML node classes.</span>
-<span class="sd">    </span>
+
 <span class="sd">    This modules is not intended for standalone use.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">has_xml_attrs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Determine if the node has XML attributes.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            A bool that is True if the node has XML attributes, and</span>
 <span class="sd">                False otherwise.</span>
@@ -407,10 +407,10 @@
                 <span class="s2">&quot;Attempt to modify an out-of-date node. &quot;</span> <span class="o">+</span>
                 <span class="s2">&quot;Use get_current_node() to update the reference.&quot;</span>
                 <span class="p">)</span>
-        
+
     <span class="k">def</span> <span class="nf">set_xml_attr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set an XML attribute.</span>
-<span class="sd">        </span>
+
 <span class="sd">        This method sets the XML attribute to the given value.  If the</span>
 <span class="sd">        XML attribute already existed, its value is overridden by the</span>
 <span class="sd">        new value.  If the XML attribute did not already exist, it is</span>
@@ -432,11 +432,11 @@
 
     <span class="k">def</span> <span class="nf">get_xml_attr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">defval</span><span class="o">=</span><span class="n">_NoArg</span><span class="p">()):</span>
         <span class="sd">&quot;&quot;&quot;Get an XML attribute.</span>
-<span class="sd">        </span>
+
 <span class="sd">        This method returns the value of an XML attribute. If the XML</span>
 <span class="sd">        attribute does not exist, it will return a user-supplied default value.</span>
 <span class="sd">        If the user did not supply a default value, it raises a KeyError.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            attr (string): The name of the XML attribute.</span>
 <span class="sd">            defval (string): The default value. (Default: Raise a KeyError.)</span>
@@ -457,12 +457,12 @@
 
     <span class="k">def</span> <span class="nf">get_xml_attrs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the XML attribute dictionary.</span>
-<span class="sd">        </span>
+
 <span class="sd">        This method returns the value of the XML attribute</span>
 <span class="sd">        dictonary.  Note that it returns the actual XML attribute</span>
 <span class="sd">        dictionary, rather than a copy.  Please take caution in</span>
 <span class="sd">        modifying it.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            :py:class:`OrderedDict`: The XML attribute dictionary.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -470,7 +470,7 @@
 
     <span class="k">def</span> <span class="nf">delete_xml_attr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Delete an XML attribute.</span>
-<span class="sd">        </span>
+
 <span class="sd">        This method deletes an XML attribute from the node.  If the</span>
 <span class="sd">        attribute does not exist, it raises a KeyError.</span>
 
@@ -490,13 +490,13 @@
 
     <span class="k">def</span> <span class="nf">set_cdata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cdata</span><span class="p">,</span> <span class="n">return_node</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set a node&#39;s CDATA.</span>
-<span class="sd">        </span>
+
 <span class="sd">        This method sets a node&#39;s CDATA.  Note that any node can</span>
 <span class="sd">        contain CDATA in what is called &quot;semi-structured&quot;</span>
 <span class="sd">        XML. However, nodes that only contain CDATA are represented as</span>
 <span class="sd">        :py:class:`XMLCDATANode` objects. Regardless of the node, you can use</span>
 <span class="sd">        this same method to set the CDATA.</span>
-<span class="sd">        </span>
+
 <span class="sd">        **Note**: When running this on an XMLCDATANode, the actual node</span>
 <span class="sd">        will be replaced with a new node in the tree. (This is a</span>
 <span class="sd">        result of Python&#39;s string immutability.)  The function will</span>
@@ -531,13 +531,13 @@
 
     <span class="k">def</span> <span class="nf">append_cdata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cdata</span><span class="p">,</span> <span class="n">return_node</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Append text to a node&#39;s CDATA.</span>
-<span class="sd">        </span>
+
 <span class="sd">        This method appends text to a node&#39;s CDATA.  Note that any</span>
 <span class="sd">        node can contain CDATA in what is called &quot;semi-structured&quot;</span>
 <span class="sd">        XML. However, nodes that only contain CDATA are represented as</span>
 <span class="sd">        :py:class:`XMLCDATANode` objects. Regardless of the node, you can use</span>
 <span class="sd">        this same method to append CDATA.</span>
-<span class="sd">        </span>
+
 <span class="sd">        **Note**: When running this on an :py:class:`XMLCDATANode`, the actual</span>
 <span class="sd">        node will be replaced with a new node in the tree. (This is a</span>
 <span class="sd">        result of Python&#39;s string immutability.)  The function will</span>
@@ -551,7 +551,7 @@
 
 <span class="sd">            &gt;&gt;&gt; node = root[&#39;a&#39;][&#39;b&#39;][0]</span>
 <span class="sd">            &gt;&gt;&gt; node = node.append_cdata(&quot;foo&quot;, True)</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            cdata (string): The text value that should be used for the</span>
 <span class="sd">                node&#39;s CDATA.</span>
@@ -573,7 +573,7 @@
 
     <span class="k">def</span> <span class="nf">get_cdata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get a node&#39;s CDATA.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            A string containing the node&#39;s CDATA.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -581,17 +581,17 @@
 
     <span class="k">def</span> <span class="nf">strip_cdata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chars</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">return_node</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Strip leading/trailing characters from a node&#39;s CDATA.</span>
-<span class="sd">        </span>
+
 <span class="sd">        This method runs the string class&#39; :py:meth:`strip` method on a node&#39;s</span>
 <span class="sd">        CDATA and updates the node&#39;s CDATA with the result. (This is</span>
 <span class="sd">        the functional equivalent to</span>
 <span class="sd">        ``node.set_cdata(node.get_cdata().strip())``.)</span>
-<span class="sd">        </span>
+
 <span class="sd">        Note that any node can contain CDATA in what is called</span>
 <span class="sd">        &quot;semi-structured&quot; XML. However, nodes that only contain CDATA</span>
 <span class="sd">        are represented as :py:class:`XMLCDATANode` objects. Regardless of the</span>
 <span class="sd">        node, you can use this same method to append CDATA.</span>
-<span class="sd">        </span>
+
 <span class="sd">        **Note**: When running this on an :py:class:`XMLCDATANode`, the actual</span>
 <span class="sd">        node will be replaced with a new node in the tree. (This is a</span>
 <span class="sd">        result of Python&#39;s string immutability.)  The function will</span>
@@ -605,7 +605,7 @@
 
 <span class="sd">            &gt;&gt;&gt; node = root[&#39;a&#39;][&#39;b&#39;][0]</span>
 <span class="sd">            &gt;&gt;&gt; node = node.strip_cdata(return_node=True)</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            chars (string): Contains the characters to strip. This is passed to</span>
 <span class="sd">                the string class&#39; :py:meth:`strip` method.</span>
@@ -627,20 +627,20 @@
     <span class="k">def</span> <span class="nf">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">_unicode</span><span class="p">(),</span> <span class="n">new_node</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                  <span class="n">update</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add an XML node to an XML tree.</span>
-<span class="sd">        </span>
+
 <span class="sd">        This method adds a new XML node as a child of the current</span>
 <span class="sd">        node. If the current node is an :py:class:`XMLCDATANode`, it will be</span>
 <span class="sd">        converted to an :py:class:`XMLDictNode` so that it can hold children.</span>
 <span class="sd">        If the current node is an :py:class:`XMLDictNode` and you attempt to</span>
 <span class="sd">        add a node with a duplicate key, the code will create a list to hold</span>
 <span class="sd">        the existing node and add the new node to the list.</span>
-<span class="sd">        </span>
+
 <span class="sd">        By default, all new nodes are created as :py:class:`XMLCDATANode`</span>
 <span class="sd">        objects. You can include any keyword parameters that you could</span>
 <span class="sd">        provide when creating an :py:class:`XMLCDATANode` object. If supplied,</span>
 <span class="sd">        these additional keyword parameters are passed to the</span>
 <span class="sd">        :py:func:`XMLCDATANode.__init__` function.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            tag (string): The XML tag of the node.</span>
 <span class="sd">            key (string or tuple): The dictionary key that the method should</span>
@@ -672,18 +672,18 @@
 
     <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_place</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a node as a list.</span>
-<span class="sd">        </span>
+
 <span class="sd">        This method returns a node as a list. This is useful when you</span>
 <span class="sd">        are not sure whether a node will contain a single entry or a</span>
 <span class="sd">        list. If the node contains a list, the node itself is</span>
 <span class="sd">        returned. If the node does not already contain a list, the</span>
 <span class="sd">        method creates a list, adds the node to it, and returns the</span>
 <span class="sd">        list.</span>
-<span class="sd">        </span>
+
 <span class="sd">        If the :py:obj:`in_place` parameter is True, then the change is</span>
 <span class="sd">        made in the XML tree. Otherwise, the XML tree is left unchanged and</span>
 <span class="sd">        the method creates and returns a temporary list.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            in_place (bool): Whether the change should be made in the</span>
 <span class="sd">                XML tree.</span>
@@ -722,21 +722,21 @@
 
     <span class="k">def</span> <span class="nf">get_current_node</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the current node.</span>
-<span class="sd">        </span>
+
 <span class="sd">        There are times that the current node must be replaced in the</span>
 <span class="sd">        XML tree for some reason. For example, due to the immutability</span>
 <span class="sd">        of Python strings, a new XMLCDATANode (which masquerades as a</span>
 <span class="sd">        string) is required anytime its CDATA value changes.</span>
-<span class="sd">        </span>
+
 <span class="sd">        When this occurs, you can retrieve the latest node using the</span>
 <span class="sd">        get_current_node() method. This will attempt to find the node</span>
 <span class="sd">        that succeeded the node in question. If the node is still</span>
 <span class="sd">        current, it simply returns itself.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Therefore, it should always be safe to run::</span>
 
 <span class="sd">            &gt;&gt;&gt; node = node.get_current_node()</span>
-<span class="sd">        </span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            Subclass of :py:class:`XMLNodeBase` containing the current</span>
 <span class="sd">            successor to the node (if any). If the node is still &quot;current&quot;,</span>
@@ -799,7 +799,7 @@
                     <span class="k">return</span>
                 <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">XMLListNode</span><span class="p">):</span>
                     <span class="c1"># Check the list</span>
-                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)):</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)):</span>
                         <span class="k">if</span> <span class="n">val</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="p">:</span>
                             <span class="k">if</span> <span class="n">newnode</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                                 <span class="c1"># Update the new node&#39;s key and parent</span>
@@ -818,15 +818,15 @@
             <span class="k">pass</span>
         <span class="c1"># Case 2: Parent is list</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">made_change</span><span class="o">=</span><span class="bp">False</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">)):</span>
+            <span class="n">made_change</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">)):</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">newnode</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">newnode</span>
                         <span class="k">return</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-                        <span class="n">made_change</span><span class="o">=</span><span class="bp">True</span>
+                        <span class="n">made_change</span> <span class="o">=</span> <span class="bp">True</span>
                         <span class="k">break</span>
             <span class="k">if</span> <span class="n">made_change</span><span class="p">:</span>
                 <span class="c1"># Make sure we don&#39;t need to delete the enclosing list,</span>
@@ -841,34 +841,34 @@
     <span class="k">def</span> <span class="nf">dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">[],</span> <span class="n">tags</span><span class="o">=</span><span class="p">[],</span> <span class="n">func</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">in_place</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
              <span class="n">promote</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a dictionary keyed as indicated by the parameters.</span>
-<span class="sd">        </span>
+
 <span class="sd">        This method lets you re-key your data with some</span>
 <span class="sd">        flexibility. It takes the current node (whether a single node</span>
 <span class="sd">        or a list) and turns it into a dictionary. If the current node</span>
 <span class="sd">        is a list, all the list members are added to the</span>
 <span class="sd">        dictionary. If the current node is not a list, just the</span>
 <span class="sd">        current node is added to the dictonary.</span>
-<span class="sd">        </span>
+
 <span class="sd">        The key for each node is determined by the :py:obj:`attrs`,</span>
 <span class="sd">        :py:obj:`tags`, and :py:obj:`func` parameters, in that order of</span>
 <span class="sd">        precedence. For *each node*, the method looks for child nodes that</span>
 <span class="sd">        have an XML attribute that exactly matches one of the attributes</span>
 <span class="sd">        in the :py:obj:`attrs` argument. If it finds a match, it uses the</span>
 <span class="sd">        *node&#39;s* (not the attribute&#39;s) CDATA as the key.</span>
-<span class="sd">        </span>
+
 <span class="sd">        If the method does not find a matching attribute, it looks for</span>
 <span class="sd">        child nodes that have a tag that exactly matches one of the</span>
 <span class="sd">        tags in the :py:obj:`tags` argument. If it finds a match, it uses</span>
 <span class="sd">        the node&#39;s CDATA as the key.</span>
-<span class="sd">        </span>
+
 <span class="sd">        If the method does not find a matching tag, it passes the node</span>
 <span class="sd">        to the user-suppled function (supplied by the :py:obj:`func` parameter)</span>
 <span class="sd">        and uses the return value as the key.</span>
-<span class="sd">        </span>
+
 <span class="sd">        If the :py:obj:`func` is not provided or returns a value that</span>
 <span class="sd">        evaluates to False (e.g. None or &quot;&quot;), the method uses the node&#39;s</span>
 <span class="sd">        XML tag as the key.</span>
-<span class="sd">        </span>
+
 <span class="sd">        If there are multiple matches, the order of precedence is like</span>
 <span class="sd">        this (again, this is applied for *each node* independent of</span>
 <span class="sd">        the other nodes):</span>
@@ -879,12 +879,12 @@
 <span class="sd">           in the attrs parameter.</span>
 <span class="sd">        3. The return value of the user-supplied function.</span>
 <span class="sd">        4. The node&#39;s XML tag.</span>
-<span class="sd">        </span>
+
 <span class="sd">        If the :py:obj:`in_place` parameter is True, then the method will</span>
 <span class="sd">        replace the current node in the hierarchy with the</span>
 <span class="sd">        dictionary. Otherwise, it will create a new dictionary and</span>
 <span class="sd">        return it.</span>
-<span class="sd"> </span>
+
 <span class="sd">        If both the :py:obj:`in_place` and :py:obj:`promote` parameters are</span>
 <span class="sd">        True, then the method will make the changes as described above;</span>
 <span class="sd">        however, it will add the nodes to the first dictionary it finds</span>
@@ -904,7 +904,7 @@
 <span class="sd">            &gt;&gt;&gt; root.prettyprint()</span>
 <span class="sd">            {&#39;a&#39;: {&#39;b&#39;: [{&#39;name&#39;: u&#39;foo&#39;, &#39;value&#39;: u&#39;1&#39;},</span>
 <span class="sd">                         {&#39;name&#39;: u&#39;bar&#39;, &#39;value&#39;: u&#39;2&#39;}]}}</span>
-<span class="sd">        </span>
+
 <span class="sd">        Here is an example of a dictionary changed in place. Note how</span>
 <span class="sd">        the original nodes are turned into a dictionary with the</span>
 <span class="sd">        appropriate keys and this dictionary replaces the current node</span>
@@ -919,7 +919,7 @@
 <span class="sd">            &gt;&gt;&gt; root.prettyprint()</span>
 <span class="sd">            {&#39;a&#39;: {&#39;b&#39;: {u&#39;bar&#39;: {&#39;name&#39;: u&#39;bar&#39;, &#39;value&#39;: u&#39;2&#39;},</span>
 <span class="sd">                         u&#39;foo&#39;: {&#39;name&#39;: u&#39;foo&#39;, &#39;value&#39;: u&#39;1&#39;}}}}</span>
-<span class="sd">        </span>
+
 <span class="sd">        Here is an example of the &quot;promotion&quot; functionality. Note how</span>
 <span class="sd">        the original nodes are added directly to the ``root[&#39;a&#39;]``</span>
 <span class="sd">        enclosing dictionary::</span>
@@ -933,7 +933,7 @@
 <span class="sd">            &gt;&gt;&gt; root.prettyprint()</span>
 <span class="sd">            {&#39;a&#39;: {u&#39;bar&#39;: {&#39;name&#39;: u&#39;bar&#39;, &#39;value&#39;: u&#39;2&#39;},</span>
 <span class="sd">                   u&#39;foo&#39;: {&#39;name&#39;: u&#39;foo&#39;, &#39;value&#39;: u&#39;1&#39;}}}</span>
-<span class="sd">        </span>
+
 <span class="sd">        Quirks:</span>
 
 <span class="sd">        1. If the current node is the only member of a list in</span>
@@ -990,7 +990,7 @@
             <span class="c1"># doesn&#39;t make complete sense.</span>
             <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span>
             <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">XMLListNode</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
-                <span class="ow">and</span> <span class="n">parent</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="p">):</span>
+                    <span class="ow">and</span> <span class="n">parent</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="p">):</span>
                 <span class="c1"># Easy. Just convert our parent.</span>
                 <span class="n">newlist</span> <span class="o">=</span> <span class="n">parent</span>
             <span class="k">else</span><span class="p">:</span>
@@ -1014,34 +1014,34 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">orig</span><span class="p">[</span><span class="s1">&#39;parent&#39;</span><span class="p">]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">=</span> <span class="n">orig</span><span class="p">[</span><span class="s1">&#39;tag&#39;</span><span class="p">]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">orig</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">]</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_replacement_node</span><span class="o">=</span><span class="bp">None</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_replacement_node</span> <span class="o">=</span> <span class="bp">None</span>
                 <span class="n">newlist</span><span class="o">.</span><span class="n">_replace_node</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
             <span class="k">raise</span>
 
     <span class="k">def</span> <span class="nf">jdict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_place</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">promote</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a dictionary keyed appropriately for Junos output.</span>
-<span class="sd">        </span>
+
 <span class="sd">        This method is a shortcut to call the :py:meth:`dict`</span>
 <span class="sd">        method with these parameters::</span>
 
 <span class="sd">            attrs=[(&#39;junos:key&#39;, &#39;junos:key&#39;, &#39;junos:key&#39;),</span>
-<span class="sd">                   (&#39;junos:key&#39;, &#39;junos:key&#39;), &#39;junos:key&#39;] </span>
+<span class="sd">                   (&#39;junos:key&#39;, &#39;junos:key&#39;), &#39;junos:key&#39;]</span>
 <span class="sd">            tags=[&#39;name&#39;]</span>
-<span class="sd">        </span>
+
 <span class="sd">        This will attempt to produce the correct key for each</span>
 <span class="sd">        node. Some nodes have a multi-field key. If that occurs, the</span>
 <span class="sd">        dictionary key will be a tuple. In cases where there is a</span>
 <span class="sd">        single key, the dictionary key will be a string. If there is</span>
 <span class="sd">        no matching node, the key will simply be the XML tag name.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Some Junos nodes use a different tag for the key. And, in some</span>
 <span class="sd">        cases, the ``junos:key`` attribute is not available. In those</span>
 <span class="sd">        circumstances, you should directly call the :py:meth:`dict`</span>
 <span class="sd">        method with the correct attributes or tags.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Please see the documentation for the :py:meth:`dict` method for</span>
 <span class="sd">        further information.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            in_place (bool): Whether the change should be made in the XML tree.</span>
 <span class="sd">            promote (bool): Whether the new nodes should be added to a</span>
@@ -1069,11 +1069,11 @@
 
     <span class="k">def</span> <span class="nf">standardize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deep</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convert all child nodes to instances of an XMLNodeBase sub-class.</span>
-<span class="sd">        </span>
+
 <span class="sd">        This method is useful when you have added a child node</span>
 <span class="sd">        directly to a dictionary or list and now want to convert it to</span>
 <span class="sd">        the appropriate :py:class:`XMLNodeBase` sub-class.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            deep (bool): If True (the default), recursively descend</span>
 <span class="sd">                through all children, converting all nodes, as needed. If</span>
@@ -1086,10 +1086,10 @@
     <span class="k">def</span> <span class="nf">emit_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content_handler</span><span class="p">,</span> <span class="n">pretty</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">newl</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
                      <span class="n">indent</span><span class="o">=</span><span class="s1">&#39;    &#39;</span><span class="p">,</span> <span class="n">full_document</span><span class="o">=</span><span class="n">_NoArg</span><span class="p">()):</span>
         <span class="sd">&quot;&quot;&quot;Pass the contents of the XML tree to a ContentHandler object.</span>
-<span class="sd">        </span>
+
 <span class="sd">        This method will pass the contents of the XML tree to a</span>
 <span class="sd">        :py:obj:`ContentHandler` object.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            content_handler (:py:obj:`ContentHandler`): The</span>
 <span class="sd">                :py:obj:`ContentHandler` object to which the XML tree wll</span>
@@ -1119,20 +1119,20 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">full_document</span><span class="p">,</span> <span class="n">_NoArg</span><span class="p">):</span>
             <span class="c1"># Make sure there is only one root in a &quot;full&quot; document.</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">full_document</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">XMLListNode</span><span class="p">)</span> <span class="ow">and</span>
-		<span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Document will have more than one root node. &quot;</span>
-				 <span class="s2">&quot;The full_document argument must be False.&quot;</span><span class="p">)</span>
+                                 <span class="s2">&quot;The full_document argument must be False.&quot;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">XMLListNode</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="c1"># We have multiple tags. We cannot be a full document.</span>
             <span class="n">full_document</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span>
-	      <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">XMLDictNode</span><span class="p">,</span> <span class="n">XMLListNode</span><span class="p">))</span> <span class="ow">and</span>
-	      <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">):</span>
+              <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">XMLDictNode</span><span class="p">,</span> <span class="n">XMLListNode</span><span class="p">))</span> <span class="ow">and</span>
+              <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">):</span>
             <span class="c1"># We are the root. We have a single root tag.</span>
             <span class="n">full_document</span> <span class="o">=</span> <span class="bp">True</span>
         <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span> <span class="p">(</span><span class="n">_unicode</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span> <span class="ow">and</span>
-	      <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span>
-	      <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">tag</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">))):</span>
+              <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span>
+               <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">tag</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">))):</span>
             <span class="c1"># We look like the only child of the root node. In other words,</span>
             <span class="c1"># we look like the root tag. Treat us as a full document.</span>
             <span class="n">full_document</span> <span class="o">=</span> <span class="bp">True</span>
@@ -1151,7 +1151,7 @@
 <div class="viewcode-block" id="XMLNodeBase.emit_xml"><a class="viewcode-back" href="../output.html#jxmlease.XMLNodeBase.emit_xml">[docs]</a>    <span class="k">def</span> <span class="nf">emit_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="n">handler</span><span class="o">=</span><span class="n">XMLGenerator</span><span class="p">,</span>
                  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the contents of the XML tree as an XML document.</span>
-<span class="sd">        </span>
+
 <span class="sd">        This method will create a :py:obj:`ContentHandler` by calling the</span>
 <span class="sd">        method provided by the handler parameter.  It will call</span>
 <span class="sd">        :py:meth:`emit_handler` with this :py:obj:`ContentHandler` object.</span>
@@ -1159,7 +1159,7 @@
 <span class="sd">        :py:meth:`emit_handler` method accepts (except the</span>
 <span class="sd">        :py:obj:`content_handler` parameter).  It will pass</span>
 <span class="sd">        them to the :py:meth:`emit_handler` method when it calls it.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            output (A file-like IO object, or None): The file-like IO object</span>
 <span class="sd">                in which output should be placed. If None, the method will</span>
@@ -1193,14 +1193,14 @@
 
     <span class="k">def</span> <span class="nf">prettyprint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Print a &quot;pretty&quot; representation of the data structure.</span>
-<span class="sd">        </span>
+
 <span class="sd">        This uses the :py:meth:`pprint` method from the :py:mod:`pprint`</span>
 <span class="sd">        module to print a &quot;pretty&quot; representation of the data structure.</span>
 <span class="sd">        The parameters are passed unchanged to the :py:meth:`pprint` method.</span>
-<span class="sd">        </span>
+
 <span class="sd">        The output from this method shows only the main data and not the meta</span>
 <span class="sd">        data (such as XML attributes).</span>
-<span class="sd">        </span>
+
 <span class="sd">        When using :py:meth:`pprint`, it is necessary to use this method to</span>
 <span class="sd">        get a reasonable representation of the data; otherwise,</span>
 <span class="sd">        :py:meth:`pprint` will not know how to represent the object in a</span>
@@ -1210,17 +1210,17 @@
 
     <span class="k">def</span> <span class="nf">find_nodes_with_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Iterates over nodes that have a matching tag.</span>
-<span class="sd">        </span>
+
 <span class="sd">        **NOTE**: This documentation needs to be updated to take into</span>
 <span class="sd">        account the changes to list handling and always checking the</span>
 <span class="sd">        current node&#39;s tag.</span>
-<span class="sd">        </span>
+
 <span class="sd">        This method searches for a node that is a descendant of the</span>
 <span class="sd">        current node and has a matching tag. Optionally (by providing</span>
 <span class="sd">        a False value to the :py:obj:`recursive` parameter), you can limit</span>
 <span class="sd">        the search to direct children of the current node. In either</span>
 <span class="sd">        case, the tag of the current node is not checked.</span>
-<span class="sd">        </span>
+
 <span class="sd">        For example, this will print all &quot;name&quot; nodes from the XML</span>
 <span class="sd">        snippet that is shown::</span>
 
@@ -1245,21 +1245,21 @@
 <span class="sd">                              u&#39;name&#39;: u&#39;name #1&#39;}}}</span>
 <span class="sd">            &gt;&gt;&gt; for node in root.find_nodes_with_tag(&#39;name&#39;):</span>
 <span class="sd">            ...   print node</span>
-<span class="sd">            ... </span>
+<span class="sd">            ...</span>
 <span class="sd">            name #1</span>
 <span class="sd">            name #2</span>
 <span class="sd">            name #3</span>
-<span class="sd">        </span>
+
 <span class="sd">        However, if we turn off recursion, you will see that this</span>
 <span class="sd">        returns only the direct children (if any) of the node we</span>
 <span class="sd">        select::</span>
 
 <span class="sd">            &gt;&gt;&gt; for node in root.find_nodes_with_tag(&#39;name&#39;, recursive=False):</span>
 <span class="sd">            ...   print node</span>
-<span class="sd">            ... </span>
+<span class="sd">            ...</span>
 <span class="sd">            &gt;&gt;&gt; for node in root[&#39;name&#39;][&#39;a&#39;].find_nodes_with_tag(&#39;name&#39;, recursive=False):</span>
 <span class="sd">            ...   print node</span>
-<span class="sd">            ... </span>
+<span class="sd">            ...</span>
 <span class="sd">            name #1</span>
 
 <span class="sd">        If you run this against an :py:class:`XMLDictNode` without a tag (for</span>
@@ -1272,29 +1272,29 @@
 <span class="sd">            &gt;&gt;&gt; root = jxmlease.parse(&quot;&lt;name&gt;top-level tag&lt;/name&gt;&quot;)</span>
 <span class="sd">            &gt;&gt;&gt; for i in root.find_nodes_with_tag(&#39;name&#39;):</span>
 <span class="sd">            ...   print i</span>
-<span class="sd">            ... </span>
+<span class="sd">            ...</span>
 <span class="sd">            &gt;&gt;&gt; root = jxmlease.parse(\&quot;\&quot;\&quot;\</span>
 <span class="sd">            ... &lt;a&gt;</span>
 <span class="sd">            ...   &lt;name&gt;second-level tag&lt;/name&gt;</span>
 <span class="sd">            ... &lt;/a&gt;\&quot;\&quot;\&quot;)</span>
 <span class="sd">            &gt;&gt;&gt; for i in root.find_nodes_with_tag(&#39;name&#39;):</span>
 <span class="sd">            ...   print i</span>
-<span class="sd">            ... </span>
+<span class="sd">            ...</span>
 <span class="sd">            second-level tag</span>
-<span class="sd"> </span>
+
 <span class="sd">        If the current node is a list and it appears that the list was</span>
 <span class="sd">        created to hold multiple elements with the same tag, then the</span>
 <span class="sd">        command is run on each member of the list (rather than on the</span>
 <span class="sd">        list itself). The impact of this is that it will search for</span>
 <span class="sd">        tags in the grandchildren of the :py:class:`XMLListNode`, rather</span>
 <span class="sd">        than searching the children of the :py:class:`XMLListNode`.</span>
-<span class="sd">        </span>
+
 <span class="sd">        As confusing as this may sound, the point is simple: we never</span>
 <span class="sd">        check the tag of the &quot;current&quot; element. Because lists can be</span>
 <span class="sd">        homogenous or heterogenous, that statement is ambiguous for</span>
 <span class="sd">        lists. We resolve the ambiguity by comparing the tag stored</span>
 <span class="sd">        with the list and the tag of the children.</span>
-<span class="sd">        </span>
+
 <span class="sd">        For example, here is a root node with two top-level &quot;name&quot;</span>
 <span class="sd">        elements. Searching for the &quot;name&quot; tag does not find these</span>
 <span class="sd">        top-level elements because both the top-level dictionary and</span>
@@ -1307,9 +1307,9 @@
 <span class="sd">            {&#39;name&#39;: [u&#39;tag #1&#39;, u&#39;tag #2&#39;]}</span>
 <span class="sd">            &gt;&gt;&gt; for i in root.find_nodes_with_tag(&#39;name&#39;):</span>
 <span class="sd">            ...   print i</span>
-<span class="sd">            ... </span>
+<span class="sd">            ...</span>
 <span class="sd">            &gt;&gt;&gt;</span>
-<span class="sd">        </span>
+
 <span class="sd">        On the other hand, we create a root :py:class:`XMLListNode` and add</span>
 <span class="sd">        two name tags to it. Because the :py:class:`XMLListNode` has no internal</span>
 <span class="sd">        representation of its tag, it checks for matches in its</span>
@@ -1327,7 +1327,7 @@
 <span class="sd">            &lt;name&gt;tag #2&lt;/name&gt;</span>
 <span class="sd">            &gt;&gt;&gt; for i in badroot.find_nodes_with_tag(&#39;name&#39;):</span>
 <span class="sd">            ...   print i</span>
-<span class="sd">            ... </span>
+<span class="sd">            ...</span>
 <span class="sd">            tag #1</span>
 <span class="sd">            tag #2</span>
 
@@ -1344,13 +1344,13 @@
 <span class="sd">            ... &lt;/a&gt;\&quot;\&quot;\&quot;)</span>
 <span class="sd">            &gt;&gt;&gt; for i in root.find_nodes_with_tag(&#39;b&#39;):</span>
 <span class="sd">            ...   print i</span>
-<span class="sd">            ... </span>
+<span class="sd">            ...</span>
 <span class="sd">            {u&#39;c&#39;: {u&#39;foo&#39;: u&#39;bar&#39;, u&#39;status&#39;: u&#39;ok&#39;}}</span>
 
 <span class="sd">        You can also use a tuple as the tag parameter, in which case</span>
 <span class="sd">        the method will return nodes with a tag that matches any of</span>
 <span class="sd">        the given tag values.</span>
-<span class="sd">        </span>
+
 <span class="sd">        You can use this function to create somewhat complicated logic</span>
 <span class="sd">        that mimics the functionality from XPath &quot;//tag&quot; matches. For</span>
 <span class="sd">        example, here we check for &lt;xnm:warning&gt; and &lt;xnm:error&gt; nodes</span>
@@ -1369,7 +1369,7 @@
 <span class="sd">            ... &lt;/foot&gt;\&quot;\&quot;\&quot;)</span>
 <span class="sd">            &gt;&gt;&gt; if root.has_node_with_tag((&#39;xnm:warning&#39;, &#39;xnm:error&#39;)):</span>
 <span class="sd">            ...   print &quot;Something bad happened.&quot;</span>
-<span class="sd">            ... </span>
+<span class="sd">            ...</span>
 <span class="sd">            Something bad happened.</span>
 <span class="sd">            &gt;&gt;&gt; for node in root.find_nodes_with_tag((&#39;xnm:warning&#39;, &#39;xnm:error&#39;)):</span>
 <span class="sd">            ...   if node.tag == &#39;xnm:error&#39;:</span>
@@ -1379,7 +1379,7 @@
 <span class="sd">            ...   else:</span>
 <span class="sd">            ...     level = &quot;Unknown:&quot;</span>
 <span class="sd">            ...   print(level + &quot; &quot; + node.get(&quot;message&quot;, &quot;(unknown)&quot;))</span>
-<span class="sd">            ... </span>
+<span class="sd">            ...</span>
 <span class="sd">            Warning: This is bad.</span>
 <span class="sd">            Error: This is very bad.</span>
 
@@ -1404,17 +1404,17 @@
 
     <span class="k">def</span> <span class="nf">has_node_with_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Determine whether a node with a matching tag exists.</span>
-<span class="sd">        </span>
+
 <span class="sd">        This method uses the :py:meth:`find_nodes_with_tag` method to search</span>
 <span class="sd">        for a node that is a child of the current node and has a</span>
 <span class="sd">        matching tag. The tag of the current node is not checked. The</span>
 <span class="sd">        method returns a boolean value to indicate whether at least</span>
 <span class="sd">        one matching node is found.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Because this function uses the :py:meth:`find_nodes_with_tag` method,</span>
 <span class="sd">        the parameters and algorithm are the same as the</span>
 <span class="sd">        :py:meth:`find_nodes_with_tag` method.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            tag (string or tuple): The XML tag (or tags) for which to search.</span>
 <span class="sd">            recursive (bool): If True (the default), search recursively through</span>
@@ -1488,7 +1488,7 @@
 <div class="viewcode-block" id="XMLCDATANode.prettyprint"><a class="viewcode-back" href="../cdata_objects.html#jxmlease.XMLCDATANode.prettyprint">[docs]</a>    <span class="k">def</span> <span class="nf">prettyprint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">currdepth</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;currdepth&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="n">newobj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__parent_class__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">currdepth</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">currdepth</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">pprint</span><span class="p">(</span><span class="n">newobj</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">newobj</span></div>
@@ -1513,11 +1513,11 @@
 <div class="viewcode-block" id="XMLListNode"><a class="viewcode-back" href="../list_objects.html#jxmlease.XMLListNode">[docs]</a><span class="k">class</span> <span class="nc">XMLListNode</span><span class="p">(</span><span class="n">XMLNodeBase</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
 <div class="viewcode-block" id="XMLListNode.add_node"><a class="viewcode-back" href="../list_objects.html#jxmlease.XMLListNode.add_node">[docs]</a>    <span class="k">def</span> <span class="nf">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add an XML node to the XML tree.</span>
-<span class="sd">        </span>
+
 <span class="sd">        You should **NOT** call this method on an XMLListNode. Instead,</span>
 <span class="sd">        call the add_node method on an :py:class:`XMLCDATANode` or an</span>
 <span class="sd">        :py:class:`XMLDictNode`.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Raises:</span>
 <span class="sd">            :py:exc:`AttributeError`: If the node is out of date.</span>
 <span class="sd">                (See :py:class:`get_current_node`.)</span>
@@ -1525,7 +1525,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_replacement</span><span class="p">()</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Unable to add a child node to a list. Either add the &quot;</span>
-			<span class="s2">&quot;node to the list&#39;s parent or one of the list members.&quot;</span><span class="p">)</span></div>
+                        <span class="s2">&quot;node to the list&#39;s parent or one of the list members.&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="XMLListNode.list"><a class="viewcode-back" href="../list_objects.html#jxmlease.XMLListNode.list">[docs]</a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_place</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span></div>
@@ -1569,23 +1569,20 @@
                     <span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">parent</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">parent</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;promote argument is True, &quot;</span>
-				     <span class="s2">&quot;but no parent was a dictionary&quot;</span><span class="p">)</span>
+                                     <span class="s2">&quot;but no parent was a dictionary&quot;</span><span class="p">)</span>
                 <span class="n">newnode</span> <span class="o">=</span> <span class="n">parent</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_replace_node</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">newnode</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">newnode</span> <span class="o">=</span> <span class="n">XMLDictNode</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">,</span>
-				  <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
+                                  <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
             <span class="n">newnode</span><span class="o">.</span><span class="n">_ignore_level</span> <span class="o">=</span> <span class="bp">True</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-                <span class="n">newkey</span><span class="o">=</span><span class="bp">None</span>
+                <span class="n">newkey</span> <span class="o">=</span> <span class="bp">None</span>
                 <span class="k">for</span> <span class="n">attr_keys</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">:</span>
                     <span class="n">key_check</span> <span class="o">=</span> <span class="n">KeyBuilder</span><span class="p">(</span><span class="n">attr_keys</span><span class="p">)</span>
 
-                    <span class="k">for</span> <span class="n">grandchild</span> <span class="ow">in</span> <span class="n">_get_dict_value_iter</span><span class="p">(</span>
-                                          <span class="n">child</span><span class="p">,</span>
-                                          <span class="s2">&quot;child node attributes&quot;</span>
-                                      <span class="p">):</span>
+                    <span class="k">for</span> <span class="n">grandchild</span> <span class="ow">in</span> <span class="n">_get_dict_value_iter</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="s2">&quot;child node attributes&quot;</span><span class="p">):</span>
                         <span class="c1"># The grandchild might be a list.</span>
                         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">grandchild</span><span class="o">.</span><span class="n">list</span><span class="p">():</span>
                             <span class="n">newkey</span> <span class="o">=</span> <span class="n">key_check</span><span class="o">.</span><span class="n">eval_key</span><span class="p">(</span>
@@ -1601,10 +1598,8 @@
                 <span class="k">if</span> <span class="n">newkey</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
                     <span class="k">for</span> <span class="n">tag_keys</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
                         <span class="n">key_check</span> <span class="o">=</span> <span class="n">KeyBuilder</span><span class="p">(</span><span class="n">tag_keys</span><span class="p">)</span>
-                        <span class="k">for</span> <span class="n">grandchild</span> <span class="ow">in</span> <span class="n">_get_dict_value_iter</span><span class="p">(</span>
-                                              <span class="n">child</span><span class="p">,</span>
-                                              <span class="s2">&quot;child node&quot;</span>
-                                          <span class="p">):</span>
+                        <span class="k">for</span> <span class="n">grandchild</span> <span class="ow">in</span> <span class="n">_get_dict_value_iter</span><span class="p">(</span><span class="n">child</span><span class="p">,</span>
+                                                               <span class="s2">&quot;child node&quot;</span><span class="p">):</span>
                             <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">grandchild</span><span class="o">.</span><span class="n">list</span><span class="p">():</span>
                                 <span class="n">newkey</span> <span class="o">=</span> <span class="n">key_check</span><span class="o">.</span><span class="n">eval_key</span><span class="p">(</span>
                                     <span class="p">[</span><span class="n">item</span><span class="o">.</span><span class="n">tag</span><span class="p">],</span>
@@ -1696,7 +1691,7 @@
                                              <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">newlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">currdepth</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">currdepth</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">pprint</span><span class="p">(</span><span class="n">newlist</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">newlist</span></div>
@@ -1742,8 +1737,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_node</span><span class="p">,</span> <span class="n">XMLNodeBase</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;&#39;new_node&#39; argument must be a subclass of &quot;</span>
-				<span class="s2">&quot;XMLNodeBase, not &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span>
-				<span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">new_node</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span><span class="p">))</span>
+                                <span class="s2">&quot;XMLNodeBase, not &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span>
+                                <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">new_node</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">key</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
                     <span class="n">new_node</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">key</span><span class="p">)</span>
@@ -1825,7 +1820,7 @@
                 <span class="k">if</span> <span class="n">pretty</span> <span class="ow">and</span> <span class="n">depth</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">first_element</span><span class="p">:</span>
                     <span class="n">content_handler</span><span class="o">.</span><span class="n">ignorableWhitespace</span><span class="p">(</span><span class="n">newl</span><span class="p">)</span>
                 <span class="bp">self</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">_emit_handler</span><span class="p">(</span><span class="n">content_handler</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">pretty</span><span class="p">,</span> <span class="n">newl</span><span class="p">,</span>
-				      <span class="n">indent</span><span class="p">)</span>
+                                      <span class="n">indent</span><span class="p">)</span>
                 <span class="n">first_element</span> <span class="o">=</span> <span class="bp">False</span>
             <span class="k">return</span>
         <span class="k">if</span> <span class="n">pretty</span><span class="p">:</span>
@@ -1835,7 +1830,7 @@
             <span class="n">content_handler</span><span class="o">.</span><span class="n">ignorableWhitespace</span><span class="p">(</span><span class="n">newl</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
             <span class="bp">self</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">_emit_handler</span><span class="p">(</span><span class="n">content_handler</span><span class="p">,</span> <span class="n">depth</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">pretty</span><span class="p">,</span> <span class="n">newl</span><span class="p">,</span>
-				  <span class="n">indent</span><span class="p">)</span>
+                                  <span class="n">indent</span><span class="p">)</span>
         <span class="n">content_handler</span><span class="o">.</span><span class="n">characters</span><span class="p">(</span><span class="n">_unicode</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_cdata</span><span class="p">()))</span>
         <span class="k">if</span> <span class="n">pretty</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">content_handler</span><span class="o">.</span><span class="n">ignorableWhitespace</span><span class="p">(</span><span class="n">depth</span> <span class="o">*</span> <span class="n">indent</span><span class="p">)</span>
@@ -1850,13 +1845,13 @@
             <span class="k">return</span> <span class="p">{}</span>
         <span class="c1"># Construct a new item, recursively.</span>
         <span class="n">newdict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-        <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="s2">&quot;prettyprint&quot;</span><span class="p">):</span>
                 <span class="n">newdict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">prettyprint</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">currdepth</span><span class="o">=</span><span class="n">currdepth</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span>
                                            <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">newdict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
-        <span class="k">if</span> <span class="n">currdepth</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">currdepth</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">pprint</span><span class="p">(</span><span class="n">newdict</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">newdict</span></div>
@@ -1927,7 +1922,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">in_ignore</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cdata_separator</span> <span class="o">=</span> <span class="n">cdata_separator</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">need_cdata_separator</span><span class="o">=</span><span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">need_cdata_separator</span> <span class="o">=</span> <span class="bp">False</span>
 
     <span class="k">def</span> <span class="nf">_parse_generator_matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">match_string</span><span class="p">):</span>
         <span class="n">match_obj</span> <span class="o">=</span> <span class="n">_GeneratorMatch</span><span class="p">(</span><span class="n">match_string</span><span class="o">=</span><span class="n">match_string</span><span class="p">)</span>
@@ -2000,7 +1995,7 @@
                     <span class="n">newkey</span> <span class="o">=</span> <span class="n">k</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">namespace_separator</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span>
                     <span class="k">if</span> <span class="n">newkey</span> <span class="ow">in</span> <span class="n">rv</span><span class="p">:</span>
                         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Stripping namespace causes duplicate &quot;</span>
-					 <span class="s2">&quot;attribute </span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">newkey</span><span class="p">)</span>
+                                         <span class="s2">&quot;attribute </span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">newkey</span><span class="p">)</span>
                     <span class="n">rv</span><span class="p">[</span><span class="n">newkey</span><span class="p">]</span> <span class="o">=</span> <span class="n">rv</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
                     <span class="k">del</span> <span class="n">rv</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">rv</span>
@@ -2066,10 +2061,10 @@
 
 <div class="viewcode-block" id="Parser"><a class="viewcode-back" href="../parsing.html#jxmlease.Parser">[docs]</a><span class="k">class</span> <span class="nc">Parser</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Creates Python data structures from raw XML.</span>
-<span class="sd">    </span>
+
 <span class="sd">    This class creates a callable object used to parse XML into Python data</span>
 <span class="sd">    structures. You can provide optional parameters at the class creation time.</span>
-<span class="sd">    These parameters modify the default behavior of the parser. When you invoke </span>
+<span class="sd">    These parameters modify the default behavior of the parser. When you invoke</span>
 <span class="sd">    the callable object to parse a document, you can supply additional</span>
 <span class="sd">    parameters to override the values specified when the :py:class:`Parser`</span>
 <span class="sd">    object was created.</span>
@@ -2098,7 +2093,7 @@
 <span class="sd">    :py:class:`Parser` class and calling it all in one call. You can provide</span>
 <span class="sd">    the same arguments to the :py:meth:`parse` method that you provide to the</span>
 <span class="sd">    :py:class:`Parser` class.</span>
-<span class="sd">        </span>
+
 <span class="sd">    For example::</span>
 
 <span class="sd">          &gt;&gt;&gt; root = jxmlease.parse(&#39;&lt;a x=&quot;y&quot;&gt;&lt;b&gt;1&lt;/b&gt;&lt;b&gt;2&lt;/b&gt;&lt;b&gt;3&lt;/b&gt;&lt;/a&gt;&#39;)</span>
@@ -2112,7 +2107,7 @@
 <span class="sd">    root node of a parsed XML hierarchy, the parser returns a generator object.</span>
 <span class="sd">    On each call to the generator object, it will return the next node that</span>
 <span class="sd">    matches one of the provided paths.</span>
-<span class="sd">        </span>
+
 <span class="sd">    Paths are provided in a format similar to XPath expressions. For example,</span>
 <span class="sd">    ``/a/b`` will match node ``&lt;b&gt;`` in this XML::</span>
 
@@ -2132,14 +2127,14 @@
 
 <span class="sd">    In this example, ``/a/b/c``, ``c``, ``b/c``, and ``a/b/c`` all match the</span>
 <span class="sd">    ``&lt;c&gt;`` node.</span>
-<span class="sd">        </span>
+
 <span class="sd">    For each match, the generator returns a tuple of:</span>
 <span class="sd">    ``(path,match_string,xml_node)``, where the *path* is</span>
 <span class="sd">    the calculated absolute path to the matching node, *match_string* is the</span>
 <span class="sd">    user-supplied match string that triggered the match, and *xml_node* is the</span>
 <span class="sd">    object representing that node (an instance of a :py:class:`XMLNodeBase`</span>
 <span class="sd">    subclass).</span>
-<span class="sd">        </span>
+
 <span class="sd">    For example::</span>
 
 <span class="sd">        &gt;&gt;&gt; xml = &#39;&lt;a x=&quot;y&quot;&gt;&lt;b&gt;1&lt;/b&gt;&lt;b&gt;2&lt;/b&gt;&lt;b&gt;3&lt;/b&gt;&lt;/a&gt;&#39;</span>
@@ -2150,7 +2145,7 @@
 <span class="sd">        /a/b: 1</span>
 <span class="sd">        /a/b: 2</span>
 <span class="sd">        /a/b: 3</span>
-<span class="sd">    </span>
+
 <span class="sd">    When calling the parser, you can specify all of these parameters. When</span>
 <span class="sd">    creating a parsing instance, you can specify all of these parameters</span>
 <span class="sd">    except :py:obj:`xml_input`:</span>
@@ -2200,7 +2195,7 @@
 <span class="sd">        Calling a :py:class:`Parser` object returns an :py:class:`XMLDictNode`</span>
 <span class="sd">        containing the parsed XML tree.</span>
 
-<span class="sd">        Alternatively, if the :py:obj:`generator` parameter is specified, a </span>
+<span class="sd">        Alternatively, if the :py:obj:`generator` parameter is specified, a</span>
 <span class="sd">        :py:obj:`generator` object is returned.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -2248,7 +2243,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_encoding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;encoding&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_expat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;expat&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_process_namespaces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;process_namespaces&#39;</span><span class="p">)</span>
-        
+
     <span class="k">def</span> <span class="nf">_make_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_handler</span> <span class="o">=</span> <span class="n">_DictSAXHandler</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">)</span>
 
@@ -2284,7 +2279,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">io_obj</span> <span class="o">=</span> <span class="n">xml_input</span>
 
-        <span class="n">at_eof</span><span class="o">=</span><span class="bp">False</span>
+        <span class="n">at_eof</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="k">while</span> <span class="ow">not</span> <span class="n">at_eof</span><span class="p">:</span>
             <span class="n">buf</span> <span class="o">=</span> <span class="n">io_obj</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">parsing_increment</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -2302,10 +2297,10 @@
                 <span class="c1"># the error and return the empty dictionary.</span>
                 <span class="n">raise_error</span> <span class="o">=</span> <span class="bp">True</span>
                 <span class="k">if</span> <span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">expat</span><span class="p">,</span> <span class="s2">&quot;errors&quot;</span><span class="p">)</span> <span class="ow">and</span>
-                    <span class="nb">hasattr</span><span class="p">(</span><span class="n">expat</span><span class="o">.</span><span class="n">errors</span><span class="p">,</span> <span class="s2">&quot;XML_ERROR_NO_ELEMENTS&quot;</span><span class="p">)</span> <span class="ow">and</span>
-                    <span class="n">at_eof</span><span class="p">):</span>
+                        <span class="nb">hasattr</span><span class="p">(</span><span class="n">expat</span><span class="o">.</span><span class="n">errors</span><span class="p">,</span> <span class="s2">&quot;XML_ERROR_NO_ELEMENTS&quot;</span><span class="p">)</span> <span class="ow">and</span>
+                        <span class="n">at_eof</span><span class="p">):</span>
                     <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">expat</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">XML_ERROR_NO_ELEMENTS</span> <span class="o">+</span>
-					 <span class="s2">&quot;:&quot;</span><span class="p">):</span>
+                                         <span class="s2">&quot;:&quot;</span><span class="p">):</span>
                         <span class="n">raise_error</span> <span class="o">=</span> <span class="bp">False</span>
 
                 <span class="c1"># If needed, raise the error</span>
@@ -2322,7 +2317,7 @@
         <span class="c1"># Make a copy of the default arguments and update that copy with</span>
         <span class="c1"># our new arguments.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_process_args</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        
+
         <span class="c1"># Did we get keyword arguments? If so, we need to recreate the</span>
         <span class="c1"># default handler. Otherwise, we can try to use it (if the default</span>
         <span class="c1"># parser exists).</span>
@@ -2361,9 +2356,9 @@
                 <span class="c1"># the error and return the empty dictionary.</span>
                 <span class="n">raise_error</span> <span class="o">=</span> <span class="bp">True</span>
                 <span class="k">if</span> <span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">expat</span><span class="p">,</span> <span class="s2">&quot;errors&quot;</span><span class="p">)</span> <span class="ow">and</span>
-                    <span class="nb">hasattr</span><span class="p">(</span><span class="n">expat</span><span class="o">.</span><span class="n">errors</span><span class="p">,</span> <span class="s2">&quot;XML_ERROR_NO_ELEMENTS&quot;</span><span class="p">)):</span>
+                        <span class="nb">hasattr</span><span class="p">(</span><span class="n">expat</span><span class="o">.</span><span class="n">errors</span><span class="p">,</span> <span class="s2">&quot;XML_ERROR_NO_ELEMENTS&quot;</span><span class="p">)):</span>
                     <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">expat</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">XML_ERROR_NO_ELEMENTS</span> <span class="o">+</span>
-					 <span class="s2">&quot;:&quot;</span><span class="p">):</span>
+                                         <span class="s2">&quot;:&quot;</span><span class="p">):</span>
                         <span class="n">raise_error</span> <span class="o">=</span> <span class="bp">False</span>
 
                 <span class="c1"># If needed, raise the error</span>
@@ -2374,7 +2369,7 @@
 
 <div class="viewcode-block" id="parse"><a class="viewcode-back" href="../parsing.html#jxmlease.parse">[docs]</a><span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">xml_input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Create Python data structures from raw XML.</span>
-<span class="sd">    </span>
+
 <span class="sd">    See the :py:class:`Parser` class documentation.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">Parser</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)(</span><span class="n">xml_input</span><span class="p">)</span></div>
 
@@ -2392,22 +2387,22 @@
 
 <div class="viewcode-block" id="EtreeParser"><a class="viewcode-back" href="../parsing.html#jxmlease.EtreeParser">[docs]</a>    <span class="k">class</span> <span class="nc">EtreeParser</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Creates Python data structures from an ElementTree object.</span>
-<span class="sd">    </span>
+
 <span class="sd">        This class returns a callable object. You can provide parameters at</span>
 <span class="sd">        the class creation time. These parameters modify the default</span>
 <span class="sd">        parameters for the parser. When you call the callable object to</span>
 <span class="sd">        parse a document, you can supply additional parameters to override</span>
 <span class="sd">        the default values.</span>
-<span class="sd">    </span>
+
 <span class="sd">        General usage is like this::</span>
 
 <span class="sd">            &gt;&gt;&gt; myparser = Parser()</span>
 <span class="sd">            &gt;&gt;&gt; root = myparser(etree_root)</span>
-<span class="sd">        </span>
+
 <span class="sd">        For detailed usage information, please see the :py:class`Parser`</span>
 <span class="sd">        class. Other than the differences noted below, the behavior of</span>
 <span class="sd">        the two classes should be the same.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Namespace Identifiers:</span>
 
 <span class="sd">        In certain versions of :py:mod:`ElementTree`, the original namespace</span>
@@ -2433,9 +2428,9 @@
 <span class="sd">        Also accepts most of the same arguments as the :py:class:`Parser` class.</span>
 <span class="sd">        However, it does not accept the :py:obj:`xml_input`, :py:obj:`expat`,</span>
 <span class="sd">        or :py:obj:`encoding` parameters.</span>
-<span class="sd">        </span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
-    
+
         <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;See the class documentation.&quot;&quot;&quot;</span>
             <span class="c1"># Populate a dictionary with default arguments.</span>
@@ -2477,7 +2472,7 @@
             <span class="c1"># Pop off and save the argument(s) that we don&#39;t want to pass</span>
             <span class="c1"># to the handler class.</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_process_namespaces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;process_namespaces&#39;</span><span class="p">)</span>
-            
+
             <span class="c1"># Get local versions of the arguments we want.</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_namespace_separator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">[</span><span class="s1">&#39;namespace_separator&#39;</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_strip_namespace</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">[</span><span class="s1">&#39;strip_namespace&#39;</span><span class="p">]</span>
@@ -2494,7 +2489,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_node</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">root_element</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">_parse_attrib</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_dict</span><span class="p">,</span> <span class="n">out_dict</span><span class="p">,</span> <span class="n">nsdict</span><span class="p">):</span>
-            <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">in_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">in_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
                 <span class="n">parsed_attr</span> <span class="o">=</span> <span class="n">QNameSeparator</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">parsed_attr</span><span class="o">.</span><span class="n">namespace</span><span class="p">:</span>
                     <span class="n">out_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
@@ -2557,7 +2552,7 @@
                     <span class="c1"># them out here when strip_namespace is true. It seems</span>
                     <span class="c1"># best to have the logic in a single place.</span>
                     <span class="n">attrib</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-                    <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">attrib</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">attrib</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                         <span class="n">parsed_attr</span> <span class="o">=</span> <span class="n">QNameSeparator</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
                         <span class="k">if</span> <span class="ow">not</span> <span class="n">parsed_attr</span><span class="o">.</span><span class="n">namespace</span><span class="p">:</span>
                             <span class="n">attrib</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
@@ -2660,14 +2655,13 @@
                             <span class="n">ns_resolve_dict</span><span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">namespace</span><span class="p">]</span> <span class="o">=</span> <span class="n">newns</span>
                             <span class="n">attrib</span><span class="p">[</span><span class="n">_unicode</span><span class="p">(</span><span class="s2">&quot;xmlns:&quot;</span> <span class="o">+</span> <span class="n">newns</span><span class="p">)]</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">namespace</span>
 
-                            
                     <span class="c1"># Add any necessary xmlns tags.</span>
                     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="s2">&quot;nsmap&quot;</span><span class="p">):</span>
                         <span class="k">if</span> <span class="n">root_element</span><span class="p">:</span>
                             <span class="n">parent_nsmap</span> <span class="o">=</span> <span class="p">{}</span>
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">parent_nsmap</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">getparent</span><span class="p">()</span><span class="o">.</span><span class="n">nsmap</span>
-                        <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">nsmap</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                        <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">nsmap</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                             <span class="k">if</span> <span class="n">parent_nsmap</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="s1">&#39;@@NOMATCH@@&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">v</span><span class="p">:</span>
                                 <span class="k">if</span> <span class="n">k</span><span class="p">:</span>
                                     <span class="n">attrib</span><span class="p">[</span><span class="n">_unicode</span><span class="p">(</span><span class="s2">&quot;xmlns:&quot;</span> <span class="o">+</span> <span class="n">k</span><span class="p">)]</span> <span class="o">=</span> <span class="n">v</span>
@@ -2733,7 +2727,7 @@
 
 <div class="viewcode-block" id="parse_etree"><a class="viewcode-back" href="../parsing.html#jxmlease.parse_etree">[docs]</a>    <span class="k">def</span> <span class="nf">parse_etree</span><span class="p">(</span><span class="n">etree_root</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create Python data structures from an :py:class:`ElementTree` object.</span>
-<span class="sd">    </span>
+
 <span class="sd">        See the :py:class:`EtreeParser` class documentation.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">EtreeParser</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)(</span><span class="n">etree_root</span><span class="p">)</span></div>
 </pre></div>
