@@ -1,5 +1,5 @@
-Ojbects
-=======
+XMLDictNode Ojbects
+===================
 
 .. py:currentmodule:: jxmlease
 

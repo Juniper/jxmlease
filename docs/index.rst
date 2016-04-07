@@ -12,22 +12,15 @@ Welcome
 .. automodule:: jxmlease
    :synopsis:
 
-Documentation
-*************
-
 .. toctree::
-   :maxdepth: 4
+   :hidden:
+   :maxdepth: 3
    :name: mastertoc
 
    install
    parsing
-   objects
-   iteration
+   dict_objects
+   list_objects
+   cdata_objects
    output
-
-Indices and tables
-******************
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   project_index

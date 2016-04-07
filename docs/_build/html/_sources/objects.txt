@@ -7,3 +7,11 @@ Ojbects
    :members:
    :inherited-members:
 
+.. autoclass:: XMLListNode
+   :members:
+   :inherited-members:
+
+.. autoclass:: XMLCDATANode
+   :members:
+   :inherited-members:
+

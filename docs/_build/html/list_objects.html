@@ -1,0 +1,1147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>XMLListNode Ojbects &mdash; jxmlease 1.0a1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="jxmlease 1.0a1 documentation" href="index.html" />
+    <link rel="next" title="XMLCDATANode Ojbects" href="cdata_objects.html" />
+    <link rel="prev" title="XMLDictNode Ojbects" href="dict_objects.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="xmllistnode-ojbects">
+<h1>XMLListNode Ojbects<a class="headerlink" href="#xmllistnode-ojbects" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="jxmlease.XMLListNode">
+<em class="property">class </em><code class="descclassname">jxmlease.</code><code class="descname">XMLListNode</code><a class="reference internal" href="_modules/jxmlease.html#XMLListNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jxmlease.XMLListNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize an XMLListNode object.</p>
+<p>The optional first parameter can be the value to which the
+object should be initialized. All other parameters must be
+given as keywords.</p>
+<p>Normally, the user can simply run this as:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">node</span> <span class="o">=</span> <span class="n">XMLListNode</span><span class="p">(</span><span class="n">initializer</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In fact, the best way to use this is:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">root</span> <span class="o">=</span> <span class="n">XMLDictNode</span><span class="p">({</span><span class="s1">&#39;root&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;branch&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="s1">&#39;leaf&#39;</span><span class="p">:</span> <span class="s1">&#39;a&#39;</span><span class="p">}}})</span>
+</pre></div>
+</div>
+<p>That will set all the tags, keys, etc. correctly. However,
+if you really want to customize a node, there are other
+parameters available. Note that these parameters only
+impact <em>this</em> node and descendants. They don&#8217;t actually
+add the node to a tree. Therefore, their use is
+discouraged. Instead, you can probably use the <a class="reference internal" href="#jxmlease.XMLListNode.add_node" title="jxmlease.XMLListNode.add_node"><code class="xref py py-meth docutils literal"><span class="pre">add_node()</span></code></a>
+method to build your tree correctly.</p>
+<p>The one exception to this general rule is when adding a
+hunk of a tree. For example, assume you currently have this XML
+structure:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">a</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">b</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">node1</span><span class="o">&gt;</span><span class="n">a</span><span class="o">&lt;/</span><span class="n">node1</span><span class="o">&gt;</span>
+  <span class="o">&lt;/</span><span class="n">b</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>And, assume you want to add another node <code class="docutils literal"><span class="pre">b</span></code> to create this
+XML structure:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">a</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">b</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">node1</span><span class="o">&gt;</span><span class="n">a</span><span class="o">&lt;/</span><span class="n">node1</span><span class="o">&gt;</span>
+  <span class="o">&lt;/</span><span class="n">b</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">b</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">node2</span><span class="o">&gt;</span><span class="n">b</span><span class="o">&lt;/</span><span class="n">node1</span><span class="o">&gt;</span>
+  <span class="o">&lt;/</span><span class="n">b</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>In that case, you might do something like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">root</span><span class="o">.</span><span class="n">prettyprint</span><span class="p">()</span>
+<span class="go">{u&#39;a&#39;: {u&#39;b&#39;: {u&#39;node1&#39;: u&#39;a&#39;}}}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_b</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;node2&#39;</span><span class="p">:</span> <span class="s1">&#39;b&#39;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_b</span> <span class="o">=</span> <span class="n">XMLDictNode</span><span class="p">(</span><span class="n">new_b</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">root</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">new_node</span><span class="o">=</span><span class="n">new_b</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">root</span><span class="o">.</span><span class="n">prettyprint</span><span class="p">()</span>
+<span class="go">{u&#39;a&#39;: {u&#39;b&#39;: [{u&#39;node1&#39;: u&#39;a&#39;}, {&#39;node2&#39;: u&#39;b&#39;}]}}</span>
+</pre></div>
+</div>
+<p>And, you can print the XML to prove it is formatted correctly:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">root</span><span class="o">.</span><span class="n">emit_xml</span><span class="p">()</span>
+<span class="go">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="go">&lt;a&gt;</span>
+<span class="go">    &lt;b&gt;</span>
+<span class="go">        &lt;node1&gt;a&lt;/node1&gt;</span>
+<span class="go">    &lt;/b&gt;</span>
+<span class="go">    &lt;b&gt;</span>
+<span class="go">        &lt;node2&gt;b&lt;/node2&gt;</span>
+<span class="go">    &lt;/b&gt;</span>
+<span class="go">&lt;/a&gt;</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>initializer</strong> (<em>as appropriate for node</em>) &#8211; The initial value for
+the node.</li>
+<li><strong>tag</strong> (<em>string</em>) &#8211; The XML tag for this node.</li>
+<li><strong>key</strong> (<em>string or tuple</em>) &#8211; The dictionary key used for this node.</li>
+<li><strong>xml_attrs</strong> (<a class="reference internal" href="dict_objects.html#jxmlease.XMLDictNode.dict" title="jxmlease.XMLDictNode.dict"><em>dict</em></a>) &#8211; The XML attributes for the node.</li>
+<li><strong>text</strong> (<em>string</em>) &#8211; The node&#8217;s initial CDATA value. (Note
+that this is ignored for <a class="reference internal" href="cdata_objects.html#jxmlease.XMLCDATANode" title="jxmlease.XMLCDATANode"><code class="xref py py-class docutils literal"><span class="pre">XMLCDATANode</span></code></a> objects.)</li>
+<li><strong>parent</strong> (Instance of a sub-class of <code class="xref py py-class docutils literal"><span class="pre">XMLNodeBase</span></code>) &#8211; A
+reference to the object&#8217;s parent node in the data structure.</li>
+<li><strong>convert</strong> (<em>bool</em>) &#8211; If True, the <code class="xref py py-meth docutils literal"><span class="pre">convert()</span></code> method is run on
+the object&#8217;s children during object initialization.</li>
+<li><strong>deep</strong> (<em>bool</em>) &#8211; If True (and the <code class="xref py py-obj docutils literal"><span class="pre">convert</span></code> parameter is
+True), the <code class="xref py py-meth docutils literal"><span class="pre">convert()</span></code> method is run recursively
+on the object&#8217;s children during object initialization.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="jxmlease.XMLListNode.add_node">
+<code class="descname">add_node</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jxmlease.html#XMLListNode.add_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jxmlease.XMLListNode.add_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an XML node to the XML tree.</p>
+<p>You should <strong>NOT</strong> call this method on an XMLListNode. Instead,
+call the add_node method on an <a class="reference internal" href="cdata_objects.html#jxmlease.XMLCDATANode" title="jxmlease.XMLCDATANode"><code class="xref py py-class docutils literal"><span class="pre">XMLCDATANode</span></code></a> or an
+<a class="reference internal" href="dict_objects.html#jxmlease.XMLDictNode" title="jxmlease.XMLDictNode"><code class="xref py py-class docutils literal"><span class="pre">XMLDictNode</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> &#8211; If the node is out of date.
+(See <a class="reference internal" href="#jxmlease.XMLListNode.get_current_node" title="jxmlease.XMLListNode.get_current_node"><code class="xref py py-class docutils literal"><span class="pre">get_current_node</span></code></a>.)</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">TypeError</span></code> &#8211; If called on an <a class="reference internal" href="#jxmlease.XMLListNode" title="jxmlease.XMLListNode"><code class="xref py py-class docutils literal"><span class="pre">XMLListNode</span></code></a>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.append">
+<code class="descname">append</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jxmlease.XMLListNode.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>L.append(object) &#8211; append object to end</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.append_cdata">
+<code class="descname">append_cdata</code><span class="sig-paren">(</span><em>cdata</em>, <em>return_node=False</em><span class="sig-paren">)</span><a class="headerlink" href="#jxmlease.XMLListNode.append_cdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Append text to a node&#8217;s CDATA.</p>
+<p>This method appends text to a node&#8217;s CDATA.  Note that any
+node can contain CDATA in what is called &#8220;semi-structured&#8221;
+XML. However, nodes that only contain CDATA are represented as
+<a class="reference internal" href="cdata_objects.html#jxmlease.XMLCDATANode" title="jxmlease.XMLCDATANode"><code class="xref py py-class docutils literal"><span class="pre">XMLCDATANode</span></code></a> objects. Regardless of the node, you can use
+this same method to append CDATA.</p>
+<p><strong>Note</strong>: When running this on an <a class="reference internal" href="cdata_objects.html#jxmlease.XMLCDATANode" title="jxmlease.XMLCDATANode"><code class="xref py py-class docutils literal"><span class="pre">XMLCDATANode</span></code></a>, the actual
+node will be replaced with a new node in the tree. (This is a
+result of Python&#8217;s string immutability.)  The function will
+update the XML tree, if necessary; however, any local
+references you have saved for the node will become stale.  You
+can obtain the updated node by setting the <code class="xref py py-obj docutils literal"><span class="pre">return_node</span></code>
+parameter to True or by running the <a class="reference internal" href="#jxmlease.XMLListNode.get_current_node" title="jxmlease.XMLListNode.get_current_node"><code class="xref py py-meth docutils literal"><span class="pre">get_current_node()</span></code></a> method
+on the old node. For this reason, if you plan to keep a local
+reference to XML node in question, it is a good idea to run
+the method like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">node</span> <span class="o">=</span> <span class="n">root</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">][</span><span class="s1">&#39;b&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">append_cdata</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cdata</strong> (<em>string</em>) &#8211; The text value that should be used for the
+node&#8217;s CDATA.</li>
+<li><strong>return_node</strong> (<em>bool</em>) &#8211; Whether the method should return the
+updated node.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
+<dt>None, if <code class="xref py py-obj docutils literal"><span class="pre">return_node</span></code> is False, otherwise, the updated</dt>
+<dd><p class="first last">node object.</p>
+</dd>
+</dl>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> &#8211; If the node is out of date.
+(See <a class="reference internal" href="#jxmlease.XMLListNode.get_current_node" title="jxmlease.XMLListNode.get_current_node"><code class="xref py py-meth docutils literal"><span class="pre">get_current_node()</span></code></a>.)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.count">
+<code class="descname">count</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span> &rarr; integer -- return number of occurrences of value<a class="headerlink" href="#jxmlease.XMLListNode.count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.delete_xml_attr">
+<code class="descname">delete_xml_attr</code><span class="sig-paren">(</span><em>attr</em><span class="sig-paren">)</span><a class="headerlink" href="#jxmlease.XMLListNode.delete_xml_attr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete an XML attribute.</p>
+<p>This method deletes an XML attribute from the node.  If the
+attribute does not exist, it raises a KeyError.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>attr</strong> (<em>string</em>) &#8211; The name of the XML attribute.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">None</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">KeyError</span></code> &#8211; If the <code class="xref py py-obj docutils literal"><span class="pre">attr</span></code> is not found.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> &#8211; If the node is out of date. (See
+<a class="reference internal" href="#jxmlease.XMLListNode.get_current_node" title="jxmlease.XMLListNode.get_current_node"><code class="xref py py-meth docutils literal"><span class="pre">get_current_node()</span></code></a>.)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.dict">
+<code class="descname">dict</code><span class="sig-paren">(</span><em>attrs=[]</em>, <em>tags=[]</em>, <em>func=None</em>, <em>in_place=False</em>, <em>promote=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jxmlease.html#XMLListNode.dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jxmlease.XMLListNode.dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dictionary keyed as indicated by the parameters.</p>
+<p>This method lets you re-key your data with some
+flexibility. It takes the current node (whether a single node
+or a list) and turns it into a dictionary. If the current node
+is a list, all the list members are added to the
+dictionary. If the current node is not a list, just the
+current node is added to the dictonary.</p>
+<p>The key for each node is determined by the <code class="xref py py-obj docutils literal"><span class="pre">attrs</span></code>,
+<code class="xref py py-obj docutils literal"><span class="pre">tags</span></code>, and <code class="xref py py-obj docutils literal"><span class="pre">func</span></code> parameters, in that order of
+precedence. For <em>each node</em>, the method looks for child nodes that
+have an XML attribute that exactly matches one of the attributes
+in the <code class="xref py py-obj docutils literal"><span class="pre">attrs</span></code> argument. If it finds a match, it uses the
+<em>node&#8217;s</em> (not the attribute&#8217;s) CDATA as the key.</p>
+<p>If the method does not find a matching attribute, it looks for
+child nodes that have a tag that exactly matches one of the
+tags in the <code class="xref py py-obj docutils literal"><span class="pre">tags</span></code> argument. If it finds a match, it uses
+the node&#8217;s CDATA as the key.</p>
+<p>If the method does not find a matching tag, it passes the node
+to the user-suppled function (supplied by the <code class="xref py py-obj docutils literal"><span class="pre">func</span></code> parameter)
+and uses the return value as the key.</p>
+<p>If the <code class="xref py py-obj docutils literal"><span class="pre">func</span></code> is not provided or returns a value that
+evaluates to False (e.g. None or &#8220;&#8221;), the method uses the node&#8217;s
+XML tag as the key.</p>
+<p>If there are multiple matches, the order of precedence is like
+this (again, this is applied for <em>each node</em> independent of
+the other nodes):</p>
+<ol class="arabic simple">
+<li>The attributes in the attrs parameter, in the order they
+appear in the attrs parameter.</li>
+<li>The tags in the tags parameter, in the order they appear
+in the attrs parameter.</li>
+<li>The return value of the user-supplied function.</li>
+<li>The node&#8217;s XML tag.</li>
+</ol>
+<p>If the <code class="xref py py-obj docutils literal"><span class="pre">in_place</span></code> parameter is True, then the method will
+replace the current node in the hierarchy with the
+dictionary. Otherwise, it will create a new dictionary and
+return it.</p>
+<p>If both the <code class="xref py py-obj docutils literal"><span class="pre">in_place</span></code> and <code class="xref py py-obj docutils literal"><span class="pre">promote</span></code> parameters are
+True, then the method will make the changes as described above;
+however, it will add the nodes to the first dictionary it finds
+enclosing the curent node.</p>
+<p>Some examples should help with this. Here is an example of the
+simple functionality. Note how the original nodes are turned
+into a dictionary with the appropriate keys, but the original
+root is left untouched:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">root</span><span class="o">.</span><span class="n">prettyprint</span><span class="p">()</span>
+<span class="go">{&#39;a&#39;: {&#39;b&#39;: [{&#39;name&#39;: u&#39;foo&#39;, &#39;value&#39;: u&#39;1&#39;},</span>
+<span class="go">             {&#39;name&#39;: u&#39;bar&#39;, &#39;value&#39;: u&#39;2&#39;}]}}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">][</span><span class="s1">&#39;b&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span><span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">prettyprint</span><span class="p">()</span>
+<span class="go">{u&#39;bar&#39;: {&#39;name&#39;: u&#39;bar&#39;, &#39;value&#39;: u&#39;2&#39;},</span>
+<span class="go"> u&#39;foo&#39;: {&#39;name&#39;: u&#39;foo&#39;, &#39;value&#39;: u&#39;1&#39;}}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">root</span><span class="o">.</span><span class="n">prettyprint</span><span class="p">()</span>
+<span class="go">{&#39;a&#39;: {&#39;b&#39;: [{&#39;name&#39;: u&#39;foo&#39;, &#39;value&#39;: u&#39;1&#39;},</span>
+<span class="go">             {&#39;name&#39;: u&#39;bar&#39;, &#39;value&#39;: u&#39;2&#39;}]}}</span>
+</pre></div>
+</div>
+<p>Here is an example of a dictionary changed in place. Note how
+the original nodes are turned into a dictionary with the
+appropriate keys and this dictionary replaces the current node
+in the hierarchy:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">root</span><span class="o">.</span><span class="n">prettyprint</span><span class="p">()</span>
+<span class="go">{&#39;a&#39;: {&#39;b&#39;: [{&#39;name&#39;: u&#39;foo&#39;, &#39;value&#39;: u&#39;1&#39;},</span>
+<span class="go">             {&#39;name&#39;: u&#39;bar&#39;, &#39;value&#39;: u&#39;2&#39;}]}}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">][</span><span class="s1">&#39;b&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span><span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">in_place</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">prettyprint</span><span class="p">()</span>
+<span class="go">{u&#39;bar&#39;: {&#39;name&#39;: u&#39;bar&#39;, &#39;value&#39;: u&#39;2&#39;},</span>
+<span class="go"> u&#39;foo&#39;: {&#39;name&#39;: u&#39;foo&#39;, &#39;value&#39;: u&#39;1&#39;}}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">root</span><span class="o">.</span><span class="n">prettyprint</span><span class="p">()</span>
+<span class="go">{&#39;a&#39;: {&#39;b&#39;: {u&#39;bar&#39;: {&#39;name&#39;: u&#39;bar&#39;, &#39;value&#39;: u&#39;2&#39;},</span>
+<span class="go">             u&#39;foo&#39;: {&#39;name&#39;: u&#39;foo&#39;, &#39;value&#39;: u&#39;1&#39;}}}}</span>
+</pre></div>
+</div>
+<p>Here is an example of the &#8220;promotion&#8221; functionality. Note how
+the original nodes are added directly to the <code class="docutils literal"><span class="pre">root['a']</span></code>
+enclosing dictionary:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">root</span><span class="o">.</span><span class="n">prettyprint</span><span class="p">()</span>
+<span class="go">{&#39;a&#39;: {&#39;b&#39;: [{&#39;name&#39;: u&#39;foo&#39;, &#39;value&#39;: u&#39;1&#39;},</span>
+<span class="go">             {&#39;name&#39;: u&#39;bar&#39;, &#39;value&#39;: u&#39;2&#39;}]}}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">][</span><span class="s1">&#39;b&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span><span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">in_place</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">promote</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">prettyprint</span><span class="p">()</span>
+<span class="go">{u&#39;bar&#39;: {&#39;name&#39;: u&#39;bar&#39;, &#39;value&#39;: u&#39;2&#39;},</span>
+<span class="go"> u&#39;foo&#39;: {&#39;name&#39;: u&#39;foo&#39;, &#39;value&#39;: u&#39;1&#39;}}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">root</span><span class="o">.</span><span class="n">prettyprint</span><span class="p">()</span>
+<span class="go">{&#39;a&#39;: {u&#39;bar&#39;: {&#39;name&#39;: u&#39;bar&#39;, &#39;value&#39;: u&#39;2&#39;},</span>
+<span class="go">       u&#39;foo&#39;: {&#39;name&#39;: u&#39;foo&#39;, &#39;value&#39;: u&#39;1&#39;}}}</span>
+</pre></div>
+</div>
+<p>Quirks:</p>
+<ol class="arabic simple">
+<li>If the current node is the only member of a list in
+the XML tree, the operation will occur on that single-node
+list instead of the node itself.</li>
+<li>If the method encounters an exception while trying to
+modify the XML tree (<code class="docutils literal"><span class="pre">in_place</span> <span class="pre">==</span> <span class="pre">True</span></code>), it will attempt
+to undo its changes; however, this logic is not
+completely reliable.</li>
+</ol>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>attrs</strong> (<a class="reference internal" href="cdata_objects.html#jxmlease.XMLCDATANode.list" title="jxmlease.XMLCDATANode.list"><em>list</em></a>) &#8211; The list of XML attributes that signal a node
+should be used as a key.</li>
+<li><strong>tags</strong> (<a class="reference internal" href="cdata_objects.html#jxmlease.XMLCDATANode.list" title="jxmlease.XMLCDATANode.list"><em>list</em></a>) &#8211; The list of XML tags that signal a node should be used
+as a key.</li>
+<li><strong>func</strong> (<em>function</em>) &#8211; A function that will accept a node as a parameter
+and return a key.</li>
+<li><strong>in_place</strong> (<em>bool</em>) &#8211; Whether the change should be made in the XML tree.</li>
+<li><strong>promote</strong> (<em>bool</em>) &#8211; Whether the new nodes should be added to a
+dictonary placed at the current node, or they should be
+&#8220;promoted&#8221; to the first enclosing dictionary.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">An <a class="reference internal" href="dict_objects.html#jxmlease.XMLDictNode" title="jxmlease.XMLDictNode"><code class="xref py py-class docutils literal"><span class="pre">XMLDictNode</span></code></a>. If <code class="xref py py-obj docutils literal"><span class="pre">in_place</span></code> is False, the
+dictionary formulated from the current node. If <code class="xref py py-obj docutils literal"><span class="pre">in_place</span></code>
+is True, the dictionary to which the nodes were added.
+(Note: If <code class="xref py py-obj docutils literal"><span class="pre">promote</span></code> is True, this dictionary may contain
+additional entries that already existed in the enclosing
+dictionary.)</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-class docutils literal"><span class="pre">AttributeError</span></code> &#8211; If the node is out of date and
+<code class="xref py py-obj docutils literal"><span class="pre">in_place</span></code> is True. (See <a class="reference internal" href="#jxmlease.XMLListNode.get_current_node" title="jxmlease.XMLListNode.get_current_node"><code class="xref py py-meth docutils literal"><span class="pre">get_current_node()</span></code></a>.)</li>
+<li><code class="xref py py-class docutils literal"><span class="pre">AttributeError</span></code> &#8211; If <code class="xref py py-obj docutils literal"><span class="pre">in_place</span></code>
+is True and the method encounters irrecoverable data
+inconsistency while making changes to the XML tree.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.emit_handler">
+<code class="descname">emit_handler</code><span class="sig-paren">(</span><em>content_handler</em>, <em>pretty=True</em>, <em>newl='\n'</em>, <em>indent='    '</em>, <em>full_document=&lt;jxmlease._NoArg instance&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#jxmlease.XMLListNode.emit_handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pass the contents of the XML tree to a ContentHandler object.</p>
+<p>This method will pass the contents of the XML tree to a
+<code class="xref py py-obj docutils literal"><span class="pre">ContentHandler</span></code> object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>content_handler</strong> (<code class="xref py py-obj docutils literal"><span class="pre">ContentHandler</span></code>) &#8211; The
+<code class="xref py py-obj docutils literal"><span class="pre">ContentHandler</span></code> object to which the XML tree wll
+be passed.</li>
+<li><strong>pretty</strong> (<em>bool</em>) &#8211; If True, this method will call the
+<code class="xref py py-meth docutils literal"><span class="pre">content_handler.ignorableWhitespace()</span></code> method to add</li>
+<li><strong>to the output document.</strong> (<em>whitespace</em>) &#8211; </li>
+<li><strong>newl</strong> (<em>string</em>) &#8211; The string which the method should use for new
+lines when adding white space (see the <code class="xref py py-obj docutils literal"><span class="pre">pretty</span></code>
+parameter).</li>
+<li><strong>indent</strong> (<em>text</em>) &#8211; The string which the method should use for each
+level of indentation when adding white space (see the
+<code class="xref py py-obj docutils literal"><span class="pre">pretty</span></code> parameter).</li>
+<li><strong>full_document</strong> (<em>bool</em>) &#8211; If True, the method will call the
+<code class="xref py py-meth docutils literal"><span class="pre">content_handler.startDocument()</span></code> and
+<code class="xref py py-meth docutils literal"><span class="pre">content_handler.endDocument()</span></code> methods at the start
+and end of the document, respectively. If False, it will not
+call these methods. If the parameter is not set, the method
+will attempt to determine whether the current node is the root
+of an XML tree with a single root tag. If so, it will set
+the full_document parameter to True; otherwise, it will
+set it to False.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.emit_xml">
+<code class="descname">emit_xml</code><span class="sig-paren">(</span><em>output=None</em>, <em>encoding='utf-8'</em>, <em>handler=&lt;class xml.sax.saxutils.XMLGenerator&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#jxmlease.XMLListNode.emit_xml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the contents of the XML tree as an XML document.</p>
+<p>This method will create a <code class="xref py py-obj docutils literal"><span class="pre">ContentHandler</span></code> by calling the
+method provided by the handler parameter.  It will call
+<a class="reference internal" href="#jxmlease.XMLListNode.emit_handler" title="jxmlease.XMLListNode.emit_handler"><code class="xref py py-meth docutils literal"><span class="pre">emit_handler()</span></code></a> with this <code class="xref py py-obj docutils literal"><span class="pre">ContentHandler</span></code> object.
+In addition, this method will accept any parameter that the
+<a class="reference internal" href="#jxmlease.XMLListNode.emit_handler" title="jxmlease.XMLListNode.emit_handler"><code class="xref py py-meth docutils literal"><span class="pre">emit_handler()</span></code></a> method accepts (except the
+<code class="xref py py-obj docutils literal"><span class="pre">content_handler</span></code> parameter).  It will pass
+them to the <a class="reference internal" href="#jxmlease.XMLListNode.emit_handler" title="jxmlease.XMLListNode.emit_handler"><code class="xref py py-meth docutils literal"><span class="pre">emit_handler()</span></code></a> method when it calls it.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>output</strong> (<em>A file-like IO object, or None</em>) &#8211; The file-like IO object
+in which output should be placed. If None, the method will
+return the XML output as a string.</li>
+<li><strong>encoding</strong> (<em>string</em>) &#8211; The encoding that should be used for the output.</li>
+<li><strong>handler</strong> (<em>function</em>) &#8211; A method that will return a
+<code class="xref py py-obj docutils literal"><span class="pre">ContentHandler</span></code> object. This method will be called
+with two positional parameters: the output parameter
+(or, if None, a file-like IO object) and the encoding parameter.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If <code class="xref py py-obj docutils literal"><span class="pre">output</span></code> was None, the method will return the XML
+output as a string. Otherwise, None.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.extend">
+<code class="descname">extend</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jxmlease.XMLListNode.extend" title="Permalink to this definition">¶</a></dt>
+<dd><p>L.extend(iterable) &#8211; extend list by appending elements from the iterable</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.find_nodes_with_tag">
+<code class="descname">find_nodes_with_tag</code><span class="sig-paren">(</span><em>tag</em>, <em>recursive=True</em><span class="sig-paren">)</span><a class="headerlink" href="#jxmlease.XMLListNode.find_nodes_with_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterates over nodes that have a matching tag.</p>
+<p><strong>NOTE</strong>: This documentation needs to be updated to take into
+account the changes to list handling and always checking the
+current node&#8217;s tag.</p>
+<p>This method searches for a node that is a descendant of the
+current node and has a matching tag. Optionally (by providing
+a False value to the <code class="xref py py-obj docutils literal"><span class="pre">recursive</span></code> parameter), you can limit
+the search to direct children of the current node. In either
+case, the tag of the current node is not checked.</p>
+<p>For example, this will print all &#8220;name&#8221; nodes from the XML
+snippet that is shown:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">root</span> <span class="o">=</span> <span class="n">jxmlease</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;            ... &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="gp">... </span><span class="s2">&lt;name&gt;</span>
+<span class="gp">... </span><span class="s2">    &lt;a&gt;</span>
+<span class="gp">... </span><span class="s2">        &lt;name&gt;name #1&lt;/name&gt;</span>
+<span class="gp">... </span><span class="s2">        &lt;b&gt;</span>
+<span class="gp">... </span><span class="s2">            &lt;name&gt;name #2&lt;/name&gt;</span>
+<span class="gp">... </span><span class="s2">        &lt;/b&gt;</span>
+<span class="gp">... </span><span class="s2">        &lt;b&gt;</span>
+<span class="gp">... </span><span class="s2">            &lt;c&gt;</span>
+<span class="gp">... </span><span class="s2">                &lt;name&gt;name #3&lt;/name&gt;</span>
+<span class="gp">... </span><span class="s2">            &lt;/c&gt;</span>
+<span class="gp">... </span><span class="s2">        &lt;/b&gt;</span>
+<span class="gp">... </span><span class="s2">    &lt;/a&gt;</span>
+<span class="gp">... </span><span class="s2">&lt;/name&gt;&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">root</span>
+<span class="go">{u&#39;name&#39;: {u&#39;a&#39;: {u&#39;b&#39;: [{u&#39;name&#39;: u&#39;name #2&#39;},</span>
+<span class="go">                         {u&#39;c&#39;: {u&#39;name&#39;: u&#39;name #3&#39;}}],</span>
+<span class="go">                  u&#39;name&#39;: u&#39;name #1&#39;}}}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">find_nodes_with_tag</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">):</span>
+<span class="gp">... </span>  <span class="nb">print</span> <span class="n">node</span>
+<span class="gp">...</span>
+<span class="go">name #1</span>
+<span class="go">name #2</span>
+<span class="go">name #3</span>
+</pre></div>
+</div>
+<p>However, if we turn off recursion, you will see that this
+returns only the direct children (if any) of the node we
+select:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">find_nodes_with_tag</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="gp">... </span>  <span class="nb">print</span> <span class="n">node</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">][</span><span class="s1">&#39;a&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">find_nodes_with_tag</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="gp">... </span>  <span class="nb">print</span> <span class="n">node</span>
+<span class="gp">...</span>
+<span class="go">name #1</span>
+</pre></div>
+</div>
+<p>If you run this against an <a class="reference internal" href="dict_objects.html#jxmlease.XMLDictNode" title="jxmlease.XMLDictNode"><code class="xref py py-class docutils literal"><span class="pre">XMLDictNode</span></code></a> without a tag (for
+example, the tagless root node), then the command is run on
+each member of the dictionary. The impact of this is that it
+will search for tags in the grandchildren of the tagless
+<a class="reference internal" href="dict_objects.html#jxmlease.XMLDictNode" title="jxmlease.XMLDictNode"><code class="xref py py-class docutils literal"><span class="pre">XMLDictNode</span></code></a>, rather than searching the children of the
+tagless <a class="reference internal" href="dict_objects.html#jxmlease.XMLDictNode" title="jxmlease.XMLDictNode"><code class="xref py py-class docutils literal"><span class="pre">XMLDictNode</span></code></a>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">root</span> <span class="o">=</span> <span class="n">jxmlease</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;&lt;name&gt;top-level tag&lt;/name&gt;&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">find_nodes_with_tag</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">):</span>
+<span class="gp">... </span>  <span class="nb">print</span> <span class="n">i</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">root</span> <span class="o">=</span> <span class="n">jxmlease</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;            ... &lt;a&gt;</span>
+<span class="gp">... </span><span class="s2">  &lt;name&gt;second-level tag&lt;/name&gt;</span>
+<span class="gp">... </span><span class="s2">&lt;/a&gt;&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">find_nodes_with_tag</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">):</span>
+<span class="gp">... </span>  <span class="nb">print</span> <span class="n">i</span>
+<span class="gp">...</span>
+<span class="go">second-level tag</span>
+</pre></div>
+</div>
+<p>If the current node is a list and it appears that the list was
+created to hold multiple elements with the same tag, then the
+command is run on each member of the list (rather than on the
+list itself). The impact of this is that it will search for
+tags in the grandchildren of the <a class="reference internal" href="#jxmlease.XMLListNode" title="jxmlease.XMLListNode"><code class="xref py py-class docutils literal"><span class="pre">XMLListNode</span></code></a>, rather
+than searching the children of the <a class="reference internal" href="#jxmlease.XMLListNode" title="jxmlease.XMLListNode"><code class="xref py py-class docutils literal"><span class="pre">XMLListNode</span></code></a>.</p>
+<p>As confusing as this may sound, the point is simple: we never
+check the tag of the &#8220;current&#8221; element. Because lists can be
+homogenous or heterogenous, that statement is ambiguous for
+lists. We resolve the ambiguity by comparing the tag stored
+with the list and the tag of the children.</p>
+<p>For example, here is a root node with two top-level &#8220;name&#8221;
+elements. Searching for the &#8220;name&#8221; tag does not find these
+top-level elements because both the top-level dictionary and
+top-level list pass through the search:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">root</span> <span class="o">=</span> <span class="n">XMLDictNode</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s1">&#39;tag #1&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s1">&#39;tag #2&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">root</span>
+<span class="go">{&#39;name&#39;: [u&#39;tag #1&#39;, u&#39;tag #2&#39;]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">find_nodes_with_tag</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">):</span>
+<span class="gp">... </span>  <span class="nb">print</span> <span class="n">i</span>
+<span class="gp">...</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<p>On the other hand, we create a root <a class="reference internal" href="#jxmlease.XMLListNode" title="jxmlease.XMLListNode"><code class="xref py py-class docutils literal"><span class="pre">XMLListNode</span></code></a> and add
+two name tags to it. Because the <a class="reference internal" href="#jxmlease.XMLListNode" title="jxmlease.XMLListNode"><code class="xref py py-class docutils literal"><span class="pre">XMLListNode</span></code></a> has no internal
+representation of its tag, it checks for matches in its
+children. Note that you shouldn&#8217;t really create XML trees this
+way; rather, you should always have an XMLDictNode as the
+root. However, this shows the concept:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">badroot</span> <span class="o">=</span> <span class="n">XMLListNode</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">badroot</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">XMLCDATANode</span><span class="p">(</span><span class="s1">&#39;tag #1&#39;</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">badroot</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">XMLCDATANode</span><span class="p">(</span><span class="s1">&#39;tag #2&#39;</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">badroot</span>
+<span class="go">[u&#39;tag #1&#39;, u&#39;tag #2&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">root</span><span class="o">.</span><span class="n">emit_xml</span><span class="p">()</span>
+<span class="go">&lt;name&gt;tag #1&lt;/name&gt;</span>
+<span class="go">&lt;name&gt;tag #2&lt;/name&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">badroot</span><span class="o">.</span><span class="n">find_nodes_with_tag</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">):</span>
+<span class="gp">... </span>  <span class="nb">print</span> <span class="n">i</span>
+<span class="gp">...</span>
+<span class="go">tag #1</span>
+<span class="go">tag #2</span>
+</pre></div>
+</div>
+<p>Also, note that this method returns the actual node:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">root</span> <span class="o">=</span> <span class="n">jxmlease</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;            ... &lt;a&gt;</span>
+<span class="gp">... </span><span class="s2">  &lt;b&gt;</span>
+<span class="gp">... </span><span class="s2">    &lt;c&gt;</span>
+<span class="gp">... </span><span class="s2">      &lt;foo&gt;bar&lt;/foo&gt;</span>
+<span class="gp">... </span><span class="s2">      &lt;status&gt;ok&lt;/status&gt;</span>
+<span class="gp">... </span><span class="s2">    &lt;/c&gt;</span>
+<span class="gp">... </span><span class="s2">  &lt;/b&gt;</span>
+<span class="gp">... </span><span class="s2">&lt;/a&gt;&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">find_nodes_with_tag</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">):</span>
+<span class="gp">... </span>  <span class="nb">print</span> <span class="n">i</span>
+<span class="gp">...</span>
+<span class="go">{u&#39;c&#39;: {u&#39;foo&#39;: u&#39;bar&#39;, u&#39;status&#39;: u&#39;ok&#39;}}</span>
+</pre></div>
+</div>
+<p>You can also use a tuple as the tag parameter, in which case
+the method will return nodes with a tag that matches any of
+the given tag values.</p>
+<p>You can use this function to create somewhat complicated logic
+that mimics the functionality from XPath &#8220;//tag&#8221; matches. For
+example, here we check for &lt;xnm:warning&gt; and &lt;xnm:error&gt; nodes
+and return their value:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">root</span> <span class="o">=</span> <span class="n">jxmlease</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;            ... &lt;foo&gt;</span>
+<span class="gp">... </span><span class="s2">  &lt;xnm:warning&gt;</span>
+<span class="gp">... </span><span class="s2">    &lt;message&gt;This is bad.&lt;/message&gt;</span>
+<span class="gp">... </span><span class="s2">  &lt;/xnm:warning&gt;</span>
+<span class="gp">... </span><span class="s2">  &lt;bar&gt;</span>
+<span class="gp">... </span><span class="s2">    &lt;xnm:error&gt;</span>
+<span class="gp">... </span><span class="s2">      &lt;message&gt;This is very bad.&lt;/message&gt;</span>
+<span class="gp">... </span><span class="s2">    &lt;/xnm:error&gt;</span>
+<span class="gp">... </span><span class="s2">  &lt;/bar&gt;</span>
+<span class="gp">... </span><span class="s2">&lt;/foot&gt;&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">root</span><span class="o">.</span><span class="n">has_node_with_tag</span><span class="p">((</span><span class="s1">&#39;xnm:warning&#39;</span><span class="p">,</span> <span class="s1">&#39;xnm:error&#39;</span><span class="p">)):</span>
+<span class="gp">... </span>  <span class="nb">print</span> <span class="s2">&quot;Something bad happened.&quot;</span>
+<span class="gp">...</span>
+<span class="go">Something bad happened.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">find_nodes_with_tag</span><span class="p">((</span><span class="s1">&#39;xnm:warning&#39;</span><span class="p">,</span> <span class="s1">&#39;xnm:error&#39;</span><span class="p">)):</span>
+<span class="gp">... </span>  <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;xnm:error&#39;</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">level</span> <span class="o">=</span> <span class="s2">&quot;Error:&quot;</span>
+<span class="gp">... </span>  <span class="k">elif</span> <span class="n">node</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;xnm:warning&#39;</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">level</span> <span class="o">=</span> <span class="s2">&quot;Warning:&quot;</span>
+<span class="gp">... </span>  <span class="k">else</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">level</span> <span class="o">=</span> <span class="s2">&quot;Unknown:&quot;</span>
+<span class="gp">... </span>  <span class="nb">print</span><span class="p">(</span><span class="n">level</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">node</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;message&quot;</span><span class="p">,</span> <span class="s2">&quot;(unknown)&quot;</span><span class="p">))</span>
+<span class="gp">...</span>
+<span class="go">Warning: This is bad.</span>
+<span class="go">Error: This is very bad.</span>
+</pre></div>
+</div>
+<p>Once a given node matches, the method does not check that
+node&#8217;s children.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>tag</strong> (<em>string or tuple</em>) &#8211; The XML tag (or tags) for which to search.</li>
+<li><strong>recursive</strong> (<em>bool</em>) &#8211; If True (the default), search recursively through
+all children. If False, only search direct children.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A generator which iterates over all matching nodes.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.get_cdata">
+<code class="descname">get_cdata</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jxmlease.XMLListNode.get_cdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a node&#8217;s CDATA.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A string containing the node&#8217;s CDATA.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.get_current_node">
+<code class="descname">get_current_node</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jxmlease.XMLListNode.get_current_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the current node.</p>
+<p>There are times that the current node must be replaced in the
+XML tree for some reason. For example, due to the immutability
+of Python strings, a new XMLCDATANode (which masquerades as a
+string) is required anytime its CDATA value changes.</p>
+<p>When this occurs, you can retrieve the latest node using the
+get_current_node() method. This will attempt to find the node
+that succeeded the node in question. If the node is still
+current, it simply returns itself.</p>
+<p>Therefore, it should always be safe to run:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">get_current_node</span><span class="p">()</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Subclass of <code class="xref py py-class docutils literal"><span class="pre">XMLNodeBase</span></code> containing the current
+successor to the node (if any). If the node is still &#8220;current&#8221;,
+the method returns the node itself.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.get_xml_attr">
+<code class="descname">get_xml_attr</code><span class="sig-paren">(</span><em>attr</em>, <em>defval=&lt;jxmlease._NoArg instance&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#jxmlease.XMLListNode.get_xml_attr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an XML attribute.</p>
+<p>This method returns the value of an XML attribute. If the XML
+attribute does not exist, it will return a user-supplied default value.
+If the user did not supply a default value, it raises a KeyError.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>attr</strong> (<em>string</em>) &#8211; The name of the XML attribute.</li>
+<li><strong>defval</strong> (<em>string</em>) &#8211; The default value. (Default: Raise a KeyError.)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The string value of the XML attribute, or <code class="xref py py-obj docutils literal"><span class="pre">defval</span></code>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">KeyError</span></code> &#8211; If the <code class="xref py py-obj docutils literal"><span class="pre">attr</span></code> is not found and
+<code class="xref py py-obj docutils literal"><span class="pre">defval</span></code> is not supplied.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.get_xml_attrs">
+<code class="descname">get_xml_attrs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jxmlease.XMLListNode.get_xml_attrs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the XML attribute dictionary.</p>
+<p>This method returns the value of the XML attribute
+dictonary.  Note that it returns the actual XML attribute
+dictionary, rather than a copy.  Please take caution in
+modifying it.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The XML attribute dictionary.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">OrderedDict</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.has_node_with_tag">
+<code class="descname">has_node_with_tag</code><span class="sig-paren">(</span><em>tag</em>, <em>recursive=True</em><span class="sig-paren">)</span><a class="headerlink" href="#jxmlease.XMLListNode.has_node_with_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine whether a node with a matching tag exists.</p>
+<p>This method uses the <a class="reference internal" href="#jxmlease.XMLListNode.find_nodes_with_tag" title="jxmlease.XMLListNode.find_nodes_with_tag"><code class="xref py py-meth docutils literal"><span class="pre">find_nodes_with_tag()</span></code></a> method to search
+for a node that is a child of the current node and has a
+matching tag. The tag of the current node is not checked. The
+method returns a boolean value to indicate whether at least
+one matching node is found.</p>
+<p>Because this function uses the <a class="reference internal" href="#jxmlease.XMLListNode.find_nodes_with_tag" title="jxmlease.XMLListNode.find_nodes_with_tag"><code class="xref py py-meth docutils literal"><span class="pre">find_nodes_with_tag()</span></code></a> method,
+the parameters and algorithm are the same as the
+<a class="reference internal" href="#jxmlease.XMLListNode.find_nodes_with_tag" title="jxmlease.XMLListNode.find_nodes_with_tag"><code class="xref py py-meth docutils literal"><span class="pre">find_nodes_with_tag()</span></code></a> method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>tag</strong> (<em>string or tuple</em>) &#8211; The XML tag (or tags) for which to search.</li>
+<li><strong>recursive</strong> (<em>bool</em>) &#8211; If True (the default), search recursively through
+all children. If False, only search direct children.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">True if at least one matching node is found; otherwise, False.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.has_xml_attrs">
+<code class="descname">has_xml_attrs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jxmlease.XMLListNode.has_xml_attrs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the node has XML attributes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>A bool that is True if the node has XML attributes, and</dt>
+<dd>False otherwise.</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.index">
+<code class="descname">index</code><span class="sig-paren">(</span><em>value</em><span class="optional">[</span>, <em>start</em><span class="optional">[</span>, <em>stop</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &rarr; integer -- return first index of value.<a class="headerlink" href="#jxmlease.XMLListNode.index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raises ValueError if the value is not present.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.insert">
+<code class="descname">insert</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jxmlease.XMLListNode.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>L.insert(index, object) &#8211; insert object before index</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.jdict">
+<code class="descname">jdict</code><span class="sig-paren">(</span><em>in_place=False</em>, <em>promote=False</em><span class="sig-paren">)</span><a class="headerlink" href="#jxmlease.XMLListNode.jdict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dictionary keyed appropriately for Junos output.</p>
+<p>This method is a shortcut to call the <a class="reference internal" href="#jxmlease.XMLListNode.dict" title="jxmlease.XMLListNode.dict"><code class="xref py py-meth docutils literal"><span class="pre">dict()</span></code></a>
+method with these parameters:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">attrs</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;junos:key&#39;</span><span class="p">,</span> <span class="s1">&#39;junos:key&#39;</span><span class="p">,</span> <span class="s1">&#39;junos:key&#39;</span><span class="p">),</span>
+       <span class="p">(</span><span class="s1">&#39;junos:key&#39;</span><span class="p">,</span> <span class="s1">&#39;junos:key&#39;</span><span class="p">),</span> <span class="s1">&#39;junos:key&#39;</span><span class="p">]</span>
+<span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>This will attempt to produce the correct key for each
+node. Some nodes have a multi-field key. If that occurs, the
+dictionary key will be a tuple. In cases where there is a
+single key, the dictionary key will be a string. If there is
+no matching node, the key will simply be the XML tag name.</p>
+<p>Some Junos nodes use a different tag for the key. And, in some
+cases, the <code class="docutils literal"><span class="pre">junos:key</span></code> attribute is not available. In those
+circumstances, you should directly call the <a class="reference internal" href="#jxmlease.XMLListNode.dict" title="jxmlease.XMLListNode.dict"><code class="xref py py-meth docutils literal"><span class="pre">dict()</span></code></a>
+method with the correct attributes or tags.</p>
+<p>Please see the documentation for the <a class="reference internal" href="#jxmlease.XMLListNode.dict" title="jxmlease.XMLListNode.dict"><code class="xref py py-meth docutils literal"><span class="pre">dict()</span></code></a> method for
+further information.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>in_place</strong> (<em>bool</em>) &#8211; Whether the change should be made in the XML tree.</li>
+<li><strong>promote</strong> (<em>bool</em>) &#8211; Whether the new nodes should be added to a
+dictonary placed at the current node, or they should be
+&#8220;promoted&#8221; to the first enclosing dictionary.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">An <a class="reference internal" href="dict_objects.html#jxmlease.XMLDictNode" title="jxmlease.XMLDictNode"><code class="xref py py-class docutils literal"><span class="pre">XMLDictNode</span></code></a>. If <code class="xref py py-obj docutils literal"><span class="pre">in_place</span></code> is False, the
+dictionary formulated from the current node. If <code class="xref py py-obj docutils literal"><span class="pre">in_place</span></code>
+is True, the dictionary to which the nodes were added.
+(Note: If <code class="xref py py-obj docutils literal"><span class="pre">promote</span></code> is True, this dictionary may contain
+additional entries that already existed in the enclosing
+dictionary.)</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-class docutils literal"><span class="pre">AttributeError</span></code> &#8211; If the node is out of date and
+<code class="xref py py-obj docutils literal"><span class="pre">in_place</span></code> is True. (See <a class="reference internal" href="#jxmlease.XMLListNode.get_current_node" title="jxmlease.XMLListNode.get_current_node"><code class="xref py py-meth docutils literal"><span class="pre">get_current_node()</span></code></a>.)</li>
+<li><code class="xref py py-class docutils literal"><span class="pre">AttributeError</span></code> &#8211; If <code class="xref py py-obj docutils literal"><span class="pre">in_place</span></code>
+is True and the method encounters irrecoverable data
+inconsistency while making changes to the XML tree.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.list">
+<code class="descname">list</code><span class="sig-paren">(</span><em>in_place=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jxmlease.html#XMLListNode.list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jxmlease.XMLListNode.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a node as a list.</p>
+<p>This method returns a node as a list. This is useful when you
+are not sure whether a node will contain a single entry or a
+list. If the node contains a list, the node itself is
+returned. If the node does not already contain a list, the
+method creates a list, adds the node to it, and returns the
+list.</p>
+<p>If the <code class="xref py py-obj docutils literal"><span class="pre">in_place</span></code> parameter is True, then the change is
+made in the XML tree. Otherwise, the XML tree is left unchanged and
+the method creates and returns a temporary list.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>in_place</strong> (<em>bool</em>) &#8211; Whether the change should be made in the
+XML tree.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list or <a class="reference internal" href="#jxmlease.XMLListNode" title="jxmlease.XMLListNode"><code class="xref py py-class docutils literal"><span class="pre">XMLListNode</span></code></a>
+If the current node is a list, the current node;
+otherwise, a list containing the current node as its sole
+member.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> &#8211; If the node is out of date and
+<code class="xref py py-obj docutils literal"><span class="pre">in_place</span></code> is True. (See <a class="reference internal" href="#jxmlease.XMLListNode.get_current_node" title="jxmlease.XMLListNode.get_current_node"><code class="xref py py-meth docutils literal"><span class="pre">get_current_node()</span></code></a>.)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.pop">
+<code class="descname">pop</code><span class="sig-paren">(</span><span class="optional">[</span><em>index</em><span class="optional">]</span><span class="sig-paren">)</span> &rarr; item -- remove and return item at index (default last).<a class="headerlink" href="#jxmlease.XMLListNode.pop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raises IndexError if list is empty or index is out of range.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.prettyprint">
+<code class="descname">prettyprint</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jxmlease.html#XMLListNode.prettyprint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jxmlease.XMLListNode.prettyprint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print a &#8220;pretty&#8221; representation of the data structure.</p>
+<p>This uses the <code class="xref py py-meth docutils literal"><span class="pre">pprint()</span></code> method from the <code class="xref py py-mod docutils literal"><span class="pre">pprint</span></code>
+module to print a &#8220;pretty&#8221; representation of the data structure.
+The parameters are passed unchanged to the <code class="xref py py-meth docutils literal"><span class="pre">pprint()</span></code> method.</p>
+<p>The output from this method shows only the main data and not the meta
+data (such as XML attributes).</p>
+<p>When using <code class="xref py py-meth docutils literal"><span class="pre">pprint()</span></code>, it is necessary to use this method to
+get a reasonable representation of the data; otherwise,
+<code class="xref py py-meth docutils literal"><span class="pre">pprint()</span></code> will not know how to represent the object in a
+&#8220;pretty&#8221; way.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.remove">
+<code class="descname">remove</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jxmlease.XMLListNode.remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>L.remove(value) &#8211; remove first occurrence of value.
+Raises ValueError if the value is not present.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.reverse">
+<code class="descname">reverse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jxmlease.XMLListNode.reverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>L.reverse() &#8211; reverse <em>IN PLACE</em></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.set_cdata">
+<code class="descname">set_cdata</code><span class="sig-paren">(</span><em>cdata</em>, <em>return_node=False</em><span class="sig-paren">)</span><a class="headerlink" href="#jxmlease.XMLListNode.set_cdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a node&#8217;s CDATA.</p>
+<p>This method sets a node&#8217;s CDATA.  Note that any node can
+contain CDATA in what is called &#8220;semi-structured&#8221;
+XML. However, nodes that only contain CDATA are represented as
+<a class="reference internal" href="cdata_objects.html#jxmlease.XMLCDATANode" title="jxmlease.XMLCDATANode"><code class="xref py py-class docutils literal"><span class="pre">XMLCDATANode</span></code></a> objects. Regardless of the node, you can use
+this same method to set the CDATA.</p>
+<p><strong>Note</strong>: When running this on an XMLCDATANode, the actual node
+will be replaced with a new node in the tree. (This is a
+result of Python&#8217;s string immutability.)  The function will
+update the XML tree, if necessary; however, any local
+references you have saved for the node will become stale.  You
+can obtain the updated node by setting the return_node
+parameter to True or by running the <a class="reference internal" href="#jxmlease.XMLListNode.get_current_node" title="jxmlease.XMLListNode.get_current_node"><code class="xref py py-meth docutils literal"><span class="pre">get_current_node()</span></code></a> method
+on the old node. For this reason, if you plan to keep a local
+reference to XML node in question, it is a good idea to run
+the method like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">node</span> <span class="o">=</span> <span class="n">root</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">][</span><span class="s1">&#39;b&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">set_cdata</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cdata</strong> (<em>string</em>) &#8211; The text value that should be used for the
+node&#8217;s CDATA.</li>
+<li><strong>return_node</strong> (<em>bool</em>) &#8211; Whether the method should return the
+updated node.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">None or the updated node object if <code class="xref py py-obj docutils literal"><span class="pre">return_node</span></code> is True.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> &#8211; If the node is out of date. (See
+<a class="reference internal" href="#jxmlease.XMLListNode.get_current_node" title="jxmlease.XMLListNode.get_current_node"><code class="xref py py-meth docutils literal"><span class="pre">get_current_node()</span></code></a>.)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.set_xml_attr">
+<code class="descname">set_xml_attr</code><span class="sig-paren">(</span><em>attr</em>, <em>val</em><span class="sig-paren">)</span><a class="headerlink" href="#jxmlease.XMLListNode.set_xml_attr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set an XML attribute.</p>
+<p>This method sets the XML attribute to the given value.  If the
+XML attribute already existed, its value is overridden by the
+new value.  If the XML attribute did not already exist, it is
+created.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>attr</strong> (<em>string</em>) &#8211; The name of the XML attribute.</li>
+<li><strong>val</strong> (<em>string</em>) &#8211; The value of the XML attribute.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">None</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> &#8211; If the node is out of date.
+(See <a class="reference internal" href="#jxmlease.XMLListNode.get_current_node" title="jxmlease.XMLListNode.get_current_node"><code class="xref py py-meth docutils literal"><span class="pre">get_current_node()</span></code></a>.)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.sort">
+<code class="descname">sort</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jxmlease.XMLListNode.sort" title="Permalink to this definition">¶</a></dt>
+<dd><p>L.sort(cmp=None, key=None, reverse=False) &#8211; stable sort <em>IN PLACE</em>;
+cmp(x, y) -&gt; -1, 0, 1</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.standardize">
+<code class="descname">standardize</code><span class="sig-paren">(</span><em>deep=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jxmlease.html#XMLListNode.standardize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jxmlease.XMLListNode.standardize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert all child nodes to instances of an XMLNodeBase sub-class.</p>
+<p>This method is useful when you have added a child node
+directly to a dictionary or list and now want to convert it to
+the appropriate <code class="xref py py-class docutils literal"><span class="pre">XMLNodeBase</span></code> sub-class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>deep</strong> (<em>bool</em>) &#8211; If True (the default), recursively descend
+through all children, converting all nodes, as needed. If
+False, only convert direct children of the node.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="jxmlease.XMLListNode.strip_cdata">
+<code class="descname">strip_cdata</code><span class="sig-paren">(</span><em>chars=None</em>, <em>return_node=False</em><span class="sig-paren">)</span><a class="headerlink" href="#jxmlease.XMLListNode.strip_cdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Strip leading/trailing characters from a node&#8217;s CDATA.</p>
+<p>This method runs the string class&#8217; <code class="xref py py-meth docutils literal"><span class="pre">strip()</span></code> method on a node&#8217;s
+CDATA and updates the node&#8217;s CDATA with the result. (This is
+the functional equivalent to
+<code class="docutils literal"><span class="pre">node.set_cdata(node.get_cdata().strip())</span></code>.)</p>
+<p>Note that any node can contain CDATA in what is called
+&#8220;semi-structured&#8221; XML. However, nodes that only contain CDATA
+are represented as <a class="reference internal" href="cdata_objects.html#jxmlease.XMLCDATANode" title="jxmlease.XMLCDATANode"><code class="xref py py-class docutils literal"><span class="pre">XMLCDATANode</span></code></a> objects. Regardless of the
+node, you can use this same method to append CDATA.</p>
+<p><strong>Note</strong>: When running this on an <a class="reference internal" href="cdata_objects.html#jxmlease.XMLCDATANode" title="jxmlease.XMLCDATANode"><code class="xref py py-class docutils literal"><span class="pre">XMLCDATANode</span></code></a>, the actual
+node will be replaced with a new node in the tree. (This is a
+result of Python&#8217;s string immutability.)  The function will
+update the XML tree, if necessary; however, any local
+references you have saved for the node will become stale.  You
+can obtain the updated node by setting the return_node
+parameter to True or by running the <a class="reference internal" href="#jxmlease.XMLListNode.get_current_node" title="jxmlease.XMLListNode.get_current_node"><code class="xref py py-meth docutils literal"><span class="pre">get_current_node()</span></code></a> method
+on the old node. For this reason, if you plan to keep a local
+reference to XML node in question, it is a good idea to run
+the method like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">node</span> <span class="o">=</span> <span class="n">root</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">][</span><span class="s1">&#39;b&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">strip_cdata</span><span class="p">(</span><span class="n">return_node</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>chars</strong> (<em>string</em>) &#8211; Contains the characters to strip. This is passed to
+the string class&#8217; <code class="xref py py-meth docutils literal"><span class="pre">strip()</span></code> method.</li>
+<li><strong>return_node</strong> (<em>bool</em>) &#8211; Whether the method should return the
+updated node.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
+<dt>None if <code class="xref py py-obj docutils literal"><span class="pre">return_node</span></code> is False; otherwise, the updated</dt>
+<dd><p class="first last">node object.</p>
+</dd>
+</dl>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">AttributeError</span></code> &#8211; If the node is out of date.
+(See <a class="reference internal" href="#jxmlease.XMLListNode.get_current_node" title="jxmlease.XMLListNode.get_current_node"><code class="xref py py-meth docutils literal"><span class="pre">get_current_node()</span></code></a>.)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/juniper_logo.png" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="index.html">jxmlease</a></h1>
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=Juniper&repo=jxmlease&type=watch&count=true&size=large"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parsing.html">Parsing XML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dict_objects.html">XMLDictNode Ojbects</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">XMLListNode Ojbects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cdata_objects.html">XMLCDATANode Ojbects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">Producing XML Output</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Juniper Networks.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

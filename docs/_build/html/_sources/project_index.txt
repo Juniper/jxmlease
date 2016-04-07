@@ -1,0 +1,4 @@
+Module Index
+============
+
+:ref:`genindex`

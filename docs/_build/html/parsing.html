@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Parsing XML &mdash; jxmlease 0.0.1 documentation</title>
+    <title>Parsing XML &mdash; jxmlease 1.0a1 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.0.1',
+        VERSION:     '1.0a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,8 +24,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="jxmlease 0.0.1 documentation" href="index.html" />
-    <link rel="next" title="Ojbects" href="objects.html" />
+    <link rel="top" title="jxmlease 1.0a1 documentation" href="index.html" />
+    <link rel="next" title="XMLDictNode Ojbects" href="dict_objects.html" />
     <link rel="prev" title="Installation" href="install.html" />
    
   
@@ -56,9 +56,9 @@ object was created.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">root</span> <span class="o">=</span> <span class="n">myparser</span><span class="p">(</span><span class="s2">&quot;&lt;a&gt;foo&lt;/a&gt;&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Calling a <a class="reference internal" href="#jxmlease.Parser" title="jxmlease.Parser"><code class="xref py py-class docutils literal"><span class="pre">Parser</span></code></a> object returns an <a class="reference internal" href="objects.html#jxmlease.XMLDictNode" title="jxmlease.XMLDictNode"><code class="xref py py-class docutils literal"><span class="pre">XMLDictNode</span></code></a>
+<p>Calling a <a class="reference internal" href="#jxmlease.Parser" title="jxmlease.Parser"><code class="xref py py-class docutils literal"><span class="pre">Parser</span></code></a> object returns an <a class="reference internal" href="dict_objects.html#jxmlease.XMLDictNode" title="jxmlease.XMLDictNode"><code class="xref py py-class docutils literal"><span class="pre">XMLDictNode</span></code></a>
 containing the parsed XML tree.</p>
-<p>In this example, <code class="docutils literal"><span class="pre">root</span></code> is an <a class="reference internal" href="objects.html#jxmlease.XMLDictNode" title="jxmlease.XMLDictNode"><code class="xref py py-class docutils literal"><span class="pre">XMLDictNode</span></code></a> which contains a
+<p>In this example, <code class="docutils literal"><span class="pre">root</span></code> is an <a class="reference internal" href="dict_objects.html#jxmlease.XMLDictNode" title="jxmlease.XMLDictNode"><code class="xref py py-class docutils literal"><span class="pre">XMLDictNode</span></code></a> which contains a
 representation of the parsed XML:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">XMLDictNode</span><span class="p">)</span>
 <span class="go">True</span>
@@ -81,7 +81,7 @@ the same arguments to the <a class="reference internal" href="#jxmlease.parse" t
 </pre></div>
 </div>
 <p>It is possible to call a <a class="reference internal" href="#jxmlease.Parser" title="jxmlease.Parser"><code class="xref py py-class docutils literal"><span class="pre">Parser</span></code></a> object as a generator by
-specifying the <code class="xref py py-attr docutils literal"><span class="pre">generator</span></code> parameter. The <code class="xref py py-attr docutils literal"><span class="pre">generator</span></code>
+specifying the <code class="xref py py-obj docutils literal"><span class="pre">generator</span></code> parameter. The <code class="xref py py-obj docutils literal"><span class="pre">generator</span></code>
 parameter contains a list of paths to match. If paths are provided in this
 parameter, the behavior of the parser is changed. Instead of returning the
 root node of a parsed XML hierarchy, the parser returns a generator object.
@@ -125,7 +125,7 @@ subclass).</p>
 </div>
 <p>When calling the parser, you can specify all of these parameters. When
 creating a parsing instance, you can specify all of these parameters
-except <code class="xref py py-attr docutils literal"><span class="pre">xml_input</span></code>:</p>
+except <code class="xref py py-obj docutils literal"><span class="pre">xml_input</span></code>:</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -140,17 +140,17 @@ input. If not provided, defaults to the expat parser in
 <li><strong>process_namespaces</strong> (<em>bool</em>) &#8211; If True, namespaces in tags and attributes
 are converted to their full URL value. If False (the default), the
 namespaces in tags and attributes are left unchanged.</li>
-<li><strong>namespace_separator</strong> (<em>string</em>) &#8211; If <code class="xref py py-attr docutils literal"><span class="pre">process_namespaces</span></code> is True,
+<li><strong>namespace_separator</strong> (<em>string</em>) &#8211; If <code class="xref py py-obj docutils literal"><span class="pre">process_namespaces</span></code> is True,
 this specifies the separator that expat should use between
 namespaces and identifiers in tags and attributes</li>
 <li><strong>xml_attribs</strong> (<em>bool</em>) &#8211; If True (the default), include XML attributes.
 If False, ignore them.</li>
 <li><strong>strip_whitespace</strong> (<em>bool</em>) &#8211; If True (the default), strip whitespace
 at the start and end of CDATA. If False, keep all whitespace.</li>
-<li><strong>namespaces</strong> (<a class="reference internal" href="objects.html#jxmlease.XMLDictNode.dict" title="jxmlease.XMLDictNode.dict"><em>dict</em></a>) &#8211; A remapping for namespaces. If supplied, identifiers
+<li><strong>namespaces</strong> (<a class="reference internal" href="dict_objects.html#jxmlease.XMLDictNode.dict" title="jxmlease.XMLDictNode.dict"><em>dict</em></a>) &#8211; A remapping for namespaces. If supplied, identifiers
 with a namespace prefix will have their namespace prefix rewritten
 based on the dictionary. The code will look for
-<code class="xref py py-attr docutils literal"><span class="pre">namespaces[current_namespace]</span></code>. If found,
+<code class="xref py py-obj docutils literal"><span class="pre">namespaces[current_namespace]</span></code>. If found,
 <code class="xref py py-obj docutils literal"><span class="pre">current_namespace</span></code> will be replaced with the result of
 the lookup.</li>
 <li><strong>strip_namespace</strong> (<em>bool</em>) &#8211; If True, the namespace prefix will be
@@ -158,8 +158,8 @@ removed from all identifiers. If False (the default), the namespace
 prefix will be retained.</li>
 <li><strong>cdata_separator</strong> (<em>string</em>) &#8211; When encountering &#8220;semi-structured&#8221; XML
 (where the XML has CDATA and tags intermixed at the same level), the
-<code class="xref py py-attr docutils literal"><span class="pre">cdata_separator</span></code> will be placed between the different
-groups of CDATA. By default, the <code class="xref py py-attr docutils literal"><span class="pre">cdata_separator</span></code>
+<code class="xref py py-obj docutils literal"><span class="pre">cdata_separator</span></code> will be placed between the different
+groups of CDATA. By default, the <code class="xref py py-obj docutils literal"><span class="pre">cdata_separator</span></code>
 parameter is &#8216;&#8217;, which results in the CDATA groups being
 concatenated without separator.</li>
 <li><strong>generator</strong> (<em>list of strings</em>) &#8211; A list of paths to match. If paths are
@@ -172,9 +172,9 @@ matches one of the provided paths.</li>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>A callable instance of the <a class="reference internal" href="#jxmlease.Parser" title="jxmlease.Parser"><code class="xref py py-class docutils literal"><span class="pre">Parser</span></code></a> class.</p>
-<p>Calling a <a class="reference internal" href="#jxmlease.Parser" title="jxmlease.Parser"><code class="xref py py-class docutils literal"><span class="pre">Parser</span></code></a> object returns an <a class="reference internal" href="objects.html#jxmlease.XMLDictNode" title="jxmlease.XMLDictNode"><code class="xref py py-class docutils literal"><span class="pre">XMLDictNode</span></code></a>
+<p>Calling a <a class="reference internal" href="#jxmlease.Parser" title="jxmlease.Parser"><code class="xref py py-class docutils literal"><span class="pre">Parser</span></code></a> object returns an <a class="reference internal" href="dict_objects.html#jxmlease.XMLDictNode" title="jxmlease.XMLDictNode"><code class="xref py py-class docutils literal"><span class="pre">XMLDictNode</span></code></a>
 containing the parsed XML tree.</p>
-<p>Alternatively, if the <code class="xref py py-attr docutils literal"><span class="pre">generator</span></code> parameter is specified, a
+<p>Alternatively, if the <code class="xref py py-obj docutils literal"><span class="pre">generator</span></code> parameter is specified, a
 <code class="xref py py-obj docutils literal"><span class="pre">generator</span></code> object is returned.</p>
 </p>
 </td>
@@ -225,21 +225,21 @@ that you can provide to the <a class="reference internal" href="#jxmlease.EtreeP
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>etree_root</strong> (<em>ElementTree</em>) &#8211; An ElementTree object representing the
-tree you wish to parse.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>etree_root</strong> (<code class="xref py py-class docutils literal"><span class="pre">ElementTree</span></code>) &#8211; An <code class="xref py py-class docutils literal"><span class="pre">ElementTree</span></code>
+object representing the tree you wish to parse.</td>
 </tr>
 </tbody>
 </table>
 <p>Also accepts most of the same arguments as the <a class="reference internal" href="#jxmlease.Parser" title="jxmlease.Parser"><code class="xref py py-class docutils literal"><span class="pre">Parser</span></code></a> class.
-However, it does not accept the <code class="xref py py-attr docutils literal"><span class="pre">xml_input</span></code>, <code class="xref py py-attr docutils literal"><span class="pre">expat</span></code>,
-or <code class="xref py py-attr docutils literal"><span class="pre">encoding</span></code> parameters.</p>
+However, it does not accept the <code class="xref py py-obj docutils literal"><span class="pre">xml_input</span></code>, <code class="xref py py-obj docutils literal"><span class="pre">expat</span></code>,
+or <code class="xref py py-obj docutils literal"><span class="pre">encoding</span></code> parameters.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="jxmlease.parse_etree">
 <code class="descclassname">jxmlease.</code><code class="descname">parse_etree</code><span class="sig-paren">(</span><em>etree_root</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/jxmlease.html#parse_etree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jxmlease.parse_etree" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create Python data structures from an ElementTree object.</p>
-<p>See the py:class:<cite>EtreeParser</cite> class documentation.</p>
+<dd><p>Create Python data structures from an <code class="xref py py-class docutils literal"><span class="pre">ElementTree</span></code> object.</p>
+<p>See the <a class="reference internal" href="#jxmlease.EtreeParser" title="jxmlease.EtreeParser"><code class="xref py py-class docutils literal"><span class="pre">EtreeParser</span></code></a> class documentation.</p>
 </dd></dl>
 
 </div>
@@ -252,15 +252,32 @@ or <code class="xref py py-attr docutils literal"><span class="pre">encoding</sp
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/juniper_logo.png" alt="Logo"/>
-            </a></p><div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="install.html" title="previous chapter">Installation</a></li>
-      <li>Next: <a href="objects.html" title="next chapter">Ojbects</a></li>
-  </ul></li>
+            </a></p>
+<h1 class="logo"><a href="index.html">jxmlease</a></h1>
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=Juniper&repo=jxmlease&type=watch&count=true&size=large"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Parsing XML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dict_objects.html">XMLDictNode Ojbects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list_objects.html">XMLListNode Ojbects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cdata_objects.html">XMLCDATANode Ojbects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">Producing XML Output</a></li>
 </ul>
-</div>
+
+
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
