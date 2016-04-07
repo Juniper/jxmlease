@@ -1,3 +1,6 @@
 *.pyc
 docs/_build/
 docs/_build/*
+.eggs
+build
+dist
