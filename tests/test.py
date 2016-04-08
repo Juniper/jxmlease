@@ -15,7 +15,7 @@ from copy import deepcopy
 from types import GeneratorType
 import jxmlease
 
-import sys
+import platform
 
 try:
     import unittest2 as unittest
@@ -59,6 +59,14 @@ if hasattr(unittest, "skipUnless"):
 else:
     def skipUnless(condition, reason):
         if not condition:
+            return skip(reason)
+        else:
+            return lambda func: func
+if hasattr(unittest, "skipIf"):
+    skipIf = unittest.skipIf
+else:
+    def skipIf(condition, reason):
+        if condition:
             return skip(reason)
         else:
             return lambda func: func
@@ -382,31 +390,52 @@ class XMLToObjTestCase(unittest.TestCase):
             msg="Bytes read (%d) is not less than the length of the full XML document (%d)" % (ioObj.tell(), len(xml))
         )
 
-    def test_generator_string_vs_file(self):
-        xml = large_xml_string
-        expected_values = list(large_xml_values)
+    def _generator_string_vs_file(self, xml_string, xml_values, xml_path):
+        """Common code used to implement two tests: one for a small string and
+           one for a large string.
+        """
+        xml = xml_string
+        expected_values = list(xml_values)
         ioObj = BytesIO(_encode(xml))
 
         # file-like IO: Must produce the same values as working on the
         # string, and must produce the same values as expected.
-        parser = self.Parser(generator=large_xml_path)
+        parser = self.Parser(generator=xml_path)
         fileio_values = list()
         for (path, match, value) in parser(ioObj):
-            self.assertEqual(path, large_xml_path)
-            self.assertEqual(match, large_xml_path)
+            self.assertEqual(path, xml_path)
+            self.assertEqual(match, xml_path)
             fileio_values.append(value)
 
         # string: Must produce the same values as working on file-like
         # IO, and must produce the same values as expected.
         stringio_values = list()
         for (path, match, value) in parser(xml):
-            self.assertEqual(path, large_xml_path)
-            self.assertEqual(match, large_xml_path)
+            self.assertEqual(path, xml_path)
+            self.assertEqual(match, xml_path)
             stringio_values.append(value)
 
         self.assertEqual(fileio_values, stringio_values)
         self.assertEqual(fileio_values, expected_values)
         self.assertEqual(stringio_values, expected_values)
+
+    @skipIf(platform.python_implementation() == 'PyPy', 'PyPy seems to dump core in this test')
+    def test_generator_string_vs_file_large(self):
+        self._generator_string_vs_file(
+            large_xml_string, large_xml_values, large_xml_path
+        )
+
+    def test_generator_string_vs_file_small(self):
+        small_xml_string = '<a x="y">\n'
+        small_xml_values = []
+        for i in range(1,128):
+            small_xml_string += "<b>%d</b>\n<c>%d</c>\n" % (i, i + 100000)
+            small_xml_values.append(str(i))
+        small_xml_string += '</a>'
+        small_xml_path = "/a/b"
+        self._generator_string_vs_file(
+            small_xml_string, small_xml_values, small_xml_path
+        )
 
     def test_unicode(self):
         try:
@@ -883,7 +912,11 @@ class EtreeToDictTestCase(XMLToObjTestCase):
         pass
 
     @skip("Test does not make sense in the Etree context")
-    def test_generator_string_vs_file(self):
+    def test_generator_string_vs_file_small(self):
+        pass
+
+    @skip("Test does not make sense in the Etree context")
+    def test_generator_string_vs_file_large(self):
         pass
 
     @skip("Test does not make sense in the Etree context")
@@ -938,29 +971,33 @@ class XMLNodeTestCase(unittest.TestCase):
                             {'c': list1_orig, 'd': data2_orig})
 
     def test_object_repr(self):
+        if jxmlease._OrderedDict == dict:
+            dict_repr = '{}'
+        else:
+            dict_repr = 'OrderedDict()'
         self.assertEqual(
             repr(XMLDictNode()),
-            'XMLDictNode(xml_attrs=OrderedDict(), value=OrderedDict())'
+            "XMLDictNode(xml_attrs=%s, value=%s)" % (dict_repr, dict_repr)
         )
         self.assertEqual(
             repr(XMLListNode()),
-            'XMLListNode(xml_attrs=OrderedDict(), value=[])'
+            "XMLListNode(xml_attrs=%s, value=[])" % dict_repr
         )
         self.assertTrue(
             repr(XMLCDATANode()).startswith(
-                "XMLCDATANode(xml_attrs=OrderedDict(), value="
+                "XMLCDATANode(xml_attrs=%s, value=" % dict_repr
             )
         )
         OrderedDict = jxmlease.OrderedDict
         myDict = OrderedDict()
-        self.assertEqual(repr(myDict), "OrderedDict()")
+        stdDict = jxmlease._OrderedDict()
+        self.assertEqual(repr(myDict), repr(stdDict))
         myDict['a'] = OrderedDict()
-        self.assertEqual(
-            repr(myDict),
-            "OrderedDict([('a', OrderedDict())])"
-        )
+        stdDict['a'] = jxmlease._OrderedDict()
+        self.assertEqual(repr(myDict), repr(stdDict))
         myDict['a'] = {}
-        self.assertEqual(repr(myDict), "OrderedDict([('a', {})])")
+        stdDict['a'] = {}
+        self.assertEqual(repr(myDict), repr(stdDict))
 
     def test_CDATA(self):
         # Initialization
@@ -1142,6 +1179,14 @@ class XMLNodeTestCase(unittest.TestCase):
         root = XMLDictNode({'a': {'b': [[{'name': 'foo'}]]}})
         self.assertRaises(TypeError, root['a']['b'].dict, tags=['name'])
 
+    def assertDictKeyListEqual(self, iter1, iter2):
+        a = list(iter1)
+        b = list(iter2)
+        if jxmlease._OrderedDict == dict:
+            a.sort()
+            b.sort()
+        self.assertEqual(a, b)
+
     def test_dict_promotion(self):
         test_foo = {'key': 'foo', 'val': '17'}
         test_bar = {'key': 'bar', 'val': '1001'}
@@ -1203,7 +1248,7 @@ class XMLNodeTestCase(unittest.TestCase):
         self.assertEqual(root['a']['b'][0], test_bar)
         rv = root['a']['b'][0].dict(tags=['key'], in_place=True, promote=True)
         self.assertTrue(rv is root['a'])
-        self.assertEqual(list(root['a'].keys()), ['foo', 'bar'])
+        self.assertDictKeyListEqual(root['a'].keys(), ['foo', 'bar'])
         self.assertEqual(root['a']['foo'], test_foo)
         self.assertEqual(root['a']['foo'].tag, 'b')
         self.assertEqual(root['a']['foo'].key, 'foo')
@@ -1251,7 +1296,7 @@ class XMLNodeTestCase(unittest.TestCase):
         self.assertTrue(root['a']['b'][0][0][0][0].parent is root['a']['b'][0][0][0])
         rv = root['a']['b'][0][0][0][0].dict(tags=['key'], in_place=True, promote=True)
         self.assertTrue(rv is root['a'])
-        self.assertEqual(list(root['a'].keys()), ['foo', 'bar'])
+        self.assertDictKeyListEqual(root['a'].keys(), ['foo', 'bar'])
         self.assertEqual(root['a']['foo'], test_foo)
         self.assertEqual(root['a']['foo'].tag, 'b')
         self.assertEqual(root['a']['foo'].key, 'foo')
@@ -1470,8 +1515,17 @@ class XMLNodeTestCase(unittest.TestCase):
         self.assertEqual(parse(xml).emit_xml(full_document=False, pretty=False), xml)
 
     def test_output_notpretty_attr(self):
-        xml = """<aa xmlns:a="http://www.example.com/" a:b="foo"><ab><ac>1</ac><ac>2</ac></ab><ab><ac>3</ac><ac>4</ac></ab></aa>"""
-        self.assertEqual(parse(xml).emit_xml(full_document=False, pretty=False), xml)
+        ns_attr = 'xmlns:a="http://www.example.com/"'
+        other_attr = 'a:b="foo"'
+        xml_template = "<aa %s %s><ab><ac>1</ac><ac>2</ac></ab><ab><ac>3</ac><ac>4</ac></ab></aa>"
+        xml_in = xml_template % (ns_attr, other_attr)
+        xml_out = parse(xml_in).emit_xml(full_document=False, pretty=False)
+        if jxmlease._OrderedDict == dict:
+            self.assertTrue(xml_out == xml_in or
+                            xml_out == xml_template % (other_attr, ns_attr)
+            )
+        else:
+            self.assertEqual(xml_in, xml_out)
 
     def test_output_notpretty_semistructured(self):
         xml = "<aa><ab><ac>1</ac><ac>2</ac>foo</ab><ab><ac>3</ac><ac>4</ac>bar</ab>baz</aa>"

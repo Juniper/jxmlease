@@ -1402,7 +1402,7 @@ class XMLNodeBase(XMLNodeMetaClass):
 class XMLCDATANode(XMLNodeBase, _unicode):
     def __init__(self, *args, **kwargs):
         self.text = self
-        _unicode.__init__(self, *args, **kwargs)
+        _unicode.__init__(self)
 
     def add_node(self, tag, key=None, *args, **kwargs):
         self._check_replacement()

@@ -1,0 +1,32 @@
+# Copyright (c) 2016, Juniper Networks, Inc.
+# All rights reserved.
+language: python
+python:
+  - "2.6"
+  - "2.7"
+  - "3.2"
+  - "3.4"
+  - "3.5"
+  - "nightly"
+  - "pypy"
+  - "pypy3"
+env:
+  - USE_LXML=yes
+matrix:
+  allow_failures:
+    - python: "nightly"
+  include:
+    - python: "2.7"
+      env: USE_LXML=no
+    - python: "3.5"
+      env: USE_LXML=no
+    # PyPy3 won't load LXML; try without it
+    - python: "pypy3"
+      env: USE_LXML=no
+  exclude:
+    # PyPy3 won't load LXML
+    - python: "pypy3"
+      env: USE_LXML=yes
+install:
+  - if [ "$USE_LXML" == "yes" ]; then pip install lxml; fi
+script: python setup.py test
