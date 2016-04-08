@@ -14,7 +14,7 @@ Welcome
 
 .. toctree::
    :hidden:
-   :maxdepth: 3
+   :maxdepth: 2
    :name: mastertoc
 
    install
