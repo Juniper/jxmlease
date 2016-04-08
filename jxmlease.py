@@ -32,6 +32,10 @@ XML using the :py:meth:`XMLNodeBase.emit_xml` method::
 
 """
 
+# We don't use the absolue_import functionality, but this is the default
+# in Python 3.x and it is good to maintain consistent behavior.
+from __future__ import absolute_import
+
 import sys
 from xml.parsers import expat
 from xml.sax.saxutils import XMLGenerator
@@ -59,6 +63,7 @@ try: # pragma no cover
     from pprint import pprint
 except ImportError: # pragma no cover
     def pprint(obj, *args, **kwargs):
+        """Internal backup substitute for the pprint library function."""
         if len(args) > 0:
             stream = args[0]
         else:
@@ -66,13 +71,15 @@ except ImportError: # pragma no cover
         if stream is not None:
             stream.write("%r\n" % obj)
         else:
-            print("%r" % obj)
+            print("%r" % obj) # pylint: disable=superfluous-parens
 
-QNameDecode = None
+QNameDecode = None # pylint: disable=invalid-name
 try: # pragma no cover
+    # pylint: disable=wrong-import-position
     from lxml import etree
-    QNameDecode = etree.QName
+    QNameDecode = etree.QName # pylint: disable=invalid-name
 except ImportError: # pragma no cover
+    # pylint: disable=wrong-import-position
     try:
         import xml.etree.cElementTree as etree
     except ImportError:
@@ -80,6 +87,7 @@ except ImportError: # pragma no cover
             import xml.etree.ElementTree as etree
             # Not tested; but, should be the same as cElementTree
         except ImportError:
+            # pylint: disable=superfluous-parens
             try:
                 import cElementTree as etree
                 print("Warning: Not tested with cElementTree")
@@ -90,7 +98,10 @@ except ImportError: # pragma no cover
                 except ImportError:
                     print("Unable to import etree: lxml functionality disabled")
 
-class QNameSeparator():
+class QNameSeparator(object): # pylint: disable=too-few-public-methods
+    """Class to separate an XML identifier into its namespace and name
+       components.
+    """
     def __init__(self, text):
         endidx = text.rfind('}')
         if text[0] != '{' or endidx < 0:
@@ -100,17 +111,15 @@ class QNameSeparator():
             self.namespace = text[1:endidx]
             self.localname = text[endidx+1:]
 
-if etree and QNameDecode == None: # pragma no cover
-    class QNameDecode(QNameSeparator):
+if etree and QNameDecode is None: # pragma no cover
+    # pylint: disable=function-redefined
+    class QNameDecode(QNameSeparator): # pylint: disable=too-few-public-methods
+        """Internal backup substitute for the LXML QName class."""
         def __init__(self, node):
             QNameSeparator.__init__(self, node.tag)
 
 try:  # pragma no cover
-    _basestring = basestring
-except NameError:  # pragma no cover
-    _basestring = str
-try:  # pragma no cover
-    _unicode = unicode
+    _unicode = unicode # pylint: disable=unicode-builtin
 except NameError:  # pragma no cover
     _unicode = str
 try:  # pragma no cover
@@ -130,9 +139,10 @@ __author__ = 'Juniper Networks'
 __version__ = '1.0a1'
 __license__ = 'MIT'
 
-class _NoArg():
+class _NoArg(object): # pylint: disable=too-few-public-methods
     """Internal Use Only"""
-    pass
+    def __init__(self):
+        pass
 
 class OrderedDict(_OrderedDict):
     """Standard OrderedDict class, with a small local modification.
@@ -140,8 +150,9 @@ class OrderedDict(_OrderedDict):
     This module uses the OrderedDict class to maintain ordering
     of the input data.
     """
-
-    def __repr__(self, _repr_running={}):
+    def __repr__(self, _repr_running=None):
+        if _repr_running is None:
+            _repr_running = {}
         temp = self.__class__.__name__
         try:
             # The OrderedDict.__repr__ function takes an
@@ -162,28 +173,28 @@ class OrderedDict(_OrderedDict):
 
 class _XMLNodeMetaClass(type):
     """Internal Use Only"""
-    def __new__(cls, name, bases, dict):
+    def __new__(mcs, name, bases, obj_dict):
         # Record parent class for later use.
-        dict["__parent_class__"] = bases[-1]
+        obj_dict["__parent_class__"] = bases[-1]
 
         # Handle doc string inheritance. This is all a fancy way of
         # inheriting doc strings from earlier classes. It will only
         # overwrite doc strings if they are not already set.
-        for k in dict:
-            if hasattr(dict[k], '__call__') and not dict[k].__doc__:
+        for k in obj_dict:
+            if hasattr(obj_dict[k], '__call__') and not obj_dict[k].__doc__:
                 try:
                     if hasattr(XMLNodeBase, k):
-                        dict[k].__doc__ = getattr(XMLNodeBase, k).__doc__
+                        obj_dict[k].__doc__ = getattr(XMLNodeBase, k).__doc__
                 except:
                     pass
 
-        if '__init__' in dict and not dict['__init__'].__doc__:
-            dict['__init__'].__doc__ = """Initialize an %s object.
+        if '__init__' in obj_dict and not obj_dict['__init__'].__doc__:
+            obj_dict['__init__'].__doc__ = """Initialize an %s object.
             
             See the class documentation for initializer arguments.
             """ % (name,)
-        if not '__doc__' in dict:
-            dict['__doc__'] = """Initialize an %s object.
+        if not '__doc__' in obj_dict:
+            obj_dict['__doc__'] = """Initialize an %s object.
             
             The optional first parameter can be the value to which the
             object should be initialized. All other parameters must be
@@ -267,9 +278,9 @@ class _XMLNodeMetaClass(type):
                     on the object's children during object initialization.
             """ % (name, name)
         # Create and return the class.
-        return type.__new__(cls, name, bases, dict)
+        return type.__new__(mcs, name, bases, obj_dict)
 
-    def __call__(self, *args, **kwargs):
+    def __call__(cls, *args, **kwargs):
         # Determine if we were called with an initial value. If so,
         # make sure there was only *one* initial value.
         initializer = kwargs.pop("initializer", _NoArg())
@@ -277,7 +288,7 @@ class _XMLNodeMetaClass(type):
             if len(args) > 0:
                 raise TypeError("got multiple values for keyword "
                                 "argument 'initializer'")
-            args.append(initializer)
+            args = (initializer,)
         elif len(args) == 1:
             initializer = args[0]
 
@@ -310,7 +321,7 @@ class _XMLNodeMetaClass(type):
         deep = kwargs.pop('deep', True)
 
         # Create the object.
-        obj = type.__call__(self, *args, **kwargs)
+        obj = type.__call__(cls, *args, **kwargs)
 
         # Add attributes to the object.
         obj.tag = tag
@@ -797,7 +808,7 @@ class XMLNodeBase(XMLNodeMetaClass):
             pass
         raise AttributeError("Unable to find existing node in parent")
 
-    def dict(self, attrs=[], tags=[], func=None, in_place=False,
+    def dict(self, attrs=None, tags=None, func=None, in_place=False,
              promote=False):
         """Return a dictionary keyed as indicated by the parameters.
 
@@ -930,13 +941,19 @@ class XMLNodeBase(XMLNodeMetaClass):
                 is True and the method encounters irrecoverable data
                 inconsistency while making changes to the XML tree.
         """
+        if attrs is None:
+            attrs = []
+        if tags is None:
+            tags = []
         newlist = None
         if in_place:
             # If editing in place, check that we are current.
             self._check_replacement()
 
             # Save some information to help restore things, if needed.
+            # pylint: disable=access-member-before-definition
             orig = dict(parent=self.parent, tag=self.tag, key=self.key)
+            # pylint: enable=access-member-before-definition
 
             # If we were editing in place, we need to figure out how to
             # properly replace ourselves.
@@ -957,9 +974,11 @@ class XMLNodeBase(XMLNodeMetaClass):
                 newlist = self.list(in_place=True)
         if newlist is None:
             # Make a list and add us to it.
+            # pylint: disable=access-member-before-definition
             newlist = XMLListNode(
                 [self], tag=self.tag, key=self.key, convert=False
             )
+            # pylint: enable=access-member-before-definition
 
         # Now, let's turn the list node into a dict.
         try:
@@ -1383,7 +1402,7 @@ class XMLNodeBase(XMLNodeMetaClass):
             True if at least one matching node is found; otherwise, False.
 
         """
-        for node in self.find_nodes_with_tag(tag, recursive=recursive):
+        for _ in self.find_nodes_with_tag(tag, recursive=recursive):
             return True
         return False
 
@@ -1400,7 +1419,7 @@ class XMLNodeBase(XMLNodeMetaClass):
 
 
 class XMLCDATANode(XMLNodeBase, _unicode):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs): # pylint: disable=unused-argument
         self.text = self
         _unicode.__init__(self)
 
@@ -1473,7 +1492,7 @@ def _get_dict_value_iter(arg, descr="node"):
         raise TypeError("Unexpected type %s for %s" % (str(type(arg)), descr))
 
 class XMLListNode(XMLNodeBase, list):
-    def add_node(self, *args, **kwargs):
+    def add_node(self, *args, **kwargs): # pylint: disable=unused-argument
         """Add an XML node to the XML tree.
 
         You should **NOT** call this method on an XMLListNode. Instead,
@@ -1492,8 +1511,12 @@ class XMLListNode(XMLNodeBase, list):
     def list(self, in_place=False):
         return self
 
-    def dict(self, attrs=[], tags=[], func=None, in_place=False,
+    def dict(self, attrs=None, tags=None, func=None, in_place=False,
              promote=False):
+        if attrs is None:
+            attrs = []
+        if tags is None:
+            tags = []
         class KeyBuilder(object):
             def __init__(self, matches):
                 if isinstance(matches, (tuple, list)):
@@ -1502,7 +1525,7 @@ class XMLListNode(XMLNodeBase, list):
                 else:
                     self.key_list = [matches]
                     self.tuple = False
-                self.value_list = [None for i in range(0, len(self.key_list))]
+                self.value_list = [None for _ in range(0, len(self.key_list))]
 
             def eval_key(self, key_list, val):
                 found_match = False
@@ -1625,7 +1648,7 @@ class XMLListNode(XMLNodeBase, list):
                 # Update the internal book-keeping entries that might
                 # need to be changed.
                 self._check_replacement()
-                if not (node.tag):
+                if not node.tag:
                     node.tag = self.tag
                 node.key = self.key
                 node.parent = self
@@ -1837,7 +1860,9 @@ class XMLDictNode(XMLNodeBase, OrderedDict):
 
 class _GeneratorMatch(object):
     # Essentially, a data structure used to hold information on matches.
-    def __init__(self, rooted=False, elements=[], depth=0, match_string=""):
+    def __init__(self, rooted=False, elements=None, depth=0, match_string=""):
+        if elements is None:
+            elements = []
         self.rooted = rooted
         self.elements = elements
         self.depth = depth
@@ -1853,7 +1878,7 @@ class _DictSAXHandler(object):
                  namespaces=None,
                  strip_namespace=False,
                  cdata_separator=_unicode(''),
-                 generator=[]):
+                 generator=None):
         self.path = []
         self.stack = []
         self.matches = []
@@ -1869,7 +1894,7 @@ class _DictSAXHandler(object):
         self.matches = []
         if isinstance(generator, str):
             self.match_tests.append(self._parse_generator_matches(generator))
-        else:
+        elif generator is not None:
             for i in generator:
                 self.match_tests.append(self._parse_generator_matches(i))
         if len(self.match_tests) > 0:
@@ -1946,7 +1971,7 @@ class _DictSAXHandler(object):
         if isinstance(attrs, dict):
             rv = attrs
         else:
-            rv = OrderedDict(zip(attrs[0::2], attrs[1::2]))
+            rv = OrderedDict(zip(attrs[0::2], attrs[1::2])) # pylint: disable=zip-builtin-not-iterating
         if self.strip_namespace:
             for k in list(rv.keys()):
                 if k == "xmlns" or k.startswith("xmlns" +
@@ -1989,7 +2014,7 @@ class _DictSAXHandler(object):
             # We don't need a CDATA separator when starting an item.
             self.need_cdata_separator = False
 
-    def end_element(self, full_name):
+    def end_element(self, full_name): # pylint: disable=unused-argument
         if not self.in_ignore:
             if self.strip_whitespace:
                 self.item = self.item.strip_cdata(return_node=True)
@@ -2113,7 +2138,7 @@ class Parser(object):
     except :py:obj:`xml_input`:
 
     Args:
-	xml_input (stirng or file-like object): Ccontains the XML to parse.
+	xml_input (stirng or file-like object): Contains the XML to parse.
 	encoding (string or None): The input's encoding. If not provided, this
             defaults to 'utf-8'.
         expat (An expat, or equivalent, parser class): Used for parsing the XML
@@ -2207,6 +2232,7 @@ class Parser(object):
         self._process_namespaces = self._kwargs.pop('process_namespaces')
 
     def _make_handler(self):
+        # pylint: disable=unexpected-keyword-arg
         self._handler = _DictSAXHandler(**self._kwargs)
 
     def _make_parser(self):
@@ -2336,9 +2362,10 @@ def parse(xml_input, **kwargs):
     return Parser(**kwargs)(xml_input)
 
 if etree:
-    class NamespaceError(ValueError):
+    class NamespaceError(Exception):
         def __init__(self, namespace):
             self.namespace = namespace
+            Exception.__init__(self)
         def __str__(self):
             return "Namespace \"%s\" not found in namespace store." % (
                 self.namespace
@@ -2424,6 +2451,10 @@ if etree:
             self._default_handler = self._handler
             self._handler = None
 
+            # Initialize the namespace dictionary attribute. This will be
+            # overwritten each time we start parsing.
+            self._namespace_dict = {}
+
         def _process_args(self, **kwargs):
             # Make a copy of the default kwargs database.
             self._kwargs = dict(self._default_kwargs)
@@ -2440,6 +2471,7 @@ if etree:
             self._strip_namespace = self._kwargs['strip_namespace']
 
         def _make_handler(self):
+            # pylint: disable=unexpected-keyword-arg
             self._handler = _DictSAXHandler(**self._kwargs)
 
         def _parse(self, node):
@@ -2567,7 +2599,7 @@ if etree:
                             # use a consistent NS identifier. Otherwise, add
                             # the identifier to the main database.
                             if parsed_tag.namespace in self._namespace_dict:
-                                newns = self._namespace_dict[parsed_tag.namespacein]
+                                newns = self._namespace_dict[parsed_tag.namespace]
                             else:
                                 newns = self._namespace_dict['nexttag']
                                 self._namespace_dict[parsed_tag.namespace] = newns
@@ -2663,6 +2695,7 @@ if etree:
 
             # Figure out which node we should hand to the parser.
             try:
+                # pylint: disable=no-member
                 if isinstance(etree_root, etree._ElementTree):
                     etree_root = etree_root.getroot()
             except:
@@ -2683,7 +2716,7 @@ if etree:
             if self._kwargs.get("generator", False):
                 return childIter
             else:
-                for i in childIter:
+                for _ in childIter:
                     pass
                 return self._handler.item
 
