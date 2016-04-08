@@ -4,7 +4,7 @@ Installation
 Requirements
 ------------
 
-* Python 2.5 or greater (Python 3.x is supported)
+* Python 2.6 or greater (Python 3.x is supported)
 * ``pip`` the installation tool for the Python Package Index (PyPI)
 
 Prerequisites
