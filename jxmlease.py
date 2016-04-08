@@ -126,7 +126,7 @@ parsing_increment = 1024
 parser_defaults = {}
 
 
-__author__ = 'Jonathan Looney'
+__author__ = 'Juniper Networks'
 __version__ = '1.0a1'
 __license__ = 'MIT'
 
