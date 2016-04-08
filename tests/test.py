@@ -1,9 +1,14 @@
-# Copyright (c) 2015, Juniper Networks, Inc.
+#!/usr/bin/env python
+# Copyright (c) 2015-2016, Juniper Networks, Inc.
 # All rights reserved.
 #
 # Copyright (C) 2012 Martin Blech and individual contributors.
 #
 # See the LICENSE file for further information.
+
+import sys
+if __name__ == "__main__":
+    sys.path.append('..')
 
 from jxmlease import parse, Parser, parse_etree, EtreeParser, XMLDictNode, XMLListNode, XMLCDATANode
 from copy import deepcopy
@@ -16,10 +21,9 @@ try:
     import unittest2 as unittest
 except ImportError:
     import unittest
-try:
-    from io import BytesIO as StringIO
-except ImportError:
-    from jxmlease import StringIO
+
+BytesIO = jxmlease.BytesIO
+StringIO = jxmlease.StringIO
 
 unicode = jxmlease._unicode
 
@@ -76,7 +80,7 @@ class ParsingInterrupted(Exception):
 # is processed.
 def _test_expat_partial_processing():
     xml = _encode(large_xml_string)
-    ioObj = StringIO(xml)
+    ioObj = BytesIO(xml)
     parser = jxmlease.expat.ParserCreate('ascii')
     def raise_error(full_name):
         raise ParsingInterrupted()
@@ -133,7 +137,7 @@ class XMLToObjTestCase(unittest.TestCase):
         xml = '<a>data</a>'
         xml = self.xmlTextToTestFormat(xml)
         self.assertEqual(self.parse(xml),
-                         self.parse(StringIO(_encode(xml))))
+                         self.parse(BytesIO(_encode(xml))))
 
     def test_minimal(self):
         xml = '<a/>'
@@ -367,7 +371,7 @@ class XMLToObjTestCase(unittest.TestCase):
     @skipUnless(_test_expat_partial_processing(), "Expat does not do partial processing of a file; no need to check for generator correctness.")
     def test_generator_file_is_incremental(self):
         xml = _encode(large_xml_string)
-        ioObj = StringIO(xml)
+        ioObj = BytesIO(xml)
         count = 0
         for i in self.parse(ioObj, generator="/a/b"):
             count += 1
@@ -381,7 +385,7 @@ class XMLToObjTestCase(unittest.TestCase):
     def test_generator_string_vs_file(self):
         xml = large_xml_string
         expected_values = list(large_xml_values)
-        ioObj = StringIO(_encode(xml))
+        ioObj = BytesIO(_encode(xml))
 
         # file-like IO: Must produce the same values as working on the
         # string, and must produce the same values as expected.
@@ -1406,7 +1410,6 @@ class XMLNodeTestCase(unittest.TestCase):
         attrs['bb'] = newval
         self.assertEqual(node.get_xml_attrs(), attrs)
         self.assertEqual(node.get_xml_attr('bb'), newval)
-        self.assertTrue(node.get_xml_attr('bb') is not newval)
         self.assertTrue(node.has_xml_attrs())
         node.delete_xml_attr('aa')
         self.assertNotEqual(node.get_xml_attrs(), attrs)
@@ -1474,3 +1477,5 @@ class XMLNodeTestCase(unittest.TestCase):
         xml = "<aa><ab><ac>1</ac><ac>2</ac>foo</ab><ab><ac>3</ac><ac>4</ac>bar</ab>baz</aa>"
         self.assertEqual(parse(xml).emit_xml(full_document=False, pretty=False), xml)
 
+if __name__ == '__main__':
+    unittest.main()

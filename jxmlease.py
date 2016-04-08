@@ -1456,6 +1456,9 @@ class XMLCDATANode(XMLNodeBase, _unicode):
         if self.tag in tag:
             yield self
 
+    def __str__(self):
+        return self.__parent_class__.__str__(self)
+
 def _get_dict_value_iter(arg, descr="node"):
     if isinstance(arg, XMLDictNode):
         try:
