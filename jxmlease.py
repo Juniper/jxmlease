@@ -135,6 +135,7 @@ parser_defaults = {}
 __author__ = 'Juniper Networks'
 __version__ = '1.0a1'
 __license__ = 'MIT'
+__all__ = ['XMLDictNode', 'XMLListNode', 'XMLCDATANode', 'Parser', 'parse', 'EtreeParser', 'parse_etree']
 
 class _NoArg(object): # pylint: disable=too-few-public-methods
     """Internal Use Only"""
