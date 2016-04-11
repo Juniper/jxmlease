@@ -14,6 +14,8 @@ from jxmlease import parse, Parser, parse_etree, EtreeParser, XMLDictNode, XMLLi
 from copy import deepcopy
 from types import GeneratorType
 import jxmlease
+import jxmlease.xmlparser
+from jxmlease.etreeparser import etree
 
 import platform
 
@@ -22,8 +24,11 @@ try:
 except ImportError:
     import unittest
 
-BytesIO = jxmlease.BytesIO
 StringIO = jxmlease.StringIO
+try:
+    from io import BytesIO
+except ImportError:
+    BytesIO = StringIO
 
 unicode = jxmlease._unicode
 
@@ -89,7 +94,7 @@ class ParsingInterrupted(Exception):
 def _test_expat_partial_processing():
     xml = _encode(large_xml_string)
     ioObj = BytesIO(xml)
-    parser = jxmlease.expat.ParserCreate('ascii')
+    parser = jxmlease.xmlparser.expat.ParserCreate('ascii')
     def raise_error(full_name):
         raise ParsingInterrupted()
     parser.EndElementHandler = raise_error
@@ -892,10 +897,10 @@ class EtreeToDictTestCase(XMLToObjTestCase):
 
     def xmlTextToTestFormat(self, xml):
         try:
-            return jxmlease.etree.fromstring(xml)
+            return etree.fromstring(xml)
         except UnicodeEncodeError:
             xml = xml.encode('utf-8')
-            return jxmlease.etree.fromstring(xml)
+            return etree.fromstring(xml)
 
     # XMLToObjTestCase tests that do not make sense to run in the
     # ElementTree context.
@@ -927,8 +932,8 @@ class EtreeToDictTestCase(XMLToObjTestCase):
     # ElementTree parsing.
     def test_element_vs_element_tree(self):
         xml = '<a>data</a>'
-        xml_element = jxmlease.etree.fromstring(xml)
-        xml_elementtree = jxmlease.etree.ElementTree(xml_element)
+        xml_element = etree.fromstring(xml)
+        xml_elementtree = etree.ElementTree(xml_element)
         self.assertEqual(self.parse(xml_element),
                          self.parse(xml_elementtree))
 
