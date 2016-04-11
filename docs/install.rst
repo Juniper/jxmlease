@@ -11,27 +11,29 @@ Prerequisites
 -------------
 
 jxmlease requires an implementation of the :py:class:`ElementTree` API.
+Python (beginning in version 2.5) includes an implementation in the
+`standard library`_ which satisfies this prerequisite.
 
-The preferred :py:class:`ElementTree` implementation is
-`lxml`_. See `lxml installation`_ for details on installing lxml.
+.. _standard library: https://docs.python.org/2/library/xml.etree.elementtree.html
+
+While not a pre-requisite, jxmlease will use some of the advanced functionality
+provided by the `lxml`_ module, if it is installed.
 
 .. _lxml: http://lxml.de/
+
+Of particular note is that :py:mod:`lxml` will maintain the original namespace
+identifiers when you use jxmlease to iterate over an :py:mod:`lxml`
+:py:class:`ElementTree` data structure.
+
+The standard library's :py:class:`ElementTree` data structures do not maintain
+the original namespace identifiers. See the “Namespace Identifiers” section of
+:py:class:`jxmlease.EtreeParser` for more details on this restriction. *Note:*
+This is only applicable when using jxmlease to parse ElementTree data
+structures. This is not applicable when using jxmlease to parse text.
+
+See `lxml installation`_ for details on installing lxml.
+
 .. _lxml installation: http://lxml.de/installation.html
-
-If lxml is not present, jxmlease attempts to use the `cElementTree`_
-implementation of the :py:class:`ElementTree` API.
-
-.. _cElementTree: http://effbot.org/zone/celementtree.htm
-
-Finally, if neither lxml or cElementTree are present, jxmlease uses the
-:py:class:`ElementTree` implementation available in the
-`Python standard library`_.
-
-.. _Python standard library: https://docs.python.org/2/library/xml.etree.elementtree.html
-
-If lxml is not present, the original namespace identifiers on XML attributes
-are not maintained. See the "Namespace Identifiers" section of
-:py:class:`jxmlease.EtreeParser` for more details on this restriction.
 
 Installing the latest released version of jxmlease
 --------------------------------------------------
