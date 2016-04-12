@@ -7,7 +7,6 @@
 # See the LICENSE file for further information.
 """Module that provides LXML/ElementTree parsing."""
 from __future__ import absolute_import
-import sys
 
 # pylint: disable=wrong-import-position
 
@@ -19,18 +18,7 @@ except ImportError: # pragma no cover
     try:
         import xml.etree.cElementTree as etree
     except ImportError:
-        try:
-            import xml.etree.ElementTree as etree
-            # Not tested; but, should be the same as cElementTree
-        except ImportError:
-            # pylint: disable=superfluous-parens
-            try:
-                import cElementTree as etree
-                print("Warning: Not tested with cElementTree")
-            except ImportError:
-                # pylint: disable=import-error
-                import elementtree.ElementTree as etree
-                print("Warning: Not tested with elementtree.ElementTree")
+        import xml.etree.ElementTree as etree
 
 from . import parser_defaults, _unicode
 from ._parsehandler import _DictSAXHandler
@@ -329,13 +317,7 @@ class EtreeParser(object):
                         self._parse_attrib(
                             old_attrib, attrib, ns_resolve_dict
                         )
-                    except NamespaceError:
-                        # NOTE: "except NamespaceError as e" is not
-                        # supported in older Python versions. Once
-                        # support for those versions is deprecated, we
-                        # should consider changing this to the more
-                        # standard syntax.
-                        e = sys.exc_info()[1]
+                    except NamespaceError as e:
                         if hasattr(node, 'nsmap'):
                             raise
 

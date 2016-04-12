@@ -8,7 +8,6 @@
 """Module that provides XML parsing."""
 from __future__ import absolute_import
 
-import sys
 from xml.parsers import expat
 from . import parser_defaults, parsing_increment, StringIO, _unicode
 from ._parsehandler import _DictSAXHandler
@@ -251,13 +250,7 @@ class Parser(object):
                 at_eof = True
             try:
                 self._parser.Parse(buf, at_eof)
-            except expat.ExpatError:
-                # Note: "except expat.ExpatError as e" is not
-                # supported in older Python version. Once support for
-                # those versions is deprecated, we should consider
-                # changing this to the more standard syntax.
-                e = sys.exc_info()[1]
-
+            except expat.ExpatError as e:
                 # If the only error was parsing an empty document, ignore
                 # the error and return the empty dictionary.
                 raise_error = True
@@ -310,13 +303,7 @@ class Parser(object):
                     self._parser.Parse(xml_input, True)
                 else:
                     self._parser.ParseFile(xml_input)
-            except expat.ExpatError:
-                # Note: "except expat.ExpatError as e" is not
-                # supported in older Python version. Once support for
-                # those versions is deprecated, we should consider
-                # changing this to the more standard syntax.
-                e = sys.exc_info()[1]
-
+            except expat.ExpatError as e:
                 # If the only error was parsing an empty document, ignore
                 # the error and return the empty dictionary.
                 raise_error = True
