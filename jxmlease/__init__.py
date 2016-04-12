@@ -79,7 +79,7 @@ parser_defaults = {}
 
 
 __author__ = 'Juniper Networks'
-__version__ = '1.0'
+__version__ = '1.0.1dev1'
 __license__ = 'MIT'
 __all__ = [
     'XMLDictNode', 'XMLListNode', 'XMLCDATANode', 'Parser', 'parse',
