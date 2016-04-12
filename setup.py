@@ -24,7 +24,7 @@ import jxmlease
 
 setup(name='jxmlease',
       version=jxmlease.__version__,
-      description=jxmlease.__doc__,
+      description="jxmlease converts between XML and intelligent Python data structures.",
       author=jxmlease.__author__,
       author_email='jxmlease@juniper.net',
       url='https://github.com/Juniper/jxmlease',
@@ -48,7 +48,7 @@ setup(name='jxmlease',
           'Programming Language :: Python :: Implementation :: PyPy',
           'Topic :: Text Processing :: Markup :: XML',
       ],
-      py_modules=['jxmlease'],
+      packages=['jxmlease'],
       test_suite = "tests.test",
       )
 
