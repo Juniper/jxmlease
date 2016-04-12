@@ -1,10 +1,12 @@
-# jxmlease
+jxmlease
+========
 
 Welcome to jxmlease: a Python module for converting XML to
 intelligent Python data structures, and converting Python data
 structures to XML.
 
-## What is jxmlease?
+What is jxmlease?
+-----------------
 
 Do you have a requirement to process XML data, but find it cumbersome
 to process XML data in Python? If so, you are not alone.
@@ -20,7 +22,7 @@ dictionary, and string types to create new, smart XML classes that can
 represent the XML data as normal Python objects while also maintaining
 the metadata for you to use.
 
-For example, consider this sample XML document:
+For example, consider this sample XML document::
 
     <a>
       <b>
@@ -37,7 +39,7 @@ For example, consider this sample XML document:
     </a>
 
 Using jxmlease, you can get a standard Python representation of the
-*data* in this XML document:
+*data* in this XML document::
 
     >>> root = jxmlease.parse(xml)
     >>> root.prettyprint()
@@ -45,14 +47,14 @@ Using jxmlease, you can get a standard Python representation of the
             u'c': {u'd': {u'z': u'bar'}},
             u'e': {u'z': u'baz'}}}
 
-You can also still access the *metadata*:
+You can also still access the *metadata*::
 
     >>> root['a']['b']['z'].get_xml_attr("changed")
     u'true'
 
 jxmlease also provides flexibility for parsing your data. If you only
 need select information from your XML data, you can have jxmlease
-return it while it is parsing the document:
+return it while it is parsing the document::
 
     >>> for path, _, node in jxmlease.parse(xml, generator="z"):
     ...     changed = node.get_xml_attr("changed", None) is not None
@@ -62,7 +64,7 @@ return it while it is parsing the document:
     /a/c/d/z: bar (changed)
     /a/e/z  : baz
 
-You can also iterate over the full, parsed document:
+You can also iterate over the full, parsed document::
 
     >>> for node in root.find_nodes_with_tag("z"):
     ...     changed = node.get_xml_attr("changed", None) is not None
@@ -72,7 +74,7 @@ You can also iterate over the full, parsed document:
     bar (changed)
     baz
 
-These iterations can even return part of an XML tree:
+These iterations can even return part of an XML tree::
 
     >>> for node in root.find_nodes_with_tag(("b", "c")):
     ...     print("<%s>: %s" % (node.tag, node))
@@ -81,7 +83,7 @@ These iterations can even return part of an XML tree:
     <c>: {u'd': {u'z': u'bar'}}
 
 And, importantly, these objects are subclasses of Python objects, so
-things like string comparisons work correctly:
+things like string comparisons work correctly::
 
     >>> root['a']['b']['z'] == "foo"
     True
@@ -91,12 +93,17 @@ things like string comparisons work correctly:
 We think that these features, and others, combine to ease XML
 processing in Python: hence, the name: jxmlease.
 
-## Documentation
+Documentation
+-------------
 
-The documentation is hosted on [readthedocs](http://jxmlease.readthedocs.org).
+The documentation is hosted on `readthedocs`_.
 
-## Installation
+.. _readthedocs: http://jxmlease.readthedocs.org/
 
-See the
-[installation instructions](http://jxmlease.readthedocs.org/en/stable/install.html)
+Installation
+------------
+
+See the `installation instructions`_.
 for more information on installing jxmlease.
+
+.. _installation instructions: http://jxmlease.readthedocs.org/en/stable/install.html
