@@ -98,5 +98,5 @@ The documentation is hosted on [readthedocs](http://jxmlease.readthedocs.org).
 ## Installation
 
 See the
-[installation instructions](http://jxmlease.readthedocs.org/en/latest/install.html)
+[installation instructions](http://jxmlease.readthedocs.org/en/stable/install.html)
 for more information on installing jxmlease.

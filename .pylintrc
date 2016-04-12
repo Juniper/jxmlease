@@ -1,3 +1,6 @@
+# Copyright (c) 2016, Juniper Networks, Inc.
+# All rights reserved.
+
 [MESSAGES CONTROL]
 # The below disable and enable lines are basically the equivalent of this:
 #    disable=all
