@@ -194,8 +194,11 @@ class XMLDictNode(XMLNodeBase, OrderedDict):
         # want to work on the children.
         pass_through = self._ignore_level or (self.tag is None and top_level)
         if self.tag in tag and not pass_through:
+            matched = True
             yield self
-        elif recursive or top_level:
+        else:
+            matched = False
+        if recursive or (top_level and not matched):
             for node in self.values():
                 kwargs = {'recursive': recursive}
                 # Pass through the top_level arg, if appropriate.

@@ -1087,22 +1087,23 @@ class XMLNodeBase(object):
     def find_nodes_with_tag(self, tag, recursive=True):
         """Iterates over nodes that have a matching tag.
 
-        **NOTE**: This documentation needs to be updated to take into
-        account the changes to list handling and always checking the
-        current node's tag.
+        This method searches the current node and its children for
+        nodes that have a matching tag. The :py:obj:`tag` parameter
+        accepts either a string value or a tuple, allowing you to
+        search for one or more tags with a single
+        operation. Optionally (by providing a False value to the
+        :py:obj:`recursive` parameter), you can limit the search to
+        the current node and direct children of the current node.
 
-        This method searches for a node that is a descendant of the
-        current node and has a matching tag. Optionally (by providing
-        a False value to the :py:obj:`recursive` parameter), you can limit
-        the search to direct children of the current node. In either
-        case, the tag of the current node is not checked.
+        The method will return a generator, which you can use to
+        iterate over the matching nodes.
 
         For example, this will print all "name" nodes from the XML
         snippet that is shown::
 
             >>> root = jxmlease.parse(\"\"\"\
             ... <?xml version="1.0" encoding="utf-8"?>
-            ... <name>
+            ... <root>
             ...     <a>
             ...         <name>name #1</name>
             ...         <b>
@@ -1114,9 +1115,9 @@ class XMLNodeBase(object):
             ...             </c>
             ...         </b>
             ...     </a>
-            ... </name>\"\"\")
+            ... </root>\"\"\")
             >>> print root
-            {u'name': {u'a': {u'b': [{u'name': u'name #2'},
+            {u'root': {u'a': {u'b': [{u'name': u'name #2'},
                                      {u'c': {u'name': u'name #3'}}],
                               u'name': u'name #1'}}}
             >>> for node in root.find_nodes_with_tag('name'):
@@ -1133,7 +1134,7 @@ class XMLNodeBase(object):
             >>> for node in root.find_nodes_with_tag('name', recursive=False):
             ...   print node
             ...
-            >>> for node in root['name']['a'].find_nodes_with_tag('name', recursive=False):
+            >>> for node in root['root']['a'].find_nodes_with_tag('name', recursive=False):
             ...   print node
             ...
             name #1
@@ -1145,15 +1146,18 @@ class XMLNodeBase(object):
         :py:class:`XMLDictNode`, rather than searching the children of the
         tagless :py:class:`XMLDictNode`::
 
-            >>> root = jxmlease.parse("<name>top-level tag</name>")
-            >>> for i in root.find_nodes_with_tag('name'):
-            ...   print i
-            ...
             >>> root = jxmlease.parse(\"\"\"\
             ... <a>
             ...   <name>second-level tag</name>
+            ...   <b>
+            ...     <name>third-level tag</name>
+            ...   </b>
             ... </a>\"\"\")
-            >>> for i in root.find_nodes_with_tag('name'):
+            >>> for i in root.find_nodes_with_tag('name', recursive=False):
+            ...   print i
+            ...
+            second-level tag
+            >>> for i in root['a'].find_nodes_with_tag('name', recursive=False):
             ...   print i
             ...
             second-level tag
@@ -1161,53 +1165,28 @@ class XMLNodeBase(object):
         If the current node is a list and it appears that the list was
         created to hold multiple elements with the same tag, then the
         command is run on each member of the list (rather than on the
-        list itself). The impact of this is that it will search for
-        tags in the grandchildren of the :py:class:`XMLListNode`, rather
-        than searching the children of the :py:class:`XMLListNode`.
-
-        As confusing as this may sound, the point is simple: we never
-        check the tag of the "current" element. Because lists can be
-        homogenous or heterogenous, that statement is ambiguous for
-        lists. We resolve the ambiguity by comparing the tag stored
-        with the list and the tag of the children.
+        list itself). This ensures you get back each node you requested.
 
         For example, here is a root node with two top-level "name"
-        elements. Searching for the "name" tag does not find these
-        top-level elements because both the top-level dictionary and
-        top-level list pass through the search::
+        elements. Searching non-recursively for the "name" tag returns
+        the two "name" elements, even though they are enclosed within
+        a dictionary and list::
 
             >>> root = XMLDictNode()
             >>> _ = root.add_node(tag='name', text='tag #1')
             >>> _ = root.add_node(tag='name', text='tag #2')
             >>> print root
             {'name': [u'tag #1', u'tag #2']}
-            >>> for i in root.find_nodes_with_tag('name'):
-            ...   print i
-            ...
-            >>>
-
-        On the other hand, we create a root :py:class:`XMLListNode` and add
-        two name tags to it. Because the :py:class:`XMLListNode` has no internal
-        representation of its tag, it checks for matches in its
-        children. Note that you shouldn't really create XML trees this
-        way; rather, you should always have an XMLDictNode as the
-        root. However, this shows the concept::
-
-            >>> badroot = XMLListNode()
-            >>> badroot.append(XMLCDATANode('tag #1', tag='name'))
-            >>> badroot.append(XMLCDATANode('tag #2', tag='name'))
-            >>> print badroot
-            [u'tag #1', u'tag #2']
-            >>> print root.emit_xml()
-            <name>tag #1</name>
-            <name>tag #2</name>
-            >>> for i in badroot.find_nodes_with_tag('name'):
+            >>> for i in root.find_nodes_with_tag('name', recursive=False):
             ...   print i
             ...
             tag #1
             tag #2
+            >>>
 
-        Also, note that this method returns the actual node::
+        Even though our examples up to this point have
+        demonstrated text, it is worth noting that this method returns
+        the actual node, whatever that may be::
 
             >>> root = jxmlease.parse(\"\"\"\
             ... <a>
@@ -1222,6 +1201,42 @@ class XMLNodeBase(object):
             ...   print i
             ...
             {u'c': {u'foo': u'bar', u'status': u'ok'}}
+
+        If the :py:obj:`recursive` parameter is False, the code will
+        check the current node. If the current node does not match,
+        the code will check the current node's direct
+        children. However, if the current node has a matching tag and
+        the :py:obj:`recursive` parameter is False, the code will stop
+        its search and not check the children of the current node.
+
+        If the :py:obj:`recursive` parameter is True (the default),
+        the code will search the current node and all of its children,
+        even the children of other matching nodes. Therefore, the
+        method may even return children of other matches, if you
+        specify a :py:obj:`recursive` search::
+
+            >>> root = jxmlease.parse(\"\"\"
+            ... <a>
+            ...   <a>
+            ...     <a>foo</a>
+            ...     <a>bar</a>
+            ...   </a>
+            ... </a>\"\"\")
+            >>> count = 0
+            >>> for i in root.find_nodes_with_tag("a"):
+            ...     count += 1
+            ...     print("%d: %s" % (count, i))
+            ...
+            1: {u'a': {u'a': [u'foo', u'bar']}}
+            2: {u'a': [u'foo', u'bar']}
+            3: foo
+            4: bar
+            >>> count = 0
+            >>> for i in root.find_nodes_with_tag("a", recursive=False):
+            ...     count += 1
+            ...     print("%d: %s" % (count, i))
+            ...
+            1: {u'a': {u'a': [u'foo', u'bar']}}
 
         You can also use a tuple as the tag parameter, in which case
         the method will return nodes with a tag that matches any of
@@ -1259,9 +1274,6 @@ class XMLNodeBase(object):
             Warning: This is bad.
             Error: This is very bad.
 
-        Once a given node matches, the method does not check that
-        node's children.
-
         Args:
             tag (string or tuple): The XML tag (or tags) for which to search.
             recursive (bool): If True (the default), search recursively through
@@ -1269,6 +1281,7 @@ class XMLNodeBase(object):
 
         Returns:
             A generator which iterates over all matching nodes.
+
         """
         if isinstance(tag, str):
             tag = (tag,)
@@ -1281,11 +1294,10 @@ class XMLNodeBase(object):
     def has_node_with_tag(self, tag, recursive=True):
         """Determine whether a node with a matching tag exists.
 
-        This method uses the :py:meth:`find_nodes_with_tag` method to search
-        for a node that is a child of the current node and has a
-        matching tag. The tag of the current node is not checked. The
-        method returns a boolean value to indicate whether at least
-        one matching node is found.
+        This method uses the :py:meth:`find_nodes_with_tag` method to
+        search the current node and its children for a node that has a
+        matching tag.  The method returns a boolean value to indicate
+        whether at least one matching node is found.
 
         Because this function uses the :py:meth:`find_nodes_with_tag` method,
         the parameters and algorithm are the same as the

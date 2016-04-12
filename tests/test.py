@@ -1536,5 +1536,118 @@ class XMLNodeTestCase(unittest.TestCase):
         xml = "<aa><ab><ac>1</ac><ac>2</ac>foo</ab><ab><ac>3</ac><ac>4</ac>bar</ab>baz</aa>"
         self.assertEqual(parse(xml).emit_xml(full_document=False, pretty=False), xml)
 
+    def test_find_with_tag_non_recursive(self):
+        xml = "<z><aa><ab><ac>1</ac><ac>2</ac></ab><ab><ac>3</ac></ab></aa><aa><empty/></aa></z>"
+        root = parse(xml)
+
+        # We should be able to find "z" and "aa" at both the tagless
+        # root node and the real root node.
+        for tag in ("z", "aa"):
+            self.assertTrue(root.has_node_with_tag(tag, recursive=False))
+            self.assertTrue(root.has_node_with_tag(tag, recursive=False))
+
+        # We should not find children of <aa>.
+        for tag in ("ab", "ac"):
+            self.assertFalse(root.has_node_with_tag(tag, recursive=False))
+            self.assertFalse(root.has_node_with_tag(tag, recursive=False))
+
+        # We should be able to find 1 <z> and 2 <aa> nodes from the top level.
+        for tag, count in (("z", 1), ("aa", 2)):
+            self.assertEqual(len(list(root.find_nodes_with_tag(tag, recursive=False))), count)
+            self.assertEqual(len(list(root["z"].find_nodes_with_tag(tag, recursive=False))), count)
+
+        # At the <aa> node level, we should be able to find a total of
+        # 2 <aa> nodes and 2 <ab> nodes.
+        self.assertEqual(len(list(root["z"]["aa"].find_nodes_with_tag("aa", recursive=False))), 2)
+        self.assertEqual(len(list(root["z"]["aa"].find_nodes_with_tag("ab", recursive=False))), 2)
+        self.assertEqual(len(list(root["z"]["aa"].find_nodes_with_tag("ac", recursive=False))), 0)
+        for node, count in zip(root["z"]["aa"], [2, 0]):
+            self.assertEqual(len(list(node.find_nodes_with_tag("aa", recursive=False))), 1)
+            self.assertEqual(len(list(node.find_nodes_with_tag("ab", recursive=False))), count)
+            self.assertEqual(len(list(node.find_nodes_with_tag("ac", recursive=False))), 0)
+
+        # At the <ab> node level, we should be able to find a total of
+        # 2 <ab> nodes and 3 <ac> nodes.
+        ab_node = root["z"]["aa"][0]["ab"]
+        self.assertEqual(len(list(ab_node.find_nodes_with_tag("aa", recursive=False))), 0)
+        self.assertEqual(len(list(ab_node.find_nodes_with_tag("ab", recursive=False))), 2)
+        self.assertEqual(len(list(ab_node.find_nodes_with_tag("ac", recursive=False))), 3)
+        for node, count in zip(ab_node, [2, 1]):
+            self.assertEqual(len(list(node.find_nodes_with_tag("aa", recursive=False))), 0)
+            self.assertEqual(len(list(node.find_nodes_with_tag("ab", recursive=False))), 1)
+            self.assertEqual(len(list(node.find_nodes_with_tag("ac", recursive=False))), count)
+
+        # At the <ac> node level, we should be able to find a total of
+        # 3 <ac> nodes.
+        self.assertEqual(len(list(ab_node[0]["ac"].find_nodes_with_tag("ac", recursive=False))), 2)
+        for ac_node in (ab_node[0]["ac"][0], ab_node[0]["ac"][1], ab_node[1]["ac"]):
+            self.assertEqual(len(list(node.find_nodes_with_tag("ac", recursive=False))), 1)
+
+    def test_find_with_tag_recursive(self):
+        xml = "<z><aa><ab><ac>1</ac><ac>2</ac></ab><ab><ac>3</ac></ab></aa><aa><empty/></aa></z>"
+        root = parse(xml)
+
+        # We should be able to find all tags at both the tagless
+        # root node and the real root node.
+        for tag in ("z", "aa", "ab", "ac", "empty"):
+            self.assertTrue(root.has_node_with_tag(tag))
+            self.assertTrue(root.has_node_with_tag(tag))
+
+        # We should not find non-existent tags.
+        for tag in ("not_here", ""):
+            self.assertFalse(root.has_node_with_tag(tag))
+            self.assertFalse(root.has_node_with_tag(tag))
+
+        # From the top level, we should be able to find 1 <z>, 2 <aa>,
+        # 2 <ab>, 3 <ac>, and 1 <empty> node.
+        expected_results = [("z", 1), ("aa", 2), ("ab", 2), ("ac", 3), ("empty", 1), ("not_here", 0), ("", 0)]
+        for tag, count in expected_results:
+            self.assertEqual(len(list(root.find_nodes_with_tag(tag))), count)
+            self.assertEqual(len(list(root["z"].find_nodes_with_tag(tag))), count)
+
+        # At the <aa> node level, we should be able to find 2 <aa>, 2
+        # <ab>, 3 <ac>, and 1 <empty> node.
+        expected_results = expected_results[1:]
+        for tag, count in expected_results:
+            self.assertEqual(len(list(root["z"]["aa"].find_nodes_with_tag(tag))), count)
+
+        # Replace the "aa" node and drop the "empty" node. Then look in the
+        # individual "aa" nodes.
+        expected_results = [("aa", 1)] + expected_results[1:3] + expected_results[4:]
+        for tag, count in expected_results[1:3] + expected_results[4:]:
+            self.assertEqual(len(list(root["z"]["aa"][0].find_nodes_with_tag(tag))), count)
+            self.assertEqual(len(list(root["z"]["aa"][1].find_nodes_with_tag(tag))), 0)
+
+        # At the <ab> node level, we should be able to find 2 <ab> and
+        # 3 <ac> nodes.
+        expected_results = expected_results[1:]
+        ab_node = root["z"]["aa"][0]["ab"]
+        for tag, count in expected_results:
+            self.assertEqual(len(list(ab_node.find_nodes_with_tag(tag))), count)
+
+        self.assertEqual(list(ab_node.find_nodes_with_tag("ac")), ["1", "2", "3"])
+
+        for node, count in zip(ab_node, [2, 1]):
+            self.assertEqual(len(list(node.find_nodes_with_tag("aa"))), 0)
+            self.assertEqual(len(list(node.find_nodes_with_tag("ab"))), 1)
+            self.assertEqual(len(list(node.find_nodes_with_tag("ac"))), count)
+
+        # At the <ac> node level, we should be able to find a total of
+        # 3 <ac> nodes.
+        self.assertEqual(len(list(ab_node[0]["ac"].find_nodes_with_tag("ac"))), 2)
+        for ac_node in (ab_node[0]["ac"][0], ab_node[0]["ac"][1], ab_node[1]["ac"]):
+            self.assertEqual(len(list(node.find_nodes_with_tag("ac"))), 1)
+
+    def test_find_with_tag_tuple(self):
+        xml = "<z><aa><ab><ac>1</ac><ac>2</ac></ab><ab><ac>3</ac></ab></aa><aa><empty/></aa></z>"
+        root = parse(xml)
+
+        # We should be able to find 3 <ac> tags, 2 <ab> tags, and 2 <aa> tags.
+        self.assertEqual(len(list(root.find_nodes_with_tag(("ac", "foo")))), 3)
+        self.assertEqual(len(list(root.find_nodes_with_tag(("ab", "ac", "foo")))), 5)
+        self.assertEqual(len(list(root.find_nodes_with_tag(["aa", "ab", "ac", "foo"]))), 7)
+        self.assertEqual(len(list(root.find_nodes_with_tag(tuple()))), 0)
+        self.assertEqual(len(list(root.find_nodes_with_tag(("foo", "bar")))), 0)
+
 if __name__ == '__main__':
     unittest.main()

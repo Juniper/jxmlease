@@ -119,7 +119,7 @@ class OrderedDict(_OrderedDict):
 # references are fully resolved prior to importing other modules that
 # may need them.
 
-class _XMLCDATAPlaceholder(object):
+class _XMLCDATAPlaceholder(object): # pragma no cover
     """A placeholder class for XMLCDATANode.
 
        This class produces an error if called, but tries to give enough
@@ -133,7 +133,7 @@ class _XMLCDATAPlaceholder(object):
     def __getattr__(self, name):
         return getattr(_node_refs['XMLCDATANode'], name)
 
-class _XMLDictPlaceholder(object):
+class _XMLDictPlaceholder(object): # pragma no cover
     """A placeholder class for XMLDictNode.
 
        This class produces an error if called, but tries to give enough
@@ -147,7 +147,7 @@ class _XMLDictPlaceholder(object):
     def __getattr__(self, name):
         return getattr(_node_refs['XMLDictNode'], name)
 
-class _XMLListPlaceholder(object):
+class _XMLListPlaceholder(object): # pragma no cover
     """A placeholder class for XMLLstNode.
 
        This class produces an error if called, but tries to give enough
