@@ -1139,12 +1139,13 @@ class XMLNodeBase(object):
             ...
             name #1
 
-        If you run this against an :py:class:`XMLDictNode` without a tag (for
-        example, the tagless root node), then the command is run on
-        each member of the dictionary. The impact of this is that it
-        will search for tags in the grandchildren of the tagless
-        :py:class:`XMLDictNode`, rather than searching the children of the
-        tagless :py:class:`XMLDictNode`::
+        If you run this against an :py:class:`XMLDictNode` without a
+        tag (for example, the tagless root node), then the command is
+        run on each member of the dictionary. The impact of this is
+        that a non-recursive search will search for tags in the
+        grandchildren of the tagless :py:class:`XMLDictNode`, rather
+        than searching the children of the tagless
+        :py:class:`XMLDictNode`::
 
             >>> root = jxmlease.parse(\"\"\"\
             ... <a>
@@ -1162,10 +1163,9 @@ class XMLNodeBase(object):
             ...
             second-level tag
 
-        If the current node is a list and it appears that the list was
-        created to hold multiple elements with the same tag, then the
-        command is run on each member of the list (rather than on the
-        list itself). This ensures you get back each node you requested.
+        This method never returns a list. Instead, lists pass the
+        command through to their child nodes, which may be
+        returned. This ensures you get back each node you requested.
 
         For example, here is a root node with two top-level "name"
         elements. Searching non-recursively for the "name" tag returns
