@@ -32,6 +32,8 @@ except ImportError:
 
 unicode = jxmlease._unicode
 
+ExpatError = jxmlease.xmlparser.expat.ExpatError
+
 def _encode(s):
     try:
         return bytes(s, 'ascii')
@@ -889,7 +891,35 @@ class XMLToObjTestCase(unittest.TestCase):
         for xml in (xml1, xml2):
             self.assertRaises(ValueError, parser, xml)
 
-class EtreeToDictTestCase(XMLToObjTestCase):
+    def test_empty_node(self):
+        test_strings = [
+            "",
+            "<!-- comment -->",
+            """<?xml version="1.0" encoding="utf-8"?>""",
+            "           "
+        ]
+        def run_test_empty_node(tc, expected, fx, *args, **kwargs):
+            e = None
+            try:
+                result = fx(*args, **kwargs)
+            except ExpatError as e:
+                result = None
+
+            tc.assertTrue(e is None)
+            tc.assertEqual(result, expected)
+
+        for xml in test_strings:
+            run_test_empty_node(self, {}, self.parse, xml)
+            run_test_empty_node(self, [], list, self.parse(xml, generator="z"))
+            run_test_empty_node(self, [], list, self.parse(xml, generator="w/x/y/z"))
+
+    def test_corrupt_xml(self):
+        for xml in ["<a><b><c>foo</c></b>", "xxx", "</b>"]:
+            self.assertRaises(ExpatError, self.parse, xml)
+            self.assertRaises(ExpatError, list, self.parse(xml, generator="z"))
+            self.assertRaises(ExpatError, list, self.parse(xml, generator="w/x/y/z"))
+
+class EtreeToObjTestCase(XMLToObjTestCase):
     def __init__(self, *args, **kwargs):
         XMLToObjTestCase.__init__(self, *args, **kwargs)
         self.parse=parse_etree
@@ -926,6 +956,14 @@ class EtreeToDictTestCase(XMLToObjTestCase):
 
     @skip("Test does not make sense in the Etree context")
     def test_generator_file_is_incremental(self):
+        pass
+
+    @skip("Test does not make sense in the Etree context")
+    def test_empty_node(self):
+        pass
+
+    @skip("Test does not make sense in the Etree context")
+    def test_corrupt_xml(self):
         pass
 
     # Additional test case(s) that are specific to

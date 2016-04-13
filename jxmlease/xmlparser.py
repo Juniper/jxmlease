@@ -256,10 +256,10 @@ class Parser(object):
                 raise_error = True
                 if (hasattr(expat, "errors") and
                         hasattr(expat.errors, "XML_ERROR_NO_ELEMENTS") and
-                        at_eof):
-                    if str(e).startswith(expat.errors.XML_ERROR_NO_ELEMENTS +
-                                         ":"):
-                        raise_error = False
+                        str(e).startswith(expat.errors.XML_ERROR_NO_ELEMENTS + ":") and
+                        at_eof and
+                        not self._handler.processing_started):
+                    raise_error = False
 
                 # If needed, raise the error
                 if raise_error:
@@ -308,10 +308,10 @@ class Parser(object):
                 # the error and return the empty dictionary.
                 raise_error = True
                 if (hasattr(expat, "errors") and
-                        hasattr(expat.errors, "XML_ERROR_NO_ELEMENTS")):
-                    if str(e).startswith(expat.errors.XML_ERROR_NO_ELEMENTS +
-                                         ":"):
-                        raise_error = False
+                        hasattr(expat.errors, "XML_ERROR_NO_ELEMENTS") and
+                        str(e).startswith(expat.errors.XML_ERROR_NO_ELEMENTS + ":") and
+                        not self._handler.processing_started):
+                    raise_error = False
 
                 # If needed, raise the error
                 if raise_error:

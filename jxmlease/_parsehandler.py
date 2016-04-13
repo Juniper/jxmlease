@@ -62,6 +62,7 @@ class _DictSAXHandler(object):
         self.in_ignore = (self.match_depth > 0)
         self.cdata_separator = cdata_separator
         self.need_cdata_separator = False
+        self.processing_started = False
 
     def _parse_generator_matches(self, match_string):
         match_obj = _GeneratorMatch(match_string=match_string)
@@ -141,6 +142,7 @@ class _DictSAXHandler(object):
 
     def start_element(self, full_name, attrs):
         """Handle the start of an element."""
+        self.processing_started = True
         name = self._build_name(full_name)
         attrs = self._attrs_to_dict(attrs)
         self.path.append(name)
@@ -186,6 +188,7 @@ class _DictSAXHandler(object):
 
     def characters(self, data):
         """Handle character data."""
+        self.processing_started = True
         if not self.in_ignore:
             if self.need_cdata_separator:
                 data = self.cdata_separator + data
