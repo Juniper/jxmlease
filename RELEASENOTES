@@ -5,6 +5,23 @@ All rights reserved.
 Please see the latest documentation for information on installing and
 using jxmlease.
 
+version 1.0.1 (April 18, 2016):
+    Minor bugfixes and enhancements.
+
+    New features
+    ------------
+    - There is now a top-level emit_xml() function. You can use this to
+      convert standard Python data types into XML output without first
+      explicitly converting them to jxmlease objects.
+
+    Bugs fixed in this release
+    --------------------------
+    See the CHANGES file.
+
+    Known issues
+    ------------
+    None
+
 version 1.0 (April 12, 2016):
     Initial release of jxmlease!
 
