@@ -130,7 +130,7 @@ class Parser(object):
             If False, ignore them.
         strip_whitespace (bool): If True (the default), strip whitespace
             at the start and end of CDATA. If False, keep all whitespace.
-        namespaces (dict): A remapping for namespaces. If supplied, identifiers
+        namespaces (`dict`): A remapping for namespaces. If supplied, identifiers
             with a namespace prefix will have their namespace prefix rewritten
             based on the dictionary. The code will look for
             :py:obj:`namespaces[current_namespace]`. If found,

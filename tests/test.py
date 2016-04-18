@@ -50,6 +50,11 @@ if not hasattr(unittest.TestCase, "assertIsNotInstance"):
 else:
     need_assertIsNotInstance = False
 
+if not hasattr(unittest.TestCase, "assertIn"):
+    need_assertIn = True
+else:
+    need_assertIn = False
+
 # Deal with Python 2.6 unittest, which does not have the
 # unittest.skip or unittest.skipUnless decorators.
 if hasattr(unittest, "skip"):
@@ -976,6 +981,10 @@ class EtreeToObjTestCase(XMLToObjTestCase):
                          self.parse(xml_elementtree))
 
 class XMLNodeTestCase(unittest.TestCase):
+    if need_assertIn:
+        def assertIn(self, a, b, msg=None):
+            self.assertTrue(a in b, msg=msg)
+
     def pprint_compare(self, obj1, obj2, **kwargs):
         ioObj1 = StringIO()
         obj1.prettyprint(width=1000, stream=ioObj1, **kwargs)
@@ -1573,6 +1582,35 @@ class XMLNodeTestCase(unittest.TestCase):
     def test_output_notpretty_semistructured(self):
         xml = "<aa><ab><ac>1</ac><ac>2</ac>foo</ab><ab><ac>3</ac><ac>4</ac>bar</ab>baz</aa>"
         self.assertEqual(parse(xml).emit_xml(full_document=False, pretty=False), xml)
+
+    def test_output_noclass(self):
+        cases = [
+            ({'a': ''}, True, ("<a></a>",)),
+            ({'a': 'foo'}, True, ("<a>foo</a>",)),
+            ({'a': ['foo', 'bar']}, False, ("<a>foo</a><a>bar</a>",)),
+            ({'a': {'b': ['foo', 'bar']}}, True, ("<a><b>foo</b><b>bar</b></a>",)),
+            ({'a': {'b': 'foo'}}, True, ("<a><b>foo</b></a>",)),
+            ({'a': 'foo', 'b': 'bar'}, False, (
+                "<a>foo</a><b>bar</b>", "<b>bar</b><a>foo</a>"
+            )),
+            ([{'a': 'foo'}, {'a': 'bar'}], False, ("<a>foo</a><a>bar</a>",)),
+            ([{'a': 'foo'}], True, ("<a>foo</a>",)),
+        ]
+        for obj, full_doc, xml in cases:
+            if full_doc:
+                header = """<?xml version="1.0" encoding="utf-8"?>\n"""
+                expected_result = [header + i for i in xml]
+            else:
+                expected_result = list(xml)
+            emit_xml = jxmlease.emit_xml
+            self.assertIn(emit_xml(obj, pretty=False), expected_result)
+            if full_doc:
+                self.assertIn(emit_xml(obj, full_document=True, pretty=False), expected_result)
+            else:
+                self.assertRaises(ValueError, emit_xml, obj, full_document=True)
+            self.assertIn(emit_xml(obj, full_document=False, pretty=False), xml)
+
+            self.assertRaises(TypeError, emit_xml, "test")
 
     def test_find_with_tag_non_recursive(self):
         xml = "<z><aa><ab><ac>1</ac><ac>2</ac></ab><ab><ac>3</ac></ab></aa><aa><empty/></aa></z>"

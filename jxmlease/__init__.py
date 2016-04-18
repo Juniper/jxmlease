@@ -169,6 +169,9 @@ _node_refs = {'XMLListNode': None, 'XMLCDATANode': None, 'XMLDictNode': None}
 # are defined above this line.
 # pylint: disable=wrong-import-position
 
+# Import the base node.
+from ._basenode import XMLNodeBase
+
 # Import the node classes, updating the references in the dictionary.
 from .listnode import XMLListNode
 _node_refs['XMLListNode'] = XMLListNode
@@ -180,3 +183,27 @@ _node_refs['XMLDictNode'] = XMLDictNode
 # Now, import anything else we want.
 from .xmlparser import Parser, parse
 from .etreeparser import EtreeParser, parse_etree
+
+def emit_xml(obj, *args, **kwargs):
+    """Translate a Python dictionary or list to XML output.
+
+    This method internally creates an :py:class:`XMLDictNode` or
+    :py:class:`XMLListNode` object, as appropriate, and then calls the
+    :py:meth:`emit_xml <XMLNodeBase.emit_xml>` method of that class.
+
+    Any arguments you supply are passed on to the :py:meth:`emit_xml
+    <XMLNodeBase.emit_xml>` method of that class. Please see the
+    documentation for the class' :py:meth:`emit_xml <XMLNodeBase.emit_xml>`
+    method for information on arguments and return values.
+
+    Raises:
+        :py:exc:`TypeError`: If the object is not an appropriate type
+            to convert to an XML tree.
+    """
+    if isinstance(obj, (XMLDictNode, dict)):
+        parsed_obj = XMLDictNode(obj)
+    elif isinstance(obj, (XMLListNode, list, tuple)):
+        parsed_obj = XMLListNode(obj)
+    else:
+        raise TypeError
+    return parsed_obj.emit_xml(*args, **kwargs)

@@ -15,7 +15,7 @@ from __future__ import absolute_import
 from xml.sax.saxutils import XMLGenerator
 from copy import copy
 from . import _node_refs, OrderedDict, StringIO, _unicode
-from . import _XMLDictPlaceholder, _XMLListPlaceholder
+from . import _XMLCDATAPlaceholder, _XMLDictPlaceholder, _XMLListPlaceholder
 
 __all__ = ['XMLNodeBase']
 
@@ -96,7 +96,7 @@ Args:
         the node.
     tag (string): The XML tag for this node.
     key (string or tuple): The dictionary key used for this node.
-    xml_attrs (dict): The XML attributes for the node.
+    xml_attrs (`dict`): The XML attributes for the node.
     text (string): The node's initial CDATA value. (Note
         that this is ignored for :py:class:`XMLCDATANode` objects.)
     parent (Instance of a sub-class of :py:class:`XMLNodeBase`): A
@@ -137,6 +137,7 @@ def _docstring_fixup(cls):
                         # You just can't update some methods...
                         pass
 
+XMLCDATANode = _XMLCDATAPlaceholder
 XMLDictNode = _XMLDictPlaceholder
 XMLListNode = _XMLListPlaceholder
 def _resolve_references_once():
@@ -152,9 +153,11 @@ def _resolve_references_once():
     """
     # pylint: disable=global-statement
     # pylint: disable=invalid-name
+    global XMLCDATANode
     global XMLDictNode
     global XMLListNode
     global _resolve_references
+    XMLCDATANode = _node_refs['XMLCDATANode']
     XMLDictNode = _node_refs['XMLDictNode']
     XMLListNode = _node_refs['XMLListNode']
     _resolve_references = lambda: None
@@ -813,10 +816,10 @@ class XMLNodeBase(object):
            completely reliable.
 
         Args:
-            attrs (list): The list of XML attributes that signal a node
+            attrs (`list`): The list of XML attributes that signal a node
                 should be used as a key.
-            tags (list): The list of XML tags that signal a node should be used
-                as a key.
+            tags (`list`): The list of XML tags that signal a node should be
+                used as a key.
             func (function): A function that will accept a node as a parameter
                 and return a key.
             in_place (bool): Whether the change should be made in the XML tree.
@@ -957,7 +960,7 @@ class XMLNodeBase(object):
         raise NotImplementedError()
 
     def emit_handler(self, content_handler, pretty=True, newl='\n',
-                     indent='    ', full_document=_NoArg()):
+                     indent='    ', full_document=None):
         """Pass the contents of the XML tree to a ContentHandler object.
 
         This method will pass the contents of the XML tree to a
@@ -989,35 +992,73 @@ class XMLNodeBase(object):
         Returns:
             None
         """
-        if not isinstance(full_document, _NoArg):
-            # Make sure there is only one root in a "full" document.
-            if (full_document and isinstance(self, XMLListNode) and
-                    len(self) > 1):
+        full_document_ok = None
+        curnode = self
+        # See if it is OK to be a full document. If we will have
+        # multiple root nodes, it is not OK. Otherwise, we assume
+        # it is.
+        while full_document_ok is None:
+            if isinstance(curnode, XMLCDATANode):
+                # Always OK
+                full_document_ok = True
+            elif not isinstance(curnode, XMLNodeBase):
+                # Never OK -- will probably produce an error later
+                full_document_ok = False
+            elif isinstance(curnode, XMLListNode) and len(curnode) > 1:
+                # We have multiple tags. We cannot be a full document.
+                full_document_ok = False
+            elif len(curnode) == 0:
+                # Empty nodes are always OK.
+                full_document_ok = True
+            elif ((curnode.tag is None and isinstance(curnode, XMLDictNode)) or
+                  isinstance(curnode, XMLListNode)):
+                # If curnode.tag is None (or this is a list), this
+                # amounts to a request to output the child(ren) of
+                # this node. If there are multiple children, we know
+                # that it is not OK to make this a full document (as
+                # there will be multiple top-level tags). If there is
+                # just one child, we need to look at the child to
+                # determine whether it is OK to treat it as a full
+                # document.
+                if len(curnode) > 1:
+                    full_document_ok = False
+                else:
+                    if isinstance(curnode, XMLListNode):
+                        curnode = curnode[0]
+                    elif isinstance(curnode, XMLDictNode):
+                        curnode = curnode[[i for i in curnode][0]]
+            elif isinstance(curnode.tag, (_unicode, str)):
+                # We have a tag. That will produce a top-level tag.
+                full_document_ok = True
+            else:
+                # We generally shouldn't get here, but let the user
+                # do what they want.
+                full_document_ok = True
+
+        if full_document is not None:
+            # We were given a full_document argument. Make sure it is
+            # OK to treat this as a "full document".
+            if full_document and not full_document_ok:
                 raise ValueError("Document will have more than one root node. "
                                  "The full_document argument must be False.")
-        elif isinstance(self, XMLListNode) and len(self) > 1:
-            # We have multiple tags. We cannot be a full document.
-            full_document = False
-        elif (self.tag is None and
-              isinstance(self, (XMLDictNode, XMLListNode)) and
-              len(self) <= 1):
-            # We are the root. We have a single root tag.
-            full_document = True
-        elif (isinstance(self.tag, (_unicode, str)) and
-              (self.parent is None or
-               (self.parent.tag is None and len(self.parent) == 1))):
-            # We look like the only child of the root node. In other words,
-            # we look like the root tag. Treat us as a full document.
-            full_document = True
         else:
-            # We don't appear to be the root, or it appears there is a multi-
-            # member root.
-            full_document = False
+            # Default to full_document=True, if it is OK to treat this
+            # as a full document and it looks like we are at the root.
+            full_document = full_document_ok
+            if full_document:
+                # Guess that we are at the root if:
+                # - self.tag is None, or
+                # - self.tag is not None, but we have no parent, or
+                # - self.tag is not None, but our parent looks like a
+                #   single-member, tagless root
+                if (self.tag is not None and self.parent is not None and
+                        (self.parent.tag is not None or len(self.parent) > 1)):
+                    full_document = False
 
         if full_document:
             content_handler.startDocument()
-        self._emit_handler(content_handler, depth=0, pretty=pretty, newl=newl,
-                           indent=indent)
+        curnode._emit_handler(content_handler, depth=0, pretty=pretty, newl=newl,
+                              indent=indent)
         if full_document:
             content_handler.endDocument()
 
