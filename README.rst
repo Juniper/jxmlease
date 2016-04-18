@@ -90,6 +90,15 @@ things like string comparisons work correctly::
     >>> root['a']['b']['z'] == "bar"
     False
 
+You can also easily produce XML output from typical Python objects::
+
+    >>> print(jxmlease.emit_xml({'a': {'b': 'foo', 'c': 'bar'}}))
+    <?xml version="1.0" encoding="utf-8"?>
+    <a>
+        <c>bar</c>
+        <b>foo</b>
+    </a>
+
 We think that these features, and others, combine to ease XML
 processing in Python: hence, the name: jxmlease.
 
