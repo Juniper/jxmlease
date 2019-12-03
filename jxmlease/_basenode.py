@@ -691,7 +691,7 @@ class XMLNodeBase(object):
         try:
             made_change = False
             for i in range(0, len(self.parent)):
-                if self.parent[i] == self:
+                if self.parent[i] == self and self.parent[i].xml_attrs == self.xml_attrs:
                     if newnode is not None:
                         self.parent[i] = newnode
                         return
